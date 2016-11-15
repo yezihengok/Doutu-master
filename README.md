@@ -20,7 +20,7 @@
 ####效果动图：
 
 ####部分截图：
-![Doutu-master](https://github.com/yezihengok/Doutu-master/screenshots/device-2016-11-15-162723.png)
-![Doutu-master](https://github.com/yezihengok/Doutu-master/screenshots/device-2016-11-15-164034.png)
-![Doutu-master](https://github.com/yezihengok/Doutu-master/screenshots/device-2016-11-15-164232.png)
+![Doutu-master](https://github.com/yezihengok/Doutu-master/blob/master/screenshots/device-2016-11-15-162723.png)
+![Doutu-master](https://github.com/yezihengok/Doutu-master/blob/master/screenshots/device-2016-11-15-164034.png)
+![Doutu-master](https://github.com/yezihengok/Doutu-master/blob/master/screenshots/device-2016-11-15-164232.png)
  
