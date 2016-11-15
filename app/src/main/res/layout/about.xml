@@ -49,7 +49,14 @@
                 android:paddingTop="10dip"
                 android:text="@string/about_desc"
                 style="@style/txt_14sp" />
-
+            <TextView
+                android:id="@+id/tvgithub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:text="@string/github"
+                style="@style/txt_14sp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,5 +83,5 @@
         android:gravity="center"
         android:layout_marginBottom="3dp"
         style="@style/txt_12sp"
-        android:text="Copyright(c) 2016 版权所有 翻版不究" />
+        android:text="Copyright(c) 2016 版权没有 翻版不究" />
 </RelativeLayout>
