@@ -77,7 +77,7 @@ public class CommUtil {
 
     private static LoadDialog frameDialog;
     static Toast toast;
-    public static final String qq_key  = "222222";//zhb-1104579965
+    public static final String qq_key  = "100380359";//
     public static final String WECHAT_APP_ID  = "wxacc4322798406c76";//zhb
     public static final String QQ = "com.tencent.mobileqq";
     public static final String WeChat = "com.tencent.mm";
