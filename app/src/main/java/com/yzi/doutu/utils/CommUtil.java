@@ -51,7 +51,6 @@ import com.yzi.doutu.share.QQShareManager;
 import com.yzi.doutu.utils.gifdecoder.GifImageDecoder;
 import com.yzi.doutu.view.ColorTagImageView;
 import com.yzi.doutu.view.LoadDialog;
-import com.yzi.doutu.view.operate.OperateConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,8 +64,6 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static android.R.attr.tag;
-import static android.R.attr.typeface;
 import static com.yzi.doutu.utils.ContextUtil.getApplicationContext;
 
 /**
@@ -77,7 +74,7 @@ public class CommUtil {
 
     private static LoadDialog frameDialog;
     static Toast toast;
-    public static final String qq_key  = "100380359";//
+    public static final String qq_key  = "100380359";//zhb-1104579965
     public static final String WECHAT_APP_ID  = "wxacc4322798406c76";//zhb
     public static final String QQ = "com.tencent.mobileqq";
     public static final String WeChat = "com.tencent.mm";
