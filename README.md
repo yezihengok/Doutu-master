@@ -20,6 +20,8 @@
 
 ####效果动图：
 
-
-
+####部分截图：
+![image](https://github.com/yezihengok/Doutu-master/screenshots/device-2016-11-15-162723.png)
+![image](https://github.com/yezihengok/Doutu-master/screenshots/device-2016-11-15-164034.png)
+![image](https://github.com/yezihengok/Doutu-master/screenshots/device-2016-11-15-164232.png)
  
