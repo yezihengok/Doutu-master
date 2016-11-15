@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.yzi.doutu">
+  <uses-permission android:name="android.permission.GET_TASKS" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.CAMERA" />
+<!--  <uses-feature android:name="android.hardware.camera" />
+  <uses-feature android:name="android.hardware.camera.autofocus" />-->
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+  <uses-permission
+      android:name="android.permission.PACKAGE_USAGE_STATS"
+      tools:ignore="ProtectedPermissions" />
+  <application
+      android:allowBackup="true"
+      android:icon="@mipmap/meizi_"
+      android:label="@string/app_name"
+      android:name=".service.DouApplication"
+      android:theme="@style/AppTheme">
+    <activity
+        android:name=".main.MainActivity"
+        android:label="@string/app_name">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+
+    </activity>
+    <activity android:name=".activity.MoreTypeListActivity"/>
+    <activity android:name=".activity.RealManInfoListActivity"/>
+    <activity android:name=".activity.MoreTypeActivity"/>
+    <activity android:name=".activity.SearchDialogActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/DialogStyleBottom"/>
+
+    <activity android:name=".activity.ModifyPicActivity"/>
+    <activity android:name=".activity.MyFavoritesActivity"/>
+    <activity android:name=".activity.MyDIYPicActivity"/>
+    <activity android:name=".activity.AboutActivity"/>
+    <activity
+        android:name=".permission.HelpActivity"
+        android:launchMode="singleTop"
+        android:theme="@style/TransparentDialog"/>
+
+    <activity
+        android:name="com.pizidea.imagepicker.ui.ImagesGridActivity"
+        android:label="@string/app_name"
+        android:theme="@style/AppBaseTheme" />
+
+    <activity
+        android:name="com.tencent.connect.common.AssistActivity"
+        android:configChanges="orientation|keyboardHidden"
+        android:screenOrientation="portrait"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    <activity
+        android:name="com.tencent.tauth.AuthActivity"
+        android:launchMode="singleTask"
+        android:noHistory="true" >
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="tencent222222" />
+        <!-- 100380359 100381104 222222 1104579965-->
+      </intent-filter>
+    </activity>
+
+
+    <service android:name="com.yzi.doutu.service.WindowService"/>
+  </application>
+
+</manifest>

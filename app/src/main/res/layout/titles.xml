@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/titlet"
+android:layout_width="match_parent"
+android:layout_height="50dp"
+android:background="@color/main_blue_light">
+
+<ImageView
+    android:id="@+id/back"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:paddingTop="8dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="12dp"
+    android:src="@mipmap/grey_back" />
+
+<TextView
+    android:paddingTop="8dp"
+    android:gravity="center_vertical"
+    android:textColor="@color/white"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
+    android:id="@+id/tvtitle"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:layout_gravity="center"
+    android:textSize="14sp"
+    android:text="表情" />
+
+
+<TextView
+    android:paddingTop="8dp"
+    android:layout_marginLeft="8dp"
+    android:id="@+id/tvRight"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_alignParentRight="true"
+    android:gravity="center_vertical"
+    android:textColor="@color/white"
+    android:paddingLeft="10dp"
+    android:paddingRight="12dp"
+    android:background="@drawable/background_tabs"
+    android:text="保存/分享"/>
+</RelativeLayout>
