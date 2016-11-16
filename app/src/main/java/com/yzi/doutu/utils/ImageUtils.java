@@ -489,10 +489,10 @@ public class ImageUtils {
      * @param fileName
      */
     public static String saveBitmapToFile(Bitmap tempBitmap, String fileName) {
-        if (TextUtils.isEmpty(getFileRootPath())) {
+        if (TextUtils.isEmpty(getFilesPath(FILE_ROOT_PATH))) {
             return null;
         }
-        String fileNames = getFileRootPath() + fileName;
+        String fileNames = getFilesPath(FILE_ROOT_PATH) + fileName;
         BufferedOutputStream bos = null;
         try {
             bos = new BufferedOutputStream(new FileOutputStream(new File(fileNames)));
@@ -524,13 +524,13 @@ public class ImageUtils {
     }
 
     public static String saveBitmapToFiles(Bitmap tempBitmap,final DataBean dataBean) {
-        if (TextUtils.isEmpty(getFilePath())) {
+        if (TextUtils.isEmpty(getFilesPath(FILE_DIY_PATH))) {
             return null;
         }
 
         String now=CommUtil.getDate();
         final String fileName =now+ ".png";
-        String fileNames = getFilePath() + fileName;
+        String fileNames = FILE_DIY_PATH + fileName;
         BufferedOutputStream bos;
         try {
             bos = new BufferedOutputStream(new FileOutputStream(new File(fileNames)));
@@ -540,7 +540,7 @@ public class ImageUtils {
 
             //保证缓存图片的唯一性删掉旧图,替换新的文件名
             if(!TextUtils.isEmpty(dataBean.getFileName())){
-                SimpleFileUtils.deleteFile(new File(getFilePath()+dataBean.getFileName()),null);
+                SimpleFileUtils.deleteFile(new File(FILE_DIY_PATH+dataBean.getFileName()),null);
             }
             dataBean.setFileName(fileName);
 
@@ -550,27 +550,17 @@ public class ImageUtils {
         return fileNames;
     }
 
-    public static String getFilePath() {
+    public static String getFilesPath(String path) {
         String sdStatus = Environment.getExternalStorageState();
         if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
             return "";
         }
-        File file = new File(FILE_DIY_PATH);
+        File file = new File(path);
         if (!file.exists())
             file.mkdirs();// 创建文件夹
-        return FILE_DIY_PATH;
+        return path;
     }
 
-    public static String getFileRootPath() {
-        String sdStatus = Environment.getExternalStorageState();
-        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
-            return "";
-        }
-        File file = new File(FILE_ROOT_PATH);
-        if (!file.exists())
-            file.mkdirs();// 创建文件夹
-        return FILE_ROOT_PATH;
-    }
 
     /**
      * 对Bitmap进行压缩
@@ -711,7 +701,7 @@ public class ImageUtils {
 
                 //保证缓存图片的唯一性删掉旧图
                 if(!TextUtils.isEmpty(dataBean.getFileName())){
-                    SimpleFileUtils.deleteFile(new File(getFilePath()+dataBean.getFileName()),null);
+                    SimpleFileUtils.deleteFile(new File(getFilesPath(FILE_DIY_PATH)+dataBean.getFileName()),null);
                 }
                 dataBean.setFileName(fileName);//替换新的文件名
                 try {
