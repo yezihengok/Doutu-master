@@ -83,9 +83,11 @@ public class CommUtil {
     public static final String WEIBA = "Qweiba";
     public static String FLAG;
 
-    /**是否开启了QQ尾巴分享 ,如果开启了调用系统分享改为调用QQSDK分享**/
-    public static boolean  isQQopen;
 
+    /**是否开启了QQ尾巴分享 ,如果开启了调用系统分享改为调用QQSDK分享**/
+    public static boolean isQQopen() {
+        return SharedUtils.getBoolean(WEIBA,DouApplication.getInstance(),WEIBA,false);
+    }
 
     /**
      * 默认头像的网络图片地址
@@ -250,7 +252,7 @@ public class CommUtil {
                         } else if (flag == 1) {
 
                             //是否开启了QQ尾巴分享
-                            if (SharedUtils.getBoolean("", context, WEIBA, false)) {
+                            if (isQQopen()) {
                                 //使用QQSDK分享
                                 QQShareManager.getInstance(context).toQShare(filePath);
                             } else {
@@ -411,7 +413,7 @@ public class CommUtil {
         final String tag = dataBean.getFormWhere();
 
 
-        if (isQQopen) {
+        if (isQQopen()) {
             share_send.setText("QQ分享");
         }
 
@@ -422,7 +424,7 @@ public class CommUtil {
 
         //从我的制作列表进来的话，直接发送SD卡里制作过的图片，不在下载,否则先下载在分享
         if (!"DIY".equals(tag)) {
-            if (isQQopen) {
+            if (isQQopen()) {
                 CommUtil.onDownLoad(dataBean, context, 1);
             } else {
                 CommUtil.onDownLoad(dataBean, context, 0);
@@ -430,7 +432,7 @@ public class CommUtil {
 
         } else {
 
-            if (isQQopen) {
+            if (isQQopen()) {
                 QQShareManager.getInstance(context).toQShare(dataBean.getGifPath());
             } else {
                 toShare(context, new File(dataBean.getGifPath()));
@@ -589,7 +591,7 @@ public class CommUtil {
                                     public void onResult(String picpath) {
                                         showDialog.dismiss();
                                         closeWaitDialog();
-                                        if (isQQopen) {
+                                        if (isQQopen()) {
                                             QQShareManager.getInstance(context).toQShare(picpath);
                                         } else {
                                             toShare(context, new File(picpath));
@@ -614,7 +616,8 @@ public class CommUtil {
                             }
                         }
                     });
-                    decoder.run();
+                    //decoder.run();
+                    new Thread(decoder).start();
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
