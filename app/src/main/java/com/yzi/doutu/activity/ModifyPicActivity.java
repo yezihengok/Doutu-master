@@ -32,6 +32,7 @@ import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBTools;
+import com.yzi.doutu.share.QQShareManager;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.ImageUtils;
 import com.yzi.doutu.utils.SharedUtils;
@@ -39,6 +40,9 @@ import com.yzi.doutu.view.ColorTagImageView;
 import com.yzi.doutu.view.MyRelativeLayout;
 
 import java.io.File;
+
+import static com.yzi.doutu.utils.CommUtil.isQQopen;
+import static com.yzi.doutu.utils.CommUtil.toShare;
 
 
 /**
@@ -240,8 +244,13 @@ public class ModifyPicActivity extends BaseActivity implements MyRelativeLayout.
         // bitmap = ImageUtils.createViewBitmap(modifyLayout,0.3f);
         bitmap = ImageUtils.createViewBitmap(modifyLayout,250,250);
         String filePath = ImageUtils.saveBitmapToFiles(bitmap, dataBean);
-        CommUtil.toShare(ModifyPicActivity.this,new File(filePath));
         Log.v("","已保存至:" + filePath);
+        if (isQQopen) {
+            QQShareManager.getInstance(context).toQShare(filePath);
+        } else {
+            toShare(context, new File(filePath));
+        }
+
         //为空的情况下才需要设置原图地址
         if(TextUtils.isEmpty(dataBean.getOldUrl())){
             String oldUrl=dataBean.getGifPath();

@@ -35,7 +35,7 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         application.addActivity(this);
-        setContentView(R.layout.activity_moretype_list);
+        setContentView(R.layout.activity_diy);
         initView();
 
     }

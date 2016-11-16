@@ -14,7 +14,7 @@ import com.yzi.doutu.R;
 import com.yzi.doutu.utils.CommUtil;
 
 /**
- * Created by yzh on 2016/11/11.
+ * Created by yzh on 2016/11/11
  */
 public class AboutActivity extends BaseActivity {
 
@@ -29,7 +29,7 @@ public class AboutActivity extends BaseActivity {
     }
 
 	private void init() {
-		findViewById(R.id.Copyright).setVisibility(View.VISIBLE);
+		findViewById(R.id.Copyright).setVisibility(View.GONE);
 		((TextView)findViewById(R.id.tvtitle)).setText("关于");
 		findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
 			@Override

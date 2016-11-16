@@ -55,6 +55,7 @@ import java.util.List;
 
 import static android.view.View.OnClickListener;
 import static com.yzi.doutu.utils.CommUtil.WEIBA;
+import static com.yzi.doutu.utils.CommUtil.isQQopen;
 import static com.yzi.doutu.utils.ImageUtils.DOWN_PATH;
 import static com.yzi.doutu.utils.ImageUtils.ROOT_PATH;
 
@@ -232,10 +233,12 @@ public class MainActivity extends BaseActivity
   }
 
   private void setweiba() {
-    if(SharedUtils.getBoolean("",this,WEIBA,false)){
+    if(SharedUtils.getBoolean(WEIBA,this,WEIBA,false)){
       weiba_item.setTitle("QQ分享尾巴: 开");
+      isQQopen=true;
     }else{
       weiba_item.setTitle("QQ分享尾巴: 关");
+      isQQopen=false;
     }
   }
 
@@ -280,12 +283,12 @@ public class MainActivity extends BaseActivity
             break;
 
           case R.id.nav_menu_feedback:
-            boolean  isOpen=SharedUtils.getBoolean("",MainActivity.this,WEIBA,false);
+            boolean  isOpen=SharedUtils.getBoolean(WEIBA,MainActivity.this,WEIBA,false);
+            CommUtil.showToast("打开将默认分享到QQ，关闭可分享至其它",1);
             if(isOpen){
-              SharedUtils.putBoolean("",MainActivity.this,WEIBA,false);
+              SharedUtils.putBoolean(WEIBA,MainActivity.this,WEIBA,false);
             }else{
-              SharedUtils.putBoolean("",MainActivity.this,WEIBA,true);
-              CommUtil.showToast("从悬浮球分享到QQ将会带上尾巴",1);
+              SharedUtils.putBoolean(WEIBA,MainActivity.this,WEIBA,true);
             }
             setweiba();
 

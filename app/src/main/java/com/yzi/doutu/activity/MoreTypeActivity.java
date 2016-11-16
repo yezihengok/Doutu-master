@@ -112,7 +112,7 @@ public class MoreTypeActivity extends BaseActivity implements CommInterface.OnIt
     }
 
     private void setData(AllType allType) {
-        if(allType.getData()==null){
+        if(allType==null||allType.getData()==null){
             return;
         }
         beanList=allType.getData();
