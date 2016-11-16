@@ -16,6 +16,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static com.yzi.doutu.utils.ImageUtils.DOWN_PATH;
+import static com.yzi.doutu.utils.ImageUtils.FILE_ROOT_PATH;
+import static com.yzi.doutu.utils.ImageUtils.getFilesPath;
+
 /**
  * 图片下载
  */
@@ -66,9 +70,9 @@ public class DownLoadImageService implements Runnable {
                 if (file != null) {
                     String pathStr;
                     if("DIY".equals(dataBean.getFormWhere())){
-                        pathStr=ImageUtils.FILE_ROOT_PATH;
+                        pathStr=ImageUtils.getFilesPath(FILE_ROOT_PATH);
                     }else{
-                        pathStr=ImageUtils.DOWN_PATH;
+                        pathStr=ImageUtils.getFilesPath(DOWN_PATH);
                     }
                     String name;
                     if (url.endsWith("gif") || url.endsWith("GIF")) {
