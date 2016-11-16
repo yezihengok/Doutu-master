@@ -48,7 +48,9 @@ import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.service.DouApplication;
 import com.yzi.doutu.service.WindowService;
 import com.yzi.doutu.share.QQShareManager;
-import com.yzi.doutu.utils.gifdecoder.GifImageDecoder;
+import com.yzi.doutu.utils.gifdecoder.GifAction;
+import com.yzi.doutu.utils.gifdecoder.GifDecoder;
+import com.yzi.doutu.utils.gifdecoder.GifFrame;
 import com.yzi.doutu.view.ColorTagImageView;
 import com.yzi.doutu.view.LoadDialog;
 
@@ -74,7 +76,7 @@ public class CommUtil {
 
     private static LoadDialog frameDialog;
     static Toast toast;
-    public static final String qq_key  = "100380359";//zhb-1104579965
+    public static final String qq_key  = "1105824118";//zhb-1104579965
     public static final String WECHAT_APP_ID  = "wxacc4322798406c76";//zhb
     public static final String QQ = "com.tencent.mobileqq";
     public static final String WeChat = "com.tencent.mm";
@@ -83,21 +85,21 @@ public class CommUtil {
 
     /**默认头像的网络图片地址**/
     public static final String ICON="http://h.hiphotos.baidu.com/image/pic/item/34fae6cd7b899e51601a7b9c40a7d933c9950da5.jpg";
-
+    /**最热表情图片列表**/
    // public static final String HOT_URL="http://api.jiefu.tv/app2/api/dt/item/hotList.html";
     public static final String HOT_URL="http://api.jiefu.tv/app2/api/dt/item/newList.html";
-
+    /**最新表情图片列表**/
     public static final String NEW_URL="http://api.jiefu.tv/app2/api/dt/shareItem/newList.html";
-
+    /**真人表情图片列表**/
     public static final String REALMAN_URL="http://api.jiefu.tv/app2/api/dt/tag/getByType.html";
-
+    /**真人表情图片列表**/
     public static final String REALMANINFO_URL="http://api.jiefu.tv/app2/api/dt/item/getByTag.html";
-
+    /**表情分类列表**/
     public static final String ALLTYPE= "http://api.jiefu.tv/app2/api/dt/tag/allList.html";
-
+    /**表情分类列表详情**/
     //public static final String ALLTYPEBYID="http://api.jiefu.tv/app2/api/dt/shareItem/getByTag.html";
     public static final String ALLTYPEBYID= "http://api.jiefu.tv/app2/api/dt/item/getByTag.html";
-
+    /**关键字搜索表情**/
     public static final String KEYWORD_SEARCH="http://api.jiefu.tv/app2/api/dt/shareItem/search.html";
 
    private  static CommUtil commUtil;
@@ -494,7 +496,7 @@ public class CommUtil {
                 if (!TextUtils.isEmpty(edmsg.getText().toString())) {
                     dataBean.setName(edmsg.getText().toString());
                 }
-                decoderGif(dataBean,context,edmsg,showDialog,finishListener);
+                decodeGif(dataBean,context,edmsg,showDialog,finishListener);
 
             }
         });
@@ -502,78 +504,80 @@ public class CommUtil {
         return showDialog;
     }
 
+
+
+    static GifDecoder decoder=null;
     /**
-     * 利用gilde 获得图片文件并拆分每一帧图片bitmap并添加文字保存至本地在合成gif
+     * 利用gilde 获得图片文件并拆分每一帧图片bitmap并添加文字保存至本地在合成gif(使用GifDecoder分解gif)
      * @param dataBean
      * @param context
      * @param editText
      * @param showDialog
-     * @param listener 结束监听
      */
-    public static void decoderGif(final DataBean dataBean,final Context context,final EditText editText
-    ,final Dialog showDialog,final CommInterface.setFinishListener listener){
+    public static void decodeGif(final DataBean dataBean, final Context context, final EditText editText
+            , final Dialog showDialog,final CommInterface.setFinishListener listener){
         showWaitDialog(context,"处理中...",false);
         CommUtil.onDownLoad(dataBean, context, new CommInterface.setListener() {
             @Override
             public void onResult(String picpath) {
-                List<String> paths;
-                GifImageDecoder decoder;
-
+                final List<String> paths;
+                 decoder=null;
                 try {
                     FileInputStream inputStream   = new FileInputStream(new File(picpath));
-                    try {
+
                         paths=new ArrayList<>();
-                        decoder =new GifImageDecoder();
-                        decoder.read(inputStream);
-                        Log.d("","共有多少帧:" + decoder.getFrameCount());
-
-                        for (int i=0;i<decoder.getFrameCount();i++){
-
-                            String fileName=dataBean.getName()+i+ ".png";
-                            Bitmap bitmaps =drawTextToBitmap(decoder.getFrame(i),editText);
-                            String filePath = ImageUtils.saveBitmapToFile(bitmaps, fileName);
-                            paths.add(filePath);
-                            Log.v("","已保存至:" + filePath);
-
-                        }
-
-                        ImageUtils.createGif(dataBean, paths,80, new CommInterface.setListener() {
+                          decoder =new GifDecoder(inputStream, new GifAction() {
                             @Override
-                            public void onResult(String picpath) {
-                                showDialog.dismiss();
-                                closeWaitDialog();
-                                toShare(context,new File(picpath));
-                                //为空的情况下才需要设置原图地址
-                                if(TextUtils.isEmpty(dataBean.getOldUrl())){
-                                    String oldUrl=dataBean.getGifPath();
-                                    dataBean.setOldUrl(oldUrl);
+                            public void parseOk(boolean parseStatus, int frameIndex) {
+                                int size = decoder.getFrameCount();
+
+                                Log.v("parseOk", "decoder size=="+size+";frameIndex="+frameIndex+";parseStatus="+parseStatus);
+                                if (frameIndex == -1) { //只有当-1的时候才说明解码完成，否则会解析得到一帧就会调用一次
+                                    for (int i = 0; i <= decoder.getFrameCount(); i++) {
+                                        GifFrame frame = decoder.next();
+                                        String fileName = dataBean.getName() + i + ".png";
+                                        Bitmap bitmaps = drawTextToBitmap(frame.image, editText);
+                                        String filePath = ImageUtils.saveBitmapToFile(bitmaps, fileName);
+                                        paths.add(filePath);
+                                        Log.v("", "已保存至:" + filePath);
+                                    }
+
+                                    ImageUtils.createGif(dataBean, paths,75, new CommInterface.setListener() {
+                                        @Override
+                                        public void onResult(String picpath) {
+                                            showDialog.dismiss();
+                                            closeWaitDialog();
+                                            toShare(context,new File(picpath));
+                                            //为空的情况下才需要设置原图地址
+                                            if(TextUtils.isEmpty(dataBean.getOldUrl())){
+                                                String oldUrl=dataBean.getGifPath();
+                                                dataBean.setOldUrl(oldUrl);
+                                            }
+
+                                            //这里dataBean是会影响外面传进来dataBean
+                                            dataBean.setGifPath(picpath);//替换网址路径为SD文件路径
+
+                                            DBTools.getInstance(context).addMades(dataBean);
+                                              SimpleFileUtils.delFile(ImageUtils.FILE_ROOT_PATH,0,null);//清空分解的文件夹
+
+                                        }
+                                    });
+
+                                    if(listener!=null)
+                                        listener.onFinish();
                                 }
-
-                                dataBean.setGifPath(picpath);//替换网址路径为SD文件路径
-                                //这里dataBean是会影响外面传进来dataBean 所以 从我的制作列表进来时才替换
-                                if("DIY".equals(dataBean.getFormWhere())){
-
-                                }
-
-                                DBTools.getInstance(context).addMades(dataBean);
-                                SimpleFileUtils.delFile(ImageUtils.FILE_ROOT_PATH,0,null);//清空分解的文件夹
-                                if(listener!=null)
-                                    listener.onFinish();
                             }
                         });
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    decoder.run();
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-
 
             }
         });
 
     }
-
 
 
 

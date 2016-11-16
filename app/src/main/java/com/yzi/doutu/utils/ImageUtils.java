@@ -675,8 +675,8 @@ public class ImageUtils {
                 AnimatedGifEncoder localAnimatedGifEncoder = new AnimatedGifEncoder();
                 localAnimatedGifEncoder.start(baos);//start
                 localAnimatedGifEncoder.setRepeat(0);//设置生成gif的开始播放时间。0为立即开始播放
-                if(paths.size()>=15){
-                    localAnimatedGifEncoder.setDelay(fps-10);
+                if(paths.size()>12){
+                    localAnimatedGifEncoder.setDelay(fps-5);
                 }else{
                     localAnimatedGifEncoder.setDelay(fps);
                 }
