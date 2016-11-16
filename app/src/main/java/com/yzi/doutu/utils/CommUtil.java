@@ -83,21 +83,21 @@ public class CommUtil {
 
     /**默认头像的网络图片地址**/
     public static final String ICON="http://h.hiphotos.baidu.com/image/pic/item/34fae6cd7b899e51601a7b9c40a7d933c9950da5.jpg";
-    /**最热表情图片列表**/
+
    // public static final String HOT_URL="http://api.jiefu.tv/app2/api/dt/item/hotList.html";
     public static final String HOT_URL="http://api.jiefu.tv/app2/api/dt/item/newList.html";
-    /**最新表情图片列表**/
+
     public static final String NEW_URL="http://api.jiefu.tv/app2/api/dt/shareItem/newList.html";
-    /**真人表情图片列表**/
+
     public static final String REALMAN_URL="http://api.jiefu.tv/app2/api/dt/tag/getByType.html";
-    /**真人表情图片列表**/
+
     public static final String REALMANINFO_URL="http://api.jiefu.tv/app2/api/dt/item/getByTag.html";
-    /**表情分类列表**/
+
     public static final String ALLTYPE= "http://api.jiefu.tv/app2/api/dt/tag/allList.html";
-    /**表情分类列表详情**/
+
     //public static final String ALLTYPEBYID="http://api.jiefu.tv/app2/api/dt/shareItem/getByTag.html";
     public static final String ALLTYPEBYID= "http://api.jiefu.tv/app2/api/dt/item/getByTag.html";
-    /**关键字搜索表情**/
+
     public static final String KEYWORD_SEARCH="http://api.jiefu.tv/app2/api/dt/shareItem/search.html";
 
    private  static CommUtil commUtil;
