@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.yzi.doutu.R;
@@ -71,12 +70,14 @@ public class DIYFragment extends Fragment implements CommInterface.OnItemClickLi
     @Override
     public void onItemClick(View view, int position) {
 
+        DataBean dataBean=beanList.get(position);
+        dataBean.setOldUrl(null);
         if(CommUtil.QQ.equals(CommUtil.FLAG)){
-            CommUtil.onDownLoad(beanList.get(position),getActivity(),1);
+            CommUtil.onDownLoad(dataBean,getActivity(),1);
             //分享后，关闭当前dialog
             DouApplication.getInstance().removeAllActivity();
         }else if(CommUtil.WeChat.equals(CommUtil.FLAG)){
-            CommUtil.onDownLoad(beanList.get(position),getActivity(),2);
+            CommUtil.onDownLoad(dataBean,getActivity(),2);
             //分享后，关闭当前dialog
             DouApplication.getInstance().removeAllActivity();
         }
