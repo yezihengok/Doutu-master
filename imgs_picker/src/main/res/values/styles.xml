@@ -23,7 +23,7 @@
       Base application theme, dependent on API level. This theme is replaced
       by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!--
           Theme customizations available in newer API levels can go in
           res/values-vXX/styles.xml, while customizations related to
@@ -48,5 +48,10 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">2px</item>
         <item name="android:background">@color/spitLines</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>

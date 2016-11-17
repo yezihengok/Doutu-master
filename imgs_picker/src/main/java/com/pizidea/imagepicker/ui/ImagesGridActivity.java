@@ -220,9 +220,10 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            AndroidImagePicker.getInstance().getCropCompleteListener().cropComplete(resultUri, bitmap);
 
             finish();
+            AndroidImagePicker.getInstance().getCropCompleteListener().cropComplete(resultUri, bitmap);
+
         } else {
             Toast.makeText(context, "无法剪切选择图片", Toast.LENGTH_SHORT).show();
         }

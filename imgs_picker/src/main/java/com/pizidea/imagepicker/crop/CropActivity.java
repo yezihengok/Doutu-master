@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -27,7 +28,7 @@ public class CropActivity extends AppCompatActivity {
 
     private static final String TAG = "CropActivity";
 
-    TextView tvtitle;
+    ImageView btn_backpress;
 
     UCropView mUCropView;
     GestureCropImageView mGestureCropImageView;
@@ -49,8 +50,7 @@ public class CropActivity extends AppCompatActivity {
 
         this.mSaveFab = (FloatingActionButton) findViewById(R.id.crop_act_save_fab);
         this.mUCropView = (UCropView) findViewById(R.id.weixin_act_ucrop);
-//        tvtitle= (TextView) findViewById(R.id.tvtitle);
-//        tvtitle.setText("裁剪图片");
+        btn_backpress= (ImageView) findViewById(R.id.btn_backpress);
 
         mGestureCropImageView = mUCropView.getCropImageView();
         mOverlayView = mUCropView.getOverlayView();
@@ -64,7 +64,12 @@ public class CropActivity extends AppCompatActivity {
                 cropAndSaveImage();
             }
         });
-
+        btn_backpress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
 
