@@ -22,5 +22,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="image_cover_size">72dp</dimen>
-
+    <!--Crop View-->
+    <dimen name="ucrop_default_crop_grid_stoke_width">1dp</dimen>
+    <dimen name="ucrop_default_crop_frame_stoke_width">1dp</dimen>
 </resources>

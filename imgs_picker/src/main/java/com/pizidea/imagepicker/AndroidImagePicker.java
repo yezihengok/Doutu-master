@@ -57,6 +57,7 @@ public class AndroidImagePicker {
 
     public static final String KEY_PIC_PATH = "key_pic_path";
     public static final String KEY_PIC_SELECTED_POSITION = "key_pic_selected";
+    OnCropCompleteListener cropCompleteListener;
 
     private static AndroidImagePicker mInstance;
     public static AndroidImagePicker getInstance(){
@@ -136,30 +137,30 @@ public class AndroidImagePicker {
     /**
      * listeners of image crop complete
      */
-    private List<OnImageCropCompleteListener> mImageCropCompleteListeners;
-    public void addOnImageCropCompleteListener(OnImageCropCompleteListener l){
-        if(mImageCropCompleteListeners == null){
-            mImageCropCompleteListeners = new ArrayList<>();
-            Log.i(TAG, "=====create new ImageCropCompleteListener List");
-        }
-        this.mImageCropCompleteListeners.add(l);
-        Log.i(TAG,"=====addOnImageCropCompleteListener:"+l.getClass().toString());
-    }
-    public void removeOnImageCropCompleteListener(OnImageCropCompleteListener l){
-        if(mImageCropCompleteListeners == null){
-            return;
-        }
-        this.mImageCropCompleteListeners.remove(l);
-        Log.i(TAG, "=====remove mImageCropCompleteListeners:" + l.getClass().toString());
-    }
-    public void notifyImageCropComplete(Bitmap bmp,int ratio) {
-        if(mImageCropCompleteListeners != null){
-            Log.i(TAG,"=====notify onImageCropCompleteListener  bitmap="+bmp.toString()+"  ratio="+ratio);
-            for(OnImageCropCompleteListener l : mImageCropCompleteListeners){
-                l.onImageCropComplete(bmp,ratio);
-            }
-        }
-    }
+//    private List<OnImageCropCompleteListener> mImageCropCompleteListeners;
+//    public void addOnImageCropCompleteListener(OnImageCropCompleteListener l){
+//        if(mImageCropCompleteListeners == null){
+//            mImageCropCompleteListeners = new ArrayList<>();
+//            Log.i(TAG, "=====create new ImageCropCompleteListener List");
+//        }
+//        this.mImageCropCompleteListeners.add(l);
+//        Log.i(TAG,"=====addOnImageCropCompleteListener:"+l.getClass().toString());
+//    }
+//    public void removeOnImageCropCompleteListener(OnImageCropCompleteListener l){
+//        if(mImageCropCompleteListeners == null){
+//            return;
+//        }
+//        this.mImageCropCompleteListeners.remove(l);
+//        Log.i(TAG, "=====remove mImageCropCompleteListeners:" + l.getClass().toString());
+//    }
+//    public void notifyImageCropComplete(Bitmap bmp,int ratio) {
+//        if(mImageCropCompleteListeners != null){
+//            Log.i(TAG,"=====notify onImageCropCompleteListener  bitmap="+bmp.toString()+"  ratio="+ratio);
+//            for(OnImageCropCompleteListener l : mImageCropCompleteListeners){
+//                l.onImageCropComplete(bmp,ratio);
+//            }
+//        }
+//    }
 
     /**
      * listener of picture taken
@@ -265,10 +266,10 @@ public class AndroidImagePicker {
             mImageSelectedListeners.clear();
             mImageSelectedListeners = null;
         }
-        if(mImageCropCompleteListeners != null){
-            mImageCropCompleteListeners.clear();
-            mImageCropCompleteListeners = null;
-        }
+//        if(mImageCropCompleteListeners != null){
+//            mImageCropCompleteListeners.clear();
+//            mImageCropCompleteListeners = null;
+//        }
 
         //mSelectedImages.clear();
         //mSelectedImages = null;
@@ -441,8 +442,24 @@ public class AndroidImagePicker {
     }
 
 
-    public interface OnImageCropCompleteListener{
-        void onImageCropComplete(Bitmap bmp, float ratio);
+//    public interface OnImageCropCompleteListener{
+//        void onImageCropComplete(Bitmap bmp, float ratio);
+//    }
+
+
+    public void setCropCompleteListener(OnCropCompleteListener cropCompleteListener) {
+        this.cropCompleteListener = cropCompleteListener;
+    }
+
+    public OnCropCompleteListener getCropCompleteListener() {
+        return cropCompleteListener;
+    }
+
+    /**
+     * 图片选择的回调接口
+     */
+    public interface OnCropCompleteListener {
+        void cropComplete(Uri fileUri, Bitmap bitmap);
     }
 
     public interface OnPictureTakeCompleteListener{

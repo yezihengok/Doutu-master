@@ -121,10 +121,7 @@ public class ImagePreviewActivity extends FragmentActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.btn_pic_rechoose) {
-            finish();
-
-        } else if (i == R.id.btn_ok) {
+         if (i == R.id.btn_ok) {
             setResult(RESULT_OK);// select complete
             finish();
 

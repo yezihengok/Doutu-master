@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -60,6 +61,7 @@ import com.pizidea.imagepicker.data.OnImagesLoadedListener;
 import com.pizidea.imagepicker.data.impl.LocalDataSource;
 import com.pizidea.imagepicker.widget.SuperCheckBox;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +71,7 @@ import java.util.List;
  * Created by Eason.Lai on 2015/11/1 10:42 <br/>
  * contact：easonline7@gmail.com <br/>
  */
-public class ImagesGridFragment extends Fragment implements OnImagesLoadedListener,AndroidImagePicker.OnImageSelectedListener,AndroidImagePicker.OnImageCropCompleteListener{
+public class ImagesGridFragment extends Fragment implements OnImagesLoadedListener,AndroidImagePicker.OnImageSelectedListener{
     private static final String TAG = ImagesGridFragment.class.getSimpleName();
 
     Activity mContext;
@@ -92,6 +94,15 @@ public class ImagesGridFragment extends Fragment implements OnImagesLoadedListen
     private static final int ITEM_TYPE_CAMERA = 0;//the first Item may be Camera
     private static final int ITEM_TYPE_NORMAL = 1;
 
+    public static ImagesGridFragment newInstance(boolean isCrop){
+        ImagesGridFragment fragment = new ImagesGridFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("isCrop",isCrop);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +112,6 @@ public class ImagesGridFragment extends Fragment implements OnImagesLoadedListen
         //androidImagePicker.clear();
 
         androidImagePicker.addOnImageSelectedListener(this);
-        androidImagePicker.addOnImageCropCompleteListener(this);
 
         //androidImagePicker.clearSelectedImages();
         androidImagePicker.setCurrentSelectedImageSetPosition(0);
@@ -203,10 +213,6 @@ public class ImagesGridFragment extends Fragment implements OnImagesLoadedListen
         Log.i(TAG,"=====EVENT:onImageSelected");
     }
 
-    @Override
-    public void onImageCropComplete(Bitmap bmp, float ratio) {
-        getActivity().finish();
-    }
 
     /**
      * Adapter of image GridView
@@ -563,25 +569,39 @@ public class ImagesGridFragment extends Fragment implements OnImagesLoadedListen
     @Override
     public void onDestroy() {
         androidImagePicker.removeOnImageItemSelectedListener(this);
-        androidImagePicker.removeOnImageCropCompleteListener(this);
+
         //androidImagePicker.clear();
         Log.i(TAG,"=====removeOnImageItemSelectedListener");
-        Log.i(TAG,"=====removeOnImageCropCompleteListener");
+
         super.onDestroy();
     }
 
+
+    //图库中选择拍照item的onActivityResult
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == AndroidImagePicker.REQ_CAMERA && resultCode == Activity.RESULT_OK){
-            if(!TextUtils.isEmpty(androidImagePicker.getCurrentPhotoPath())){
-                AndroidImagePicker.galleryAddPic(mContext,androidImagePicker.getCurrentPhotoPath() );
-                getActivity().finish();
-                androidImagePicker.notifyPictureTaken();
+            String path=androidImagePicker.getCurrentPhotoPath();
+            if(!TextUtils.isEmpty(path)){
+                //如果是剪裁
+                if(getArguments().getBoolean("isCrop")){
+                    File file=new File(path);
+                    ((ImagesGridActivity)getActivity()).startCropActivity(Uri.fromFile(file));
+                }else{
+                    //返回拍照结果
+                    AndroidImagePicker.galleryAddPic(mContext,path);
+                    getActivity().finish();
+                    androidImagePicker.notifyPictureTaken();
+                }
             }else{
                 Log.i(TAG,"didn't save to your path");
             }
+
+
+
+
         }
 
     }

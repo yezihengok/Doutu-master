@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.example.yzh.mylibrary.R;
 import com.pizidea.imagepicker.AndroidImagePicker;
 import com.pizidea.imagepicker.ImagePresenter;
@@ -55,7 +56,7 @@ public class AvatarCropFragment extends Fragment{
     AvatarRectView mRectView;
 
     private int screenWidth;
-    private final int margin = 30;//the left and right margins of the center circular shape
+    private final int margin = 20;//the left and right margins of the center circular shape
 
     private FrameLayout rootView;
 
@@ -119,7 +120,9 @@ public class AvatarCropFragment extends Fragment{
         if(expectSize <= 0){
             return null;
         }
-        Bitmap srcBitmap = ((BitmapDrawable)superImageView.getDrawable()).getBitmap();
+        //因为使用的是glide 加载的 所以 需强转GlideBitmapDrawable
+        Bitmap srcBitmap = ((GlideBitmapDrawable)superImageView.getDrawable()).getBitmap();
+        // srcBitmap = ((BitmapDrawable)superImageView.getDrawable()).getBitmap();
         double rotation = superImageView.getImageRotation();
         int level = (int) Math.floor((rotation + Math.PI / 4) / (Math.PI / 2));
         if (level != 0){

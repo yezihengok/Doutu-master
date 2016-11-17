@@ -19,18 +19,28 @@
 package com.pizidea.imagepicker.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.yzh.mylibrary.R;
 import com.pizidea.imagepicker.AndroidImagePicker;
 import com.pizidea.imagepicker.bean.ImageItem;
+import com.pizidea.imagepicker.crop.CropActivity;
+import com.pizidea.imagepicker.crop.UCrop;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 public class ImagesGridActivity extends FragmentActivity implements View.OnClickListener,AndroidImagePicker.OnImageSelectedListener {
@@ -41,12 +51,16 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
     ImagesGridFragment mFragment;
     AndroidImagePicker androidImagePicker;
     String imagePath;
-
+     boolean isCrop=false;//是否为剪裁
+    // 剪切后图像文件
+    private Uri mDestinationUri;
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images_grid);
-
+        context=this;
+        mDestinationUri = Uri.fromFile(new File(this.getCacheDir(), "cropImage.jpeg"));
         androidImagePicker = AndroidImagePicker.getInstance();
         androidImagePicker.clearSelectedImages();//most of the time you need to clear the last selected images or you can comment out this line
 
@@ -66,12 +80,12 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
             }
         });
 
-        final boolean isCrop = getIntent().getBooleanExtra("isCrop",false);
+        isCrop = getIntent().getBooleanExtra("isCrop",false);
         imagePath = getIntent().getStringExtra(AndroidImagePicker.KEY_PIC_PATH);
-        mFragment = new ImagesGridFragment();
-        /*Bundle data = new Bundle();
-        data.putString(AndroidImagePicker.KEY_PIC_PATH,imagePath);
-        mFragment.setArguments(data);*/
+        mFragment =  ImagesGridFragment.newInstance(isCrop);
+//        Bundle data = new Bundle();
+//        data.putString(AndroidImagePicker.KEY_PIC_PATH,imagePath);
+//        mFragment.setArguments(data);
 
         mFragment.setOnImageItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -83,10 +97,9 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
                     go2Preview(position);
                 }else if(androidImagePicker.getSelectMode() == AndroidImagePicker.Select_Mode.MODE_SINGLE){
                     if(isCrop){
-                        Intent intent = new Intent();
-                        intent.setClass(ImagesGridActivity.this,ImageCropActivity.class);
-                        intent.putExtra(AndroidImagePicker.KEY_PIC_PATH,androidImagePicker.getImageItemsOfCurrentImageSet().get(position).path);
-                        startActivityForResult(intent, AndroidImagePicker.REQ_CAMERA);
+
+                        File file=new File(androidImagePicker.getImageItemsOfCurrentImageSet().get(position).path);
+                        startCropActivity(Uri.fromFile(file));
                     }else{
                         androidImagePicker.clearSelectedImages();
                         androidImagePicker.addSelectedImageItem(position, androidImagePicker.getImageItemsOfCurrentImageSet().get(position));
@@ -109,6 +122,19 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
     }
 
     /**
+     * 裁剪图片方法实现
+     *
+     * @param uri
+     */
+    public void startCropActivity(Uri uri) {
+        UCrop.of(uri, mDestinationUri)
+                .withAspectRatio(1, 1)//剪裁的宽高比为1:1
+                .withMaxResultSize(512, 512)//剪裁最大尺寸为512*512
+                .withTargetActivity(CropActivity.class)
+                .start(this);
+    }
+
+    /**
      * 预览页面
      * @param position
      */
@@ -123,10 +149,7 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.btn_pic_rechoose) {
-            finish();
-
-        } else if (i == R.id.btn_ok) {
+       if (i == R.id.btn_ok) {
             finish();
             androidImagePicker.notifyOnImagePickComplete(androidImagePicker.getSelectedImages());
             //setResult(RESULT_OK);
@@ -169,10 +192,56 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
             }else if(requestCode == AndroidImagePicker.REQ_PREVIEW){
                 setResult(RESULT_OK);
                 finish();
-            }
+
+            }else if(requestCode == UCrop.REQUEST_CROP){  // 裁剪图片结果
+                handleCropResult(data);
+            }else if(requestCode == UCrop.RESULT_ERROR){// 裁剪图片错误
+                handleCropError(data);
+        }
 
         }
 
+    }
+
+    /**
+     * 处理剪切成功的返回值
+     *
+     * @param result
+     */
+    public void handleCropResult(Intent result) {
+
+        final Uri resultUri = UCrop.getOutput(result);
+        if (null != resultUri) {
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), resultUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            AndroidImagePicker.getInstance().getCropCompleteListener().cropComplete(resultUri, bitmap);
+
+            finish();
+        } else {
+            Toast.makeText(context, "无法剪切选择图片", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 处理剪切失败的返回值
+     *
+     * @param result
+     */
+    public void handleCropError(Intent result) {
+
+        final Throwable cropError = UCrop.getError(result);
+        if (cropError != null) {
+            Log.e("", "handleCropError: ", cropError);
+            Toast.makeText(context, cropError.getMessage(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(context, "无法剪切选择图片", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
