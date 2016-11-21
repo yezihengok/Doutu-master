@@ -13,9 +13,13 @@
 * Gilde操作使用：加载圆形图、利用Gilde下载图片。
 * popWindow+属性动画实现的通知效果
 * QQ 微信SDK 分享使用、直接调用微信QQ分享界面
-* SwipeRefreshLayout和RecyclerView结合实现下拉刷新，以及的用法，还有RecyclerView中item的点击事件的实现方法；
+* SwipeRefreshLayout和RecyclerView结合实现下拉刷新，以及的用法，还有RecyclerView中item的点击事件的实现方法等...
 * 其它DEMO中运用到的框架
    感谢：xrecyclerview、glide、okhttputils opengit等开源作者
+
+   Tips：关于微信分享SDK机制，是我微信开发者平台注册我自己的机器打包的签名才能分享成功的，你自己运行项目的签名和我机器打包的签名肯定是不一样的。
+   所以微信分享大家看看代码实现就好，要实现微信分享需要你到微信开发者中心注册。至于效果app我已上架至应用宝
+* 应用宝下载地址：http://sj.qq.com/myapp/detail.htm?apkName=com.yzi.doutu
 
 ####效果动图：
 
