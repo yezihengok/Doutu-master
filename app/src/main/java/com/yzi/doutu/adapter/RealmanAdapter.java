@@ -27,21 +27,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.pizidea.imagepicker.ImagePresenter;
 import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
 import com.yzi.doutu.bean.DataBean;
-import com.yzi.doutu.bean.NewPic;
 import com.yzi.doutu.utils.CommInterface;
-import com.yzi.doutu.utils.CommUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Monkey on 2015/6/29.
+ * Created by yzh on 2015/6/29.
  */
 public class RealmanAdapter extends RecyclerView.Adapter<RealmanAdapter.ViewHolder> {
 
@@ -55,7 +50,7 @@ public class RealmanAdapter extends RecyclerView.Adapter<RealmanAdapter.ViewHold
   public Context mContext;
   public List<DataBean> mDatas;
   public LayoutInflater mLayoutInflater;
-  ImagePresenter presenter;
+  UilImagePresenter presenter;
   public void setmDatas(List<DataBean> mDatas) {
     this.mDatas = mDatas;
   }
@@ -98,9 +93,6 @@ public class RealmanAdapter extends RecyclerView.Adapter<RealmanAdapter.ViewHold
 
     holder.mTextView.setText(mDatas.get(position).getName());
     presenter.onPresentImage(holder.img,mDatas.get(position).getPicPath());
-
-
-
 
   }
 

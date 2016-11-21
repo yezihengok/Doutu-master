@@ -3,7 +3,6 @@ package com.yzi.doutu.activity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -33,7 +32,7 @@ public class MyFavoritesActivity extends BaseActivity implements CommInterface.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         application.addActivity(this);
-        setContentView(R.layout.activity_moretype_list);
+        setContentView(R.layout.activity_diy);
         initView();
     }
 
@@ -57,7 +56,7 @@ public class MyFavoritesActivity extends BaseActivity implements CommInterface.O
         mRecyclerView.setLoadingMoreEnabled(false);
         mRecyclerView.setPullRefreshEnabled(false);
         beanList=new ArrayList<>();
-        mAdapter = new HotListAdapter(this,beanList,1);
+        mAdapter = new HotListAdapter(this,beanList,1,null);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
         getFavorites();

@@ -96,9 +96,9 @@ public class NewListAdapter extends RecyclerView.Adapter<NewListAdapter.NewListH
 
     if (mDatas.get(position).getGifPath().endsWith("gif") ||
             mDatas.get(position).getGifPath().endsWith("GIF")) {
-      ((UilImagePresenter)presenter).displayGif(holder.img,mDatas.get(position).getGifPath());
+      ((UilImagePresenter)presenter).displayGif(holder.img,mDatas.get(position).getGifPath(),CommUtil.getScreenWidth()/2);
     }else{
-      presenter.onPresentImage(holder.img,mDatas.get(position).getPicPath());
+      presenter.onPresentImage(holder.img,mDatas.get(position).getPicPath(),CommUtil.getScreenWidth()/2);
     }
 
     //列表加载太多的GIF会oom ,这里还是显示jpg,分享发送时在显示gif

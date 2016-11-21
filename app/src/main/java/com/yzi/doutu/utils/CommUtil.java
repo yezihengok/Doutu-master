@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -48,15 +49,19 @@ import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.service.DouApplication;
 import com.yzi.doutu.service.WindowService;
 import com.yzi.doutu.share.QQShareManager;
+import com.yzi.doutu.share.WechatShareManager;
 import com.yzi.doutu.utils.gifdecoder.GifAction;
 import com.yzi.doutu.utils.gifdecoder.GifDecoder;
 import com.yzi.doutu.utils.gifdecoder.GifFrame;
 import com.yzi.doutu.view.ColorTagImageView;
 import com.yzi.doutu.view.LoadDialog;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -76,17 +81,19 @@ public class CommUtil {
 
     private static LoadDialog frameDialog;
     static Toast toast;
-    public static final String qq_key = "1105824118";//zhb-1104579965
-    public static final String WECHAT_APP_ID = "wxacc4322798406c76";//zhb
+    public static final String qq_key = "1105824118";
+    public static final String WECHAT_APP_ID = "wx45177b7a5c561cfb";
     public static final String QQ = "com.tencent.mobileqq";
     public static final String WeChat = "com.tencent.mm";
     public static final String WEIBA = "Qweiba";
     public static String FLAG;
 
 
-    /**是否开启了QQ尾巴分享 ,如果开启了调用系统分享改为调用QQSDK分享**/
-    public static boolean isQQopen() {
-        return SharedUtils.getBoolean(WEIBA,DouApplication.getInstance(),WEIBA,false);
+    /**
+     * 是否开启了QQ尾巴分享 ,如果开启了调用系统分享改为调用QQSDK分享
+     **/
+    public static boolean isWeiBaopen() {
+        return SharedUtils.getBoolean(WEIBA, DouApplication.getInstance(), WEIBA, true);
     }
 
     /**
@@ -96,8 +103,8 @@ public class CommUtil {
     /**
      * 最热表情图片列表
      **/
-    // public static final String HOT_URL="http://api.jiefu.tv/app2/api/dt/item/hotList.html";
-    public static final String HOT_URL = "http://api.jiefu.tv/app2/api/dt/item/newList.html";
+    public static final String HOT_URL = "http://api.jiefu.tv/app2/api/dt/item/hotList.html";
+    //public static final String HOT_URL = "http://api.jiefu.tv/app2/api/dt/item/newList.html";
     /**
      * 最新表情图片列表
      **/
@@ -204,7 +211,7 @@ public class CommUtil {
 
 
     /**
-     * 利用Glide 把图片下载本地
+     * 利用Glide 把图片下载本地(额...准确的说应该是 从glide缓存里复制图片文件到指定的文件夹)
      *
      * @param dataBean
      * @param context
@@ -237,47 +244,74 @@ public class CommUtil {
      *
      * @param dataBean
      * @param context
-     * @param flag     0调用系统分享  1直接跳转到QQ界面分享 2直接跳转到微信界面分享
+     * @param flag     0调用系统分享 1直接跳转到QQ界面分享 2直接跳转到微信界面分享<br/>SDK分享： 3 qq分享 4qq空间 5微信 6朋友圈
      */
     public static void onDownLoad(DataBean dataBean, final Context context, final int flag) {
-        //showWaitDialog(context, "加载中...", false);
+        //经测试gif图片可以分享到QQ空间但是 QQ空间是无法展示动图的只会显示静态。，而分享到朋友圈是直接跳转不过去- -！
+        //静态图片没什么问题。
+
+        //从我的制作过了的直接分享，其它情况需先下载在分享
+        if (!TextUtils.isEmpty(dataBean.getMadeUrl())) {
+            toShare(dataBean.getMadeUrl(), flag, context);
+            return;
+        }
         //启动图片下载线程
         DownLoadImageService service = new DownLoadImageService(context, dataBean,
                 new CommInterface.ImageDownLoadCallBack() {
-
                     @Override
                     public void onDownLoadSuccess(final String filePath) {
-                        if (flag == 0) {
-                            toShare(context, new File(filePath));
-                        } else if (flag == 1) {
-
-                            //是否开启了QQ尾巴分享
-                            if (isQQopen()) {
-                                //使用QQSDK分享
-                                QQShareManager.getInstance(context).toQShare(filePath);
-                            } else {
-                                shareQQ(context, new File(filePath));
-                            }
-
-                        } else if (flag == 2) {
-
-                            shareToWechat(context, new File(filePath));
-                        }
-
+                        toShare(filePath, flag, context);
                         //closeWaitDialog();
                     }
 
                     @Override
                     public void onDownLoadFailed() {
-                        // 图片保存失败
                         //closeWaitDialog();
                         showToast("获取图片失败");
                     }
                 });
-        //启动图片下载线程
-        new Thread(service).start();
+        new Thread(service).start();        //启动图片下载线程
     }
 
+
+    /**
+     * 去分享图片
+     *
+     * @param filePath 图片本地路径
+     * @param flag     0 调用系统分享 1 直接跳转到QQ界面分享 2 直接跳转到微信界面分享
+     *                 <br/>SDK分享：3 qq分享 4qq空间 5微信 6朋友圈
+     * @param context
+     */
+    static void toShare(String filePath, int flag, final Context context) {
+        if (flag == 0) {
+            toShare(context, new File(filePath));
+        } else if (flag == 1) {
+            shareQQ(context, new File(filePath));
+        } else if (flag == 2) {
+            shareToWechat(context, new File(filePath));
+        } else if (flag == 3) {
+            QQShareManager.getInstance(context).toQShare(filePath);
+        } else if (flag == 4) {
+            QQShareManager.getInstance(context).toQZoneShare(filePath);
+        } else if (flag == 5) {
+            WechatShareManager.getInstance(context).sharePic(filePath, 0);
+        } else if (flag == 6) {
+            //因为微信朋友圈无法接收gif,所以这里如果发送的是gif 我复制一个静态图在发到朋友圈
+            if (isGif(filePath)) {
+               final String newPath = ImageUtils.FILE_ROOT_PATH + "/new.jpg";
+                saveCompressFile(filePath, newPath
+                        , new CommInterface.setFinishListener() {
+                            @Override
+                            public void onFinish() {
+                                WechatShareManager.getInstance(context).sharePic(newPath, 1);
+                            }
+                        });
+            } else {
+                WechatShareManager.getInstance(context).sharePic(filePath, 1);
+            }
+
+        }
+    }
 
     /**
      * 调用系统分享
@@ -286,13 +320,15 @@ public class CommUtil {
      * @param file
      */
     public static synchronized void toShare(Context context, File file) {
-        if (file != null) {
+        if (file != null && file.exists()) {
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
             shareIntent.setType("image/*");
             context.startActivity(Intent.createChooser(shareIntent
                     , context.getResources().getText(R.string.app_name)));
+        } else {
+            showToast("图片原文件已不存在");
         }
     }
 
@@ -389,6 +425,7 @@ public class CommUtil {
         TextView share_name;
         ImageView share_img;
         Button share_send, share_save, share_update;
+        LinearLayout sdkShare_layout, qq, qqZone, wechat, wechatFriends;
         //if(sharePopView==null){
         sharePopView = LayoutInflater.from(context).inflate(R.layout.share_dialog, null);
         share_img = (ImageView) sharePopView.findViewById(R.id.share_img);
@@ -396,10 +433,18 @@ public class CommUtil {
         share_send = (Button) sharePopView.findViewById(R.id.share_send);
         share_save = (Button) sharePopView.findViewById(R.id.share_save);
         share_update = (Button) sharePopView.findViewById(R.id.share_update);
+        sdkShare_layout = (LinearLayout) sharePopView.findViewById(R.id.sdkShare_layout);
+        qq = (LinearLayout) sharePopView.findViewById(R.id.qq);
+        qqZone = (LinearLayout) sharePopView.findViewById(R.id.qqZone);
+        wechat = (LinearLayout) sharePopView.findViewById(R.id.wechat);
+        wechatFriends = (LinearLayout) sharePopView.findViewById(R.id.wechatFriends);
         //}
-
+        String url = dataBean.getMadeUrl();
+        if (TextUtils.isEmpty(url)) {
+            url = dataBean.getGifPath();
+        }
         Glide.with(context)
-                .load(dataBean.getGifPath())
+                .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 //.crossFade()
                 .thumbnail(0.5f)
@@ -410,73 +455,90 @@ public class CommUtil {
         share_name.setText(dataBean.getName());
         final PopupWindowHelper pop = new PopupWindowHelper(sharePopView, context, PopupWindowHelper.TYPE_MATCH_PARENT);
         pop.showFromBottom(context);
+
         final String tag = dataBean.getFormWhere();
-
-
-        if (isQQopen()) {
-            share_send.setText("QQ分享");
-        }
-
-        share_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-        //从我的制作列表进来的话，直接发送SD卡里制作过的图片，不在下载,否则先下载在分享
-        if (!"DIY".equals(tag)) {
-            if (isQQopen()) {
-                CommUtil.onDownLoad(dataBean, context, 1);
-            } else {
-                CommUtil.onDownLoad(dataBean, context, 0);
-            }
-
+        if (isWeiBaopen()) {
+            share_send.setVisibility(View.GONE);
+            sdkShare_layout.setVisibility(View.VISIBLE);
         } else {
-
-            if (isQQopen()) {
-                QQShareManager.getInstance(context).toQShare(dataBean.getGifPath());
-            } else {
-                toShare(context, new File(dataBean.getGifPath()));
-            }
+            share_send.setVisibility(View.VISIBLE);
+            sdkShare_layout.setVisibility(View.GONE);
         }
-
-            }
-        });
-
-        if (!TextUtils.isEmpty(tag)) {
+        if("Favorites".equals(tag)||"DIY".equals(tag)) {
             share_save.setText("删除");
             if ("DIY".equals(tag)) {
                 share_name.setVisibility(View.GONE);
                 share_update.setVisibility(View.VISIBLE);
-                share_update.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toAddText(dataBean, context, listener);
-                        pop.dismiss();
-                    }
-                });
             }
         }
-        share_save.setOnClickListener(new View.OnClickListener() {
+
+        View.OnClickListener dialogListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                switch (v.getId()) {
 
-                if (TextUtils.isEmpty(tag)) {
-                    DBTools.getInstance(context).addFavorites(dataBean);
-                    showToast("已收藏");
-                    pop.dismiss();
+                    case R.id.share_update://改字
+                        toAddText(dataBean, context, listener);
+                        pop.dismiss();
+                        break;
 
-                } else {
+                    case R.id.share_save://收藏&删除
+                        if ("newlist".equals(tag)) {
+                            DBTools.getInstance(context).addFavorites(dataBean);
+                            showToast("已收藏");
+                            pop.dismiss();
 
-                    if ("Favorites".equals(tag)) {
-                        DBTools.getInstance(context).remove(dataBean.getId());
-                    } else if ("DIY".equals(tag)) {
-                        DBTools.getInstance(context).deleteByid_made(String.valueOf(dataBean.getId()));
-                    }
-                    listener.onFinish();
-                    pop.dismiss();
+                        } else {
+
+                            if ("Favorites".equals(tag)) {
+                                DBTools.getInstance(context).remove(dataBean.getId());
+                            } else if ("DIY".equals(tag)) {
+                                DBTools.getInstance(context).deleteByid_made(String.valueOf(dataBean.getId()));
+                            }
+
+                            pop.dismiss();
+                            if(listener!=null)
+                                listener.onFinish();
+                        }
+                        break;
+
+                    case R.id.share_send://系统分享
+                        onDownLoad(dataBean, context, 0);
+                        break;
+                    case R.id.qq:
+                        onDownLoad(dataBean, context, 3);
+                        break;
+                    case R.id.qqZone:
+                        onDownLoad(dataBean, context, 4);
+                        break;
+                    case R.id.wechat:
+                        onDownLoad(dataBean, context, 5);
+                        break;
+                    case R.id.wechatFriends:
+                        onDownLoad(dataBean, context, 6);
+                        break;
                 }
             }
-        });
+        };
+
+        qq.setOnClickListener(dialogListener);
+        qqZone.setOnClickListener(dialogListener);
+        wechat.setOnClickListener(dialogListener);
+        wechatFriends.setOnClickListener(dialogListener);
+        share_send.setOnClickListener(dialogListener);
+
+        share_update.setOnClickListener(dialogListener);
+
+        if(!TextUtils.isEmpty(tag)){
+            share_save.setOnClickListener(dialogListener);
+        }else{
+            share_save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommUtil.showToast("分享后请到【我的制作】查看");
+                }
+            });
+        }
 
     }
 
@@ -488,9 +550,9 @@ public class CommUtil {
      * @param finishListener
      * @return
      */
-    public static Dialog showgifMaker(final Context context, final DataBean dataBean
+    public void showgifMaker(final Context context, final DataBean dataBean
             , final CommInterface.setFinishListener finishListener) {
-        int width = getScreenWidth(context);
+        int width = getScreenWidth();
         final Dialog showDialog = new Dialog(context);
         showDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         showDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
@@ -509,13 +571,7 @@ public class CommUtil {
         ImageView gifDialogImg = (ImageView) showDialog.findViewById(R.id.gifDialogImg);
         final EditText edmsg = (EditText) showDialog.findViewById(R.id.ed_msg);
 
-        String url;
-        if (!TextUtils.isEmpty(dataBean.getOldUrl())) {//如果是已经制作过了的图片就展示原图
-            url = dataBean.getOldUrl();
-        } else {
-            url = dataBean.getGifPath();
-        }
-        new UilImagePresenter().onImage(gifDialogImg, url);
+        new UilImagePresenter().onImage(gifDialogImg, dataBean.getGifPath());
 
         lyShowFrame.getLayoutParams().width = width - 120;
         edmsg.getLayoutParams().width = dip2px(context, 200);
@@ -544,7 +600,6 @@ public class CommUtil {
             }
         });
 
-        return showDialog;
     }
 
 
@@ -558,7 +613,7 @@ public class CommUtil {
      * @param editText
      * @param showDialog
      */
-    public static void decodeGif(final DataBean dataBean, final Context context, final EditText editText
+    public void decodeGif(final DataBean dataBean, final Context context, final EditText editText
             , final Dialog showDialog, final CommInterface.setFinishListener listener) {
         showWaitDialog(context, "处理中...", false);
         CommUtil.onDownLoad(dataBean, context, new CommInterface.setListener() {
@@ -579,40 +634,35 @@ public class CommUtil {
                             if (frameIndex == -1) { //只有当-1的时候才说明解码完成，否则会解析得到一帧就会调用一次
                                 for (int i = 0; i <= decoder.getFrameCount(); i++) {
                                     GifFrame frame = decoder.next();
-                                    String fileName = dataBean.getName() + i + ".png";
+                                    String fileName = dataBean.getName() + i + ".jpg";
                                     Bitmap bitmaps = drawTextToBitmap(frame.image, editText);
                                     String filePath = ImageUtils.saveBitmapToFile(bitmaps, fileName);
                                     paths.add(filePath);
                                     Log.v("", "已保存至:" + filePath);
                                 }
 
-                                ImageUtils.createGif(dataBean, paths, 75, new CommInterface.setListener() {
+                                ImageUtils.createGif(dataBean, paths, 70, new CommInterface.setListener() {
                                     @Override
                                     public void onResult(String picpath) {
                                         showDialog.dismiss();
                                         closeWaitDialog();
-                                        if (isQQopen()) {
-                                            QQShareManager.getInstance(context).toQShare(picpath);
+
+                                        dataBean.setMadeUrl(picpath);
+
+                                        if (isWeiBaopen()) {
+                                            showSharePop(context, dataBean, null);
                                         } else {
-                                            toShare(context, new File(picpath));
-                                        }
-                                        //为空的情况下才需要设置原图地址
-                                        if (TextUtils.isEmpty(dataBean.getOldUrl())) {
-                                            String oldUrl = dataBean.getGifPath();
-                                            dataBean.setOldUrl(oldUrl);
+                                            onDownLoad(dataBean, context, 0);
                                         }
 
-                                        //这里dataBean是会影响外面传进来dataBean
-                                        dataBean.setGifPath(picpath);//替换网址路径为SD文件路径
 
                                         DBTools.getInstance(context).addMades(dataBean);
                                         SimpleFileUtils.delFile(ImageUtils.FILE_ROOT_PATH, 0, null);//清空分解的文件夹
-
+                                        if (listener != null)
+                                            listener.onFinish();
                                     }
                                 });
 
-                                if (listener != null)
-                                    listener.onFinish();
                             }
                         }
                     });
@@ -713,7 +763,7 @@ public class CommUtil {
     public static Dialog showDialog(Context context, String msg, String leftName, String rightName
             , final CommInterface.setClickListener leftlistener,
                                     final CommInterface.setClickListener rightlistener) {
-        int width = getScreenWidth(context);
+        int width = getScreenWidth();
 
         final Dialog showDialog = new Dialog(context);
         showDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -771,9 +821,9 @@ public class CommUtil {
 
     public void toAddText(DataBean dataBean, final Context context, final CommInterface.setFinishListener finishListener) {
         String URL = dataBean.getGifPath();
-        if (URL.endsWith("GIF") || URL.endsWith("gif")) {
-            CommUtil.showgifMaker(context, dataBean, finishListener);
 
+        if (isGif(URL)) {
+            showgifMaker(context, dataBean, finishListener);
         } else {
             Intent intent = new Intent(context, ModifyPicActivity.class);
             intent.putExtra("dataBean", dataBean);
@@ -811,8 +861,8 @@ public class CommUtil {
      * @param spValue （DisplayMetrics类中属性scaledDensity）
      * @return
      */
-    public static int sp2px(Context context, float spValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+    public static int sp2px(float spValue) {
+        final float fontScale = DouApplication.getInstance().getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }
 
@@ -834,26 +884,22 @@ public class CommUtil {
 
 
     /**
-     * 屏幕框的
-     *
-     * @param context
+     * 屏幕框
      * @return
      */
-    public static int getScreenWidth(Context context) {
+    public static int getScreenWidth() {
         DisplayMetrics dm = new DisplayMetrics();
-        dm = context.getResources().getDisplayMetrics();
+        dm = DouApplication.getInstance().getResources().getDisplayMetrics();
         return dm.widthPixels;
     }
 
     /**
      * 屏幕高度
-     *
-     * @param context
      * @return
      */
-    public static int getScreenHeight(Context context) {
+    public static int getScreenHeight() {
         DisplayMetrics dm = new DisplayMetrics();
-        dm = context.getResources().getDisplayMetrics();
+        dm = DouApplication.getInstance().getResources().getDisplayMetrics();
         return dm.heightPixels;
     }
 
@@ -1044,5 +1090,99 @@ public class CommUtil {
         }
         tmptf = Typeface.create(tmptf, type);
         return tmptf;
+    }
+
+    /**
+     * cppyFile 将图片复制保存到指定文件夹
+     *
+     * @param fileOld     原文件File
+     * @param pathNew     新文件路径  /storage/emulated/0/
+     * @param newFileName 新文件名称 /a.jpg
+     */
+    public static void cppyFile(File fileOld, final String pathNew, final String newFileName
+            , final CommInterface.setListener listener) {
+        //File fileOld = new File(fileOld);
+        File fileNew = new File(pathNew);
+        if (!fileNew.exists()) {
+            fileNew.mkdir();
+        }
+        if (fileOld.exists()) {
+            try {
+                FileInputStream in = new FileInputStream(fileOld);
+                FileOutputStream out = new FileOutputStream(fileNew + newFileName);
+                //使用BufferedInputStream读资源比FileInputStream读取资源的效率高
+                BufferedInputStream bufferedIn = new BufferedInputStream(in);
+                BufferedOutputStream bufferedOut = new BufferedOutputStream(out);
+                byte[] data = new byte[1];
+                while (bufferedIn.read(data) != -1) {
+                    bufferedOut.write(data);
+                }
+                bufferedOut.flush();
+                bufferedIn.close();
+                bufferedOut.close();
+
+                HandlerUtil.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onResult(pathNew + newFileName);
+                    }
+                });
+
+
+                return;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            showToast("图片原文件不存在！");
+        }
+
+    }
+
+    /**
+     * 根据文件名压缩文件再保存
+     *
+     * @param filePath
+     * @param newFilePath
+     */
+    public static void saveCompressFile(String filePath, String newFilePath
+            , final CommInterface.setFinishListener listener) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+        int height = options.outHeight;
+        int width = options.outWidth;
+
+        int inSampleSize = 1;
+        int reqHeight = 1280;
+        int reqWidth = 960;
+        if (height > reqHeight || width > reqWidth) {
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+
+        options.inSampleSize = inSampleSize;
+        options.inJustDecodeBounds = false;
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath, options);
+
+        BufferedOutputStream bos = null;
+        try {
+            bos = new BufferedOutputStream(new FileOutputStream(new File(newFilePath)));
+            //bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+            listener.onFinish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static boolean isGif(String path) {
+        return path.endsWith("gif") || path.endsWith("Gif");
     }
 }

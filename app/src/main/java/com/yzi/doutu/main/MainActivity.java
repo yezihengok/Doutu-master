@@ -3,11 +3,12 @@
 package com.yzi.doutu.main;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -36,19 +37,19 @@ import com.pizidea.imagepicker.ImagePresenter;
 import com.pizidea.imagepicker.UilImagePresenter;
 import com.pizidea.imagepicker.bean.ImageItem;
 import com.pizidea.imagepicker.ui.ImagesGridActivity;
+import com.yzi.doutu.R;
 import com.yzi.doutu.activity.AboutActivity;
 import com.yzi.doutu.activity.BaseActivity;
-import com.yzi.doutu.activity.MyFavoritesActivity;
-import com.yzi.doutu.activity.MyDIYPicActivity;
+import com.yzi.doutu.activity.ModifyPicActivity;
 import com.yzi.doutu.activity.MoreTypeActivity;
-import com.yzi.doutu.R;
+import com.yzi.doutu.activity.MyDIYPicActivity;
+import com.yzi.doutu.activity.MyFavoritesActivity;
 import com.yzi.doutu.adapter.FragmentPagerAdapter;
 import com.yzi.doutu.permission.PermissionResultAdapter;
 import com.yzi.doutu.permission.PermissionUtil;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.ContextUtil;
-import com.yzi.doutu.utils.ImageUtils;
 import com.yzi.doutu.utils.SharedUtils;
 import com.yzi.doutu.utils.SimpleFileUtils;
 
@@ -57,7 +58,7 @@ import java.util.List;
 
 import static android.view.View.OnClickListener;
 import static com.yzi.doutu.utils.CommUtil.WEIBA;
-import static com.yzi.doutu.utils.CommUtil.isQQopen;
+import static com.yzi.doutu.utils.CommUtil.isWeiBaopen;
 import static com.yzi.doutu.utils.ImageUtils.DOWN_PATH;
 import static com.yzi.doutu.utils.ImageUtils.ROOT_PATH;
 
@@ -95,10 +96,13 @@ public class MainActivity extends BaseActivity
     MenuItem qx_item,weiba_item,cache_item;
 
     boolean isopen=false;
+    private int CROP=0x111;
+    private Context context;
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.yzi.doutu.R.layout.activity_my);
         application.addActivity(this);
+        context=this;
         ContextUtil.setApplicationContext(this);
         // 初始化各种控件
         initViews();
@@ -158,7 +162,7 @@ public class MainActivity extends BaseActivity
         setweiba();
 
         if (cache_item != null) {
-            cache_item.setTitle("发送的图片缓存："+SimpleFileUtils.getAutoFileOrFilesSize(ROOT_PATH));
+            cache_item.setTitle("发送的图片缓存："+SimpleFileUtils.getAutoFileOrFilesSize(DOWN_PATH));
         }
 
 
@@ -283,14 +287,20 @@ public class MainActivity extends BaseActivity
                         break;
 
                     case R.id.nav_menu_feedback:
-                       
-                        CommUtil.showToast("打开将默认分享到QQ，关闭可分享至其它",1);
-                        if(isQQopen()){
-                            SharedUtils.putBoolean(WEIBA,MainActivity.this,WEIBA,false);
-                        }else{
-                            SharedUtils.putBoolean(WEIBA,MainActivity.this,WEIBA,true);
-                        }
-                        setweiba();
+
+                        CommUtil.showDialog(context, "-开启可直接分享至QQ空间与朋友圈.\n-关闭时可以分享发送其它不带尾巴.", "我知道了"
+                                , null, new CommInterface.setClickListener() {
+                            @Override
+                            public void onResult() {
+                                if(isWeiBaopen()){
+                                    SharedUtils.putBoolean(WEIBA,MainActivity.this,WEIBA,false);
+                                }else{
+                                    SharedUtils.putBoolean(WEIBA,MainActivity.this,WEIBA,true);
+                                }
+                                setweiba();
+                            }
+                        },null);
+
 
                         break;
 
@@ -309,7 +319,7 @@ public class MainActivity extends BaseActivity
                                     CommUtil.getAppDetailSettingIntent(MainActivity.this);
                                     CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
                                 }
-                                
+
                             }
                         }else{
                             CommUtil.showToast("不要我点了，已经开启啦~");
@@ -329,8 +339,14 @@ public class MainActivity extends BaseActivity
                                         @Override
                                         public void finish(boolean isOk) {
                                             if(isOk){
-                                                cache_item.setTitle("分享的图片缓存："
-                                                        +SimpleFileUtils.getAutoFileOrFilesSize(DOWN_PATH));
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        cache_item.setTitle("分享的图片缓存："
+                                                                +SimpleFileUtils.getAutoFileOrFilesSize(DOWN_PATH));
+                                                    }
+                                                });
+
                                             }
                                         }
                                     });
@@ -371,6 +387,29 @@ public class MainActivity extends BaseActivity
 
         if (id == com.yzi.doutu.R.id.action_settings) {
             toActivity(AboutActivity.class);
+            return true;
+        }else if(id==R.id.action_picTake){
+
+            AndroidImagePicker.getInstance().setSelectMode(AndroidImagePicker.Select_Mode.MODE_SINGLE);
+            AndroidImagePicker.getInstance().setShouldShowCamera(true);
+            final Intent intent=new Intent(this,ImagesGridActivity.class);
+            intent.putExtra("isCrop", true);
+            startActivity(intent);
+            //裁剪监听
+            AndroidImagePicker.getInstance().setCropCompleteListener(new AndroidImagePicker.OnCropCompleteListener() {
+                @Override
+                public void cropComplete(Uri fileUri, Bitmap bitmap) {
+
+                    Bundle bundle=new Bundle();
+                    bundle.putString("formWhere","takePic");
+                    bundle.putParcelable("fileUri",fileUri);
+                    Intent intent1=new Intent(MainActivity.this, ModifyPicActivity.class);
+                    intent1.putExtras(bundle);
+                   // startActivity(intent);
+                    MainActivity.this.onActivityResult(CROP,RESULT_OK,intent1);
+                }
+            });
+
             return true;
         }
 
@@ -483,6 +522,8 @@ public class MainActivity extends BaseActivity
                 }else{
                     Log.i(TAG,"didn't save to your path");
                 }
+            }else if(requestCode==CROP){
+                startActivity(data);
             }
     }
 }

@@ -13,7 +13,7 @@ public  class DataBean implements Serializable {
     private int clickNum;
     private int clickWeight;
     private long createTime;
-    private String gifPath;//如果是制作图片，这个字段将会替换成本地图片SD的路径
+    private String gifPath;//网络图片地址 可能为gif，该字段只有在从相册选图时，该地址会保存截图的本地文件路径
     private int id;
     private int mediaType;
     private String name;
@@ -24,7 +24,7 @@ public  class DataBean implements Serializable {
     private int weight;
 
     //sqlite 所需字段
-    private String oldUrl; //原图片地址
+    private String madeUrl; // 制作的图片地址
     private String fileName;//文件名
 
     public String getFileName() {
@@ -35,12 +35,12 @@ public  class DataBean implements Serializable {
         this.fileName = fileName;
     }
 
-    public String getOldUrl() {
-        return oldUrl;
+    public String getMadeUrl() {
+        return madeUrl;
     }
 
-    public void setOldUrl(String oldUrl) {
-        this.oldUrl = oldUrl;
+    public void setMadeUrl(String madeUrl) {
+        this.madeUrl = madeUrl;
     }
 
     public String getFormWhere() {

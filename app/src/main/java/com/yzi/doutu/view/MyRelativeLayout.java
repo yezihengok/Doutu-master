@@ -5,13 +5,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,19 +17,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yzi.doutu.R;
-import com.yzi.doutu.utils.CommInterface;
-import com.yzi.doutu.utils.CommUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 说明:
- * 这是个自定义布局View
- * Created by cretin on 15/12/17.
+ * cretin on 15/12/17.
  */
 public class MyRelativeLayout extends RelativeLayout {
 
@@ -105,11 +97,16 @@ public class MyRelativeLayout extends RelativeLayout {
     ImageView bgImg;//背景图片
     private String name="新增文字";
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
 
         if(!TextUtils.isEmpty(name)){
             this.name = name;
         }
+
     }
 
     public ImageView getBgImg() {

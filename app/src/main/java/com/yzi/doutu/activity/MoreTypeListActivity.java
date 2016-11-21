@@ -1,7 +1,6 @@
 package com.yzi.doutu.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -23,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
-
-import static android.R.attr.id;
 
 /**
  * Created by yzh-t105 on 2016/9/22.

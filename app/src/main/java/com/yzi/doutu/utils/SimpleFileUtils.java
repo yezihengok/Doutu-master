@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -164,12 +166,18 @@ public class SimpleFileUtils {
 		 * @param filePath /my/aaa.txt
 		 * @param size  MB
 		 */
-		public static void  delFile(String filePath,int size,CommInterface.DoListener listener){
+		public static void  delFile(final String filePath,int size,final CommInterface.DoListener listener){
 			//String pathStr = Environment.getExternalStorageDirectory().getPath();
 			if(getFileOrFilesSize(filePath)>=1048576*size){
 				//String path = context.getFilesDir().getPath().toString() +filePath;
 				Log.d("",  filePath);
-				deleteFile(new File(filePath),listener);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						deleteFile(new File(filePath),listener);
+					}
+				}).start();
+
 			}
 		}
 		
@@ -313,4 +321,6 @@ public class SimpleFileUtils {
 		  }
 		return fileSizeString;
 		}
+
+
 }

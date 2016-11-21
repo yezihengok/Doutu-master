@@ -17,6 +17,7 @@ import com.yzi.doutu.R;
 import com.yzi.doutu.activity.MoreTypeListActivity;
 import com.yzi.doutu.bean.AllType;
 import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.utils.CommUtil;
 
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class AllTypeAdapter extends RecyclerView.Adapter<AllTypeAdapter.ViewHold
         holder.mTextView.setText(hotList.get(position).getName());
         if(!TextUtils.isEmpty(hotList.get(position).getGifPath())){
             holder.img.setVisibility(View.VISIBLE);
-            presenter.onPresentImage(holder.img,hotList.get(position).getGifPath());
+            presenter.onPresentImage(holder.img,hotList.get(position).getGifPath(), CommUtil.getScreenWidth()/3);
         }else{
             holder.img.setVisibility(View.GONE);
         }

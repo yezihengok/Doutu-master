@@ -1,10 +1,10 @@
 package com.yzi.doutu.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -60,7 +60,7 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
         mRecyclerView.setLoadingMoreEnabled(false);
         mRecyclerView.setPullRefreshEnabled(false);
         beanList=new ArrayList<>();
-        mAdapter = new HotListAdapter(this,beanList,1);
+        mAdapter = new HotListAdapter(this,beanList,1,"showMade");
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
         getFavorites();
@@ -84,7 +84,12 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
         CommUtil.getInstance().showSharePop(this, beanList.get(position),new CommInterface.setFinishListener() {
             @Override
             public void onFinish() {
-                getFavorites();
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+                        getFavorites();
+//                    }
+//                });
             }
         });
     }

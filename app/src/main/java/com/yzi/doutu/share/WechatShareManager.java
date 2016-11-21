@@ -3,11 +3,13 @@ package com.yzi.doutu.share;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.SendMessageToWX;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.tencent.mm.sdk.openapi.WXEmojiObject;
 import com.tencent.mm.sdk.openapi.WXImageObject;
 import com.tencent.mm.sdk.openapi.WXMediaMessage;
 import com.tencent.mm.sdk.openapi.WXTextObject;
@@ -16,10 +18,14 @@ import com.tencent.mm.sdk.openapi.WXWebpageObject;
 import com.tencent.mm.sdk.platformtools.Util;
 import com.yzi.doutu.R;
 import com.yzi.doutu.utils.CommUtil;
+import com.yzi.doutu.utils.ImageUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * 实现微信SDK分享功能的核心类
- * @author chengcj1
+ * @author 
  *
  */
 public class WechatShareManager {
@@ -35,6 +41,7 @@ public class WechatShareManager {
 
     private static WechatShareManager mInstance;
     private ShareContent mShareContentText, mShareContentPicture, mShareContentWebpag, mShareContentVideo;
+    ShareContent mSharePicPath;//本地图片路径分享对象
     private IWXAPI mWXApi;
     private Context mContext;
 
@@ -79,7 +86,18 @@ public class WechatShareManager {
                 shareText(shareContent, shareType);
                 break;
             case WECHAT_SHARE_WAY_PICTURE:
-                sharePicture(shareContent, shareType);
+                if(TextUtils.isEmpty(shareContent.getPicPath())){
+                    sharePicture(shareContent, shareType);
+                }else {
+                    //使用图片路径方式分享图片
+                    if(shareContent.getPicPath().endsWith("gif")||shareContent.getPicPath().endsWith("GIF")){
+                        shareGifFile(shareContent, shareType);
+                    }else{
+                        sharePicFile(shareContent, shareType);
+                    }
+
+                }
+
                 break;
             case WECHAT_SHARE_WAY_WEBPAGE:
                 shareWebPage(shareContent, shareType);
@@ -95,12 +113,12 @@ public class WechatShareManager {
         protected abstract String getContent();
         protected abstract String getTitle();
         protected abstract String getURL();
+        protected abstract String getPicPath();//本地图片路径 yzh 2016-11-18 add
         protected abstract int getPictureResource();
     }
 
     /**
      * 设置分享文字的内容
-     * @author chengcj1
      *
      */
     public class ShareContentText extends ShareContent {
@@ -135,6 +153,11 @@ public class WechatShareManager {
         }
 
         @Override
+        protected String getPicPath() {
+            return null;
+        }
+
+        @Override
         protected int getPictureResource() {
             return -1;
         }
@@ -152,13 +175,17 @@ public class WechatShareManager {
 
     /**
      * 设置分享图片的内容
-     * @author chengcj1
+     * @author 
      *
      */
     public class ShareContentPicture extends ShareContent {
-        private int pictureResource;
+        private int pictureResource;//id drawable图片
+        private String picPath;//本地图片路径
         public ShareContentPicture(int pictureResource){
             this.pictureResource = pictureResource;
+        }
+        public ShareContentPicture(String picPath){
+            this.picPath = picPath;
         }
 
         @Override
@@ -185,21 +212,34 @@ public class WechatShareManager {
         protected String getURL() {
             return null;
         }
+
+        @Override
+        protected String getPicPath() {
+            return picPath;
+        }
     }
 
     /*
-     * 获取图片分享对象
+     * 获取图片分享对象(id方式)
      */
     public ShareContent getShareContentPicture(int pictureResource) {
         if (mShareContentPicture == null) {
             mShareContentPicture = new ShareContentPicture(pictureResource);
         }
-        return (ShareContentPicture) mShareContentPicture;
+        return mShareContentPicture;
     }
+
+    /*
+    * 获取图片分享对象（本地文件路径方式）
+    */
+    public ShareContent getShareContentPicture(String picpath) {
+        return new ShareContentPicture(picpath);
+    }
+
 
     /**
      * 设置分享链接的内容
-     * @author chengcj1
+     * @author 
      *
      */
     public class ShareContentWebpage extends ShareContent {
@@ -235,6 +275,11 @@ public class WechatShareManager {
         }
 
         @Override
+        protected String getPicPath() {
+            return null;
+        }
+
+        @Override
         protected int getPictureResource() {
             return pictureResource;
         }
@@ -252,7 +297,6 @@ public class WechatShareManager {
 
     /**
      * 设置分享视频的内容
-     * @author chengcj1
      *
      */
     public class ShareContentVideo extends ShareContent {
@@ -279,6 +323,11 @@ public class WechatShareManager {
         @Override
         protected String getURL() {
             return url;
+        }
+
+        @Override
+        protected String getPicPath() {
+            return null;
         }
 
         @Override
@@ -320,6 +369,69 @@ public class WechatShareManager {
     }
 
     /*
+     * 分享图片 图片路径方式（分享gif静态图片适用）--分享到微信直接显示动图无需点开
+     */
+    private void shareGifFile(ShareContent shareContent, int shareType) {
+        String path=shareContent.getPicPath();
+        File file = new File(path);
+        if (!file.exists()) {
+            Toast.makeText(mContext, "图片不存在" + " path= " + path, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        WXEmojiObject emoji = new WXEmojiObject();
+        emoji.emojiPath = path;
+        WXMediaMessage msg = new WXMediaMessage(emoji);
+
+        msg.title = "Emoji Title";
+        msg.description = "Emoji Description";
+
+        //动图的静态略缩图
+//        String pa= ImageUtils.FILE_DIY_PATH+"111.png";
+//        msg.thumbData = WXUtil.readFromFile(pa, 0, (int) new File(pa).length());
+        Bitmap bmp = BitmapFactory.decodeFile(path);
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
+        bmp.recycle();
+        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
+
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = buildTransaction("emoji");
+        req.message = msg;
+        req.scene = shareType;
+        mWXApi.sendReq(req);
+    }
+    /*
+         * 分享图片 分享jpp\png静态图片适用）--分享默认显示缩略图点开显示原图
+         */
+    private void sharePicFile(ShareContent shareContent, int shareType) {
+        String path=shareContent.getPicPath();
+        File file = new File(path);
+        if (!file.exists()) {
+            Toast.makeText(mContext, "图片不存在" + " path= " + path, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        WXImageObject imgObj = new WXImageObject();
+        imgObj.setImagePath(path);
+
+        WXMediaMessage msg = new WXMediaMessage();
+        msg.mediaObject = imgObj;
+
+        Bitmap bmp = BitmapFactory.decodeFile(path);
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
+        bmp.recycle();
+        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
+
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = buildTransaction("img");
+        req.message = msg;
+        req.scene = shareType;
+        mWXApi.sendReq(req);
+
+    }
+
+
+    /*
      * 分享图片
      */
     private void sharePicture(ShareContent shareContent, int shareType) {
@@ -338,6 +450,21 @@ public class WechatShareManager {
         req.message = msg;
         req.scene = shareType;
         mWXApi.sendReq(req);
+    }
+
+    /**
+     * 直接分享图片
+     * @param picPath 本地图片文件路径
+     * @param flag 0 微信好友 1微信朋友圈
+     */
+    public void sharePic(String picPath,int flag){
+        ShareContentPicture scp = (ShareContentPicture)getShareContentPicture(picPath);
+        if(flag==0){
+            shareByWebchat(scp, WechatShareManager.WECHAT_SHARE_TYPE_TALK);
+        }else if(flag==1){
+            shareByWebchat(scp, WechatShareManager.WECHAT_SHARE_TYPE_FRENDS);
+        }
+
     }
 
     /*
@@ -377,7 +504,8 @@ public class WechatShareManager {
         Bitmap thumb = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.collection_null);
 //		BitmapFactory.decodeStream(new URL(video.videoUrl).openStream());
         /**
-         * 测试过程中会出现这种情况，会有个别手机会出现调不起微信客户端的情况。造成这种情况的原因是微信对缩略图的大小、title、description等参数的大小做了限制，所以有可能是大小超过了默认的范围。
+         * 测试过程中会出现这种情况，会有个别手机会出现调不起微信客户端的情况。造成这种情况的原因是微信对缩略图的大小、
+         * title、description等参数的大小做了限制，所以有可能是大小超过了默认的范围。
          * 一般情况下缩略图超出比较常见。Title、description都是文本，一般不会超过。
          */
         Bitmap thumbBitmap =  Bitmap.createScaledBitmap(thumb, THUMB_SIZE, THUMB_SIZE, true);

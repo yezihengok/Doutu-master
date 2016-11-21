@@ -276,7 +276,7 @@ public class ImageUtils {
                 .format(new Date());
         String filePath = mediaStorageDir.getPath() + File.separator;
         if (fileType == TYPE_FILE_IMAGE) {
-            filePath += ("IMG_" + timeStamp + ".png");
+            filePath += ("IMG_" + timeStamp + ".jpg");
         } else if (fileType == TYPE_FILE_VEDIO) {
             filePath += ("VIDEO_" + timeStamp + ".mp4");
         } else {
@@ -496,7 +496,7 @@ public class ImageUtils {
         BufferedOutputStream bos = null;
         try {
             bos = new BufferedOutputStream(new FileOutputStream(new File(fileNames)));
-            compressBitmap(tempBitmap).compress(Bitmap.CompressFormat.JPEG, 90, bos);
+            compressBitmap(tempBitmap).compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
             bos.close();
         } catch (Exception e) {
@@ -512,10 +512,13 @@ public class ImageUtils {
      * @param filePath
      */
     public static void saveBitmapToPath(Bitmap tempBitmap, String filePath) {
+        if (TextUtils.isEmpty(getFilesPath(filePath))) {
+            return ;
+        }
         BufferedOutputStream bos = null;
         try {
             bos = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
-            compressBitmap(tempBitmap).compress(Bitmap.CompressFormat.JPEG, 90, bos);
+            compressBitmap(tempBitmap).compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
             bos.close();
         } catch (Exception e) {
@@ -529,7 +532,7 @@ public class ImageUtils {
         }
 
         String now=CommUtil.getDate();
-        final String fileName =now+ ".png";
+        final String fileName =now+ ".jpg";
         String fileNames = FILE_DIY_PATH + fileName;
         BufferedOutputStream bos;
         try {

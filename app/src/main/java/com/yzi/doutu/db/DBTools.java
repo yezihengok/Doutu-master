@@ -119,7 +119,7 @@ public class DBTools {
             info.setName(cursor.getString(cursor.getColumnIndex("name")));
             info.setGifPath(cursor.getString(cursor.getColumnIndex("url")));
             info.setPicPath(cursor.getString(cursor.getColumnIndex("url")));
-            info.setOldUrl(cursor.getString(cursor.getColumnIndex("oldUrl")));
+            info.setMadeUrl(cursor.getString(cursor.getColumnIndex("madeUrl")));
             info.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
             infos.add(info);
             if (cursor.isLast()) {
@@ -147,9 +147,9 @@ public class DBTools {
             System.err.println("Count" + cursor.getCount());
             cursor.moveToFirst();
             int _id = cursor.getInt(cursor.getColumnIndex("_id"));
-            update_made(String.valueOf(_id), fav.getName(), fav.getGifPath(),fav.getOldUrl(),fav.getFileName());
+            update_made(String.valueOf(_id), fav.getName(), fav.getGifPath(),fav.getMadeUrl(),fav.getFileName());
         } else {
-            insert_made(id, fav.getName(), fav.getGifPath(),fav.getOldUrl(),fav.getFileName());
+            insert_made(id, fav.getName(), fav.getGifPath(),fav.getMadeUrl(),fav.getFileName());
         }
         cursor.close();
     }
@@ -170,7 +170,7 @@ public class DBTools {
             info.setName(cursor.getString(cursor.getColumnIndex("name")));
             info.setGifPath(cursor.getString(cursor.getColumnIndex("url")));
             info.setPicPath(cursor.getString(cursor.getColumnIndex("url")));
-            info.setOldUrl(cursor.getString(cursor.getColumnIndex("oldUrl")));
+            info.setMadeUrl(cursor.getString(cursor.getColumnIndex("madeUrl")));
             info.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
             cursor.close();
         }
@@ -201,23 +201,23 @@ public class DBTools {
     /**
      * 新增
      */
-    public void insert_made(String id,String name,String url,String oldUrl,String fileName){
+    public void insert_made(String id,String name,String url,String madeUrl,String fileName){
         SQLiteDatabase db=dbHelpers.getWritableDatabase();
-        db.execSQL("insert into "+dbHelpers.TABLE_MADE+"(id,name,url,oldUrl,fileName) values(?,?,?,?,?)",
-                new String[]{id,name,url,oldUrl,fileName});
+        db.execSQL("insert into "+dbHelpers.TABLE_MADE+"(id,name,url,madeUrl,fileName) values(?,?,?,?,?)",
+                new String[]{id,name,url,madeUrl,fileName});
     }
 
     /**
      * 修改
      */
-    public void update_made(String _id,String name,String url,String oldUrl,String fileName){
+    public void update_made(String _id,String name,String url,String madeUrl,String fileName){
         SQLiteDatabase db=dbHelpers.getWritableDatabase();
 
         ContentValues cv=new ContentValues();
         //cv.put("id", id);
         cv.put("name", name);
         cv.put("url", url);
-        cv.put("oldUrl", oldUrl);
+        cv.put("madeUrl", madeUrl);
         cv.put("fileName", fileName);
         db.update(dbHelpers.TABLE_MADE, cv, "_id= ?", new String[]{_id});
     }

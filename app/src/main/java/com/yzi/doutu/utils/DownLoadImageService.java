@@ -32,61 +32,44 @@ public class DownLoadImageService implements Runnable {
         this.callBack = callBack;
         this.context = context;
         this.dataBean=dataBean;
-        if(!TextUtils.isEmpty(dataBean.getOldUrl())){//如果是已经制作过了的
-            url=dataBean.getOldUrl();
-        }else{
-            url=dataBean.getGifPath();
-        }
-
+        url=dataBean.getGifPath();
     }
 
     @Override
     public void run() {
 
-        File file = new File(url);
-        if (file.exists()) {
-            //如果這個图片下載了過还存在SD卡上，那么直接愉快的返回 url吧
-            HandlerUtil.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    callBack.onDownLoadSuccess(url);
-                }
-            });
-
-        }else{
-
-            // Bitmap bitmap = null;
-            try {
-                //直接读取Glide缓存，得到File对象
-                file = Glide.with(context)
-                        .load(url)
-                        .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                        .get();
+        File file;
+        // Bitmap bitmap = null;
+        try {
+            //直接读取Glide缓存，得到File对象
+            file = Glide.with(context)
+                    .load(url)
+                    .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .get();
 //            bitmap = Glide.with(context)
 //                    .load(url)
 //                    .asBitmap()
 //                    .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
 //                    .get();
-                if (file != null) {
-                    String pathStr;
-                    if("DIY".equals(dataBean.getFormWhere())){
-                        pathStr=ImageUtils.getFilesPath(FILE_ROOT_PATH);
-                    }else{
-                        pathStr=ImageUtils.getFilesPath(DOWN_PATH);
-                    }
-                    String name;
-                    if (url.endsWith("gif") || url.endsWith("GIF")) {
-                        name = "/" + dataBean.getId()+ ".gif";
-                    } else {
-                        name = "/" +dataBean.getId()+ ".jpg";
-                    }
-                    cppyFile(file, pathStr, name);
+            if (file != null) {
+                String pathStr;
+                if("DIY".equals(dataBean.getFormWhere())){
+                    pathStr=ImageUtils.getFilesPath(FILE_ROOT_PATH);
+                }else{
+                    pathStr=ImageUtils.getFilesPath(DOWN_PATH);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-
+                String name;
+                if (url.endsWith("gif") || url.endsWith("GIF")) {
+                    name = "/" + dataBean.getId()+ ".gif";
+                } else {
+                    name = "/" +dataBean.getId()+ ".jpg";
+                }
+                cppyFile(file, pathStr, name);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
         }
 
 
@@ -129,7 +112,7 @@ public class DownLoadImageService implements Runnable {
 //    }
 
     /**
-     * cppyFile 将Glide缓存的图片复制保存到指定文件夹
+     * cppyFile 将图片复制保存到指定文件夹
      *
      * @param fileOld     原文件File
      * @param pathNew     新文件路径  /storage/emulated/0/

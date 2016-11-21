@@ -14,12 +14,14 @@ import com.yzi.doutu.R;
 public class LoadDialog extends Dialog {
 
     private TextView tvMessage;
-    private String msg="";
+    private String msg="加载中...";
     private Boolean cancelAble=true;
 	public LoadDialog(Context context, String msg, Boolean cancelAble) {
 		super(context, R.style.comm_load_dialog);
-		
-		this.msg=msg;
+		if(msg!=null){
+			this.msg=msg;
+		}
+
 		this.cancelAble=cancelAble;
 		
 	}

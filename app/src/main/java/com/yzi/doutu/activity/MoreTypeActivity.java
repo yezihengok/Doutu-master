@@ -16,8 +16,6 @@ import android.widget.TextView;
 import com.yzi.doutu.R;
 import com.yzi.doutu.adapter.AllTypeAdapter;
 import com.yzi.doutu.bean.AllType;
-import com.yzi.doutu.bean.DataBean;
-import com.yzi.doutu.bean.NewPic;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;

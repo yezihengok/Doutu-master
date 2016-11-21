@@ -33,7 +33,7 @@ import com.yzi.doutu.R;
 import java.util.List;
 
 /**
- * Created by Monkey on 2015/6/29.
+ * Created by yzh on 2015/6/29.
  */
 public class RealAdapter extends RecyclerView.Adapter<RealAdapter.ViewHolder> {
 

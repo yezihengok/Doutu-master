@@ -29,7 +29,6 @@ public class AboutActivity extends BaseActivity {
     }
 
 	private void init() {
-		findViewById(R.id.Copyright).setVisibility(View.GONE);
 		((TextView)findViewById(R.id.tvtitle)).setText("关于");
 		findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -40,7 +39,7 @@ public class AboutActivity extends BaseActivity {
 		TextView version_val = ((TextView)findViewById(R.id.version_val));
 
 		tvgithub= ((TextView)findViewById(R.id.tvgithub));
-		String str=CommUtil.getString(R.string.github);
+		String str= CommUtil.getString(R.string.github);
 		SpannableString sp=new SpannableString(str);
 		sp.setSpan(new URLSpan("https://github.com/yezihengok"), 10,str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvgithub.setText(sp);

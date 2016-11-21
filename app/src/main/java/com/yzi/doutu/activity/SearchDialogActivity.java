@@ -1,10 +1,8 @@
 package com.yzi.doutu.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -21,9 +19,7 @@ import com.yzi.doutu.fragment.SearchListFragment;
 import com.yzi.doutu.main.MainActivity;
 import com.yzi.doutu.service.DouApplication;
 import com.yzi.doutu.utils.CommInterface;
-import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.HandlerUtil;
-import com.yzi.doutu.utils.SharedUtils;
 
 import java.util.ArrayList;
 import java.util.List;

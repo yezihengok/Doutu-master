@@ -21,6 +21,8 @@ import com.yzi.doutu.utils.CommUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.yzi.doutu.utils.CommUtil.isWeiBaopen;
+
 /**
  * Created by yzh-t105 on 2016/10/9.
  */
@@ -50,7 +52,7 @@ public class DIYFragment extends Fragment implements CommInterface.OnItemClickLi
         mRecyclerView.setLoadingMoreEnabled(false);
         mRecyclerView.setPullRefreshEnabled(false);
         beanList=new ArrayList<>();
-        mAdapter = new HotListAdapter(getActivity(),beanList,1);
+        mAdapter = new HotListAdapter(getActivity(),beanList,1,"showMade");
         mAdapter.setItemWidth(ITEM);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
@@ -71,16 +73,26 @@ public class DIYFragment extends Fragment implements CommInterface.OnItemClickLi
     public void onItemClick(View view, int position) {
 
         DataBean dataBean=beanList.get(position);
-        dataBean.setOldUrl(null);
+        dataBean.setFormWhere("DIYFragment");
+
         if(CommUtil.QQ.equals(CommUtil.FLAG)){
-            CommUtil.onDownLoad(dataBean,getActivity(),1);
-            //分享后，关闭当前dialog
-            DouApplication.getInstance().removeAllActivity();
+            //是否开启了尾巴分享
+            if (isWeiBaopen()) {
+                //使用QQ SDK分享
+                CommUtil.onDownLoad(dataBean,getActivity(),3);
+            } else {
+                CommUtil.onDownLoad(dataBean,getActivity(),1);
+            }
+
         }else if(CommUtil.WeChat.equals(CommUtil.FLAG)){
-            CommUtil.onDownLoad(dataBean,getActivity(),2);
-            //分享后，关闭当前dialog
-            DouApplication.getInstance().removeAllActivity();
+            if (isWeiBaopen()) {
+                CommUtil.onDownLoad(dataBean,getActivity(),5);
+            } else {
+                CommUtil.onDownLoad(dataBean,getActivity(),2);
+            }
         }
+        //分享后，关闭当前dialog
+        DouApplication.getInstance().removeAllActivity();
     }
 
     @Override

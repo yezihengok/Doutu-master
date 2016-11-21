@@ -3,7 +3,6 @@
 package com.yzi.doutu.main;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,10 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.yzi.doutu.R;
-import com.yzi.doutu.activity.ModifyPicActivity;
 import com.yzi.doutu.adapter.HotListAdapter;
 
 import com.yzi.doutu.bean.DataBean;
@@ -27,7 +24,6 @@ import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;
 import com.yzi.doutu.utils.SharedUtils;
 import com.yzi.doutu.utils.SnackbarUtil;
-import com.yzi.doutu.utils.TopTips;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -39,7 +35,7 @@ import java.util.Random;
 import okhttp3.Call;
 
 /**
- * Created by Monkey on 2015/6/29.
+ * Created by yzh on 2016/09/25.
  */
 public class HotListFragment extends Fragment
         implements CommInterface.OnItemClickListener{

@@ -1,19 +1,18 @@
 package com.yzi.doutu.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.pizidea.imagepicker.ImagePresenter;
 import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
@@ -60,6 +59,12 @@ public class RealManInfoListActivity extends BaseActivity implements GradationSc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //透明导航栏
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
         setContentView(R.layout.activity_realman_infolist);
         application.addActivity(this);
         id=getIntent().getExtras().getInt("id");
@@ -87,7 +92,7 @@ public class RealManInfoListActivity extends BaseActivity implements GradationSc
         ivbanner.setFocusableInTouchMode(true);
         ivbanner.requestFocus();
 
-        presenter.onPresentImage(ivbanner,url);
+        presenter.onPresentImage(ivbanner,url,CommUtil.getScreenWidth()/3);
         mLayoutManager = new FullyGridLayoutManager(this,3, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);// 设置是否允许嵌套滑动，嵌套设置false，不然卡顿

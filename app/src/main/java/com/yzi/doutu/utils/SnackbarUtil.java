@@ -8,7 +8,7 @@ import android.view.View;
 import com.yzi.doutu.R;
 
 /**
- * Created by Monkey on 2015/7/1.
+ * Created by yzh on 2015/7/1.
  */
 public class SnackbarUtil {
 

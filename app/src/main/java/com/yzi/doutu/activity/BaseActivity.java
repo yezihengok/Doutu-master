@@ -2,10 +2,7 @@ package com.yzi.doutu.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -16,12 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yzi.doutu.service.DouApplication;
-import com.yzi.doutu.utils.CommUtil;
-import com.yzi.doutu.utils.SharedUtils;
 
 
 /**
- * Created by yzh on 2015/11/24.
+ * Created by yzh on 2016/09/24.
  */
 public abstract class BaseActivity extends AppCompatActivity {
     Toast toast;

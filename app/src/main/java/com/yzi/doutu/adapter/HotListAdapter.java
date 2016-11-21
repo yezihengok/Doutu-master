@@ -9,17 +9,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.pizidea.imagepicker.ImagePresenter;
 import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
 import com.yzi.doutu.bean.DataBean;
-import com.yzi.doutu.bean.NewPic;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,7 +32,7 @@ public class HotListAdapter extends RecyclerView.Adapter<HotListAdapter.ViewHold
     public List<DataBean> hotList;
     public LayoutInflater mLayoutInflater;
     ImagePresenter presenter;
-
+    String dataform;
 
     public void setHotList(List<DataBean> hotList) {
         this.hotList = hotList;
@@ -48,7 +44,6 @@ public class HotListAdapter extends RecyclerView.Adapter<HotListAdapter.ViewHold
         this.itemWidth = itemWidth;
     }
 
-    /**1 不显示文字的布局**/
     int flag;
     public HotListAdapter(Context mContext, List<DataBean> hotList) {
         this.mContext = mContext;
@@ -56,12 +51,15 @@ public class HotListAdapter extends RecyclerView.Adapter<HotListAdapter.ViewHold
         presenter=new UilImagePresenter();
         this.hotList =hotList;
     }
-    public HotListAdapter(Context mContext, List<DataBean> hotList,int flag) {
+
+    /**1 不显示文字的布局**/
+    public HotListAdapter(Context mContext, List<DataBean> hotList,int flag,String dataform) {
         this.mContext = mContext;
         mLayoutInflater = LayoutInflater.from(mContext);
         presenter=new UilImagePresenter();
         this.hotList =hotList;
         this.flag=flag;
+        this.dataform=dataform;
     }
 
     //创建新View，被LayoutManager所调用
@@ -92,19 +90,23 @@ public class HotListAdapter extends RecyclerView.Adapter<HotListAdapter.ViewHold
 
 
         if(flag!=1){
-            lp.height = CommUtil.getScreenWidth(mContext)/itemWidth-CommUtil.dip2px(mContext,20);
+            lp.height = CommUtil.getScreenWidth()/itemWidth- CommUtil.dip2px(mContext,20);
             holder.mTextView.setText(hotList.get(position).getName());
         }else{
             holder.mTextView.setVisibility(View.GONE);
-            lp.height = CommUtil.getScreenWidth(mContext)/itemWidth-CommUtil.dip2px(mContext,20);
+            lp.height = CommUtil.getScreenWidth()/itemWidth-CommUtil.dip2px(mContext,20);
         }
         holder.img.setLayoutParams(lp);
 
-        if (hotList.get(position).getGifPath().endsWith("gif") ||
-                hotList.get(position).getGifPath().endsWith("GIF")) {
-            ((UilImagePresenter)presenter).displayGif(holder.img,hotList.get(position).getGifPath());
+
+        String url=hotList.get(position).getGifPath();
+        if("showMade".equals(dataform)){
+            url=hotList.get(position).getMadeUrl();
+        }
+        if (url.endsWith("gif") ||url.endsWith("GIF")) {
+            ((UilImagePresenter)presenter).displayGif(holder.img,url,CommUtil.getScreenWidth()/3);
         }else{
-            presenter.onPresentImage(holder.img,hotList.get(position).getPicPath());
+            presenter.onPresentImage(holder.img,url,CommUtil.getScreenWidth()/3);
         }
 
     }

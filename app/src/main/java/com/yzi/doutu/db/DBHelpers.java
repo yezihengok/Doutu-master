@@ -15,7 +15,7 @@ import static android.R.attr.id;
  */
 public class DBHelpers extends SQLiteOpenHelper {
 	
-	private final static int DB_VERSION=1;
+	private final static int DB_VERSION=2;
 	private final static String DB_NAME="userInfo.db";
 	private final static String TABLE_NAME="favorites";
 	public final static String TABLE_MADE="made";
@@ -28,7 +28,7 @@ public class DBHelpers extends SQLiteOpenHelper {
 	 
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("create table "+TABLE_NAME+"( _id integer primary key autoincrement,id text,name text,url text)");
-		db.execSQL("create table "+TABLE_MADE+"( _id integer primary key autoincrement,id text,name text,url text,oldUrl text,fileName text)");
+		db.execSQL("create table "+TABLE_MADE+"( _id integer primary key autoincrement,id text,name text,url text,madeUrl text,fileName text)");
 		//db.execSQL("insert into "+TABLE_NAME+"(name,psotalcode,address,province,city,area) values(?,?,?)",new String[]{"测试1","测试2","测试3"});
 		 
 	}

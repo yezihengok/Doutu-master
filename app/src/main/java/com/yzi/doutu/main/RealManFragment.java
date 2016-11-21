@@ -23,10 +23,8 @@ import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.bean.NewPic;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
-import com.yzi.doutu.utils.HandlerUtil;
 import com.yzi.doutu.utils.PraseUtils;
 import com.yzi.doutu.utils.SharedUtils;
-import com.yzi.doutu.utils.SnackbarUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -36,9 +34,9 @@ import java.util.List;
 
 import okhttp3.Call;
 
-import static android.os.Build.VERSION.SDK;
-
-
+/**
+ * Created by yzh on 2016/09/26.
+ */
 public class RealManFragment extends Fragment
         implements SwipeRefreshLayout.OnRefreshListener, CommInterface.OnItemClickListener{
 

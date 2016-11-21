@@ -12,15 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.yzi.doutu.R;
-import com.yzi.doutu.adapter.RealmanAdapter;
 import com.yzi.doutu.adapter.NewListAdapter;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.bean.NewPic;
@@ -42,7 +36,7 @@ import java.util.Random;
 import okhttp3.Call;
 
 /**
- * Created by Monkey on 2015/6/29.
+ * Created by yzh on 2016/09/25.
  */
 public class NewListFragment extends Fragment
         implements CommInterface.OnItemClickListener{
@@ -213,7 +207,9 @@ public class NewListFragment extends Fragment
 
     @Override
     public void onItemClick(View view, int position) {
-        CommUtil.getInstance().showSharePop(getActivity(), newList.get(position),null);
+        DataBean dataBean=newList.get(position);
+        dataBean.setFormWhere("newlist");
+        CommUtil.getInstance().showSharePop(getActivity(),dataBean,null);
     }
 
     @Override

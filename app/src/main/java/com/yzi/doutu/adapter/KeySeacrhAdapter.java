@@ -1,9 +1,7 @@
 package com.yzi.doutu.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +12,6 @@ import android.widget.TextView;
 import com.pizidea.imagepicker.ImagePresenter;
 import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
-import com.yzi.doutu.activity.MoreTypeListActivity;
-import com.yzi.doutu.bean.AllType;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
@@ -69,9 +65,9 @@ public class KeySeacrhAdapter extends RecyclerView.Adapter<KeySeacrhAdapter.View
         }
 
         ViewGroup.LayoutParams lp = holder.img.getLayoutParams();
-        lp.height = CommUtil.getScreenWidth(mContext)/4-CommUtil.dip2px(mContext,20);
+        lp.height = CommUtil.getScreenWidth()/4-CommUtil.dip2px(mContext,20);
         holder.mTextView.setText(hotList.get(position).getName());
-        presenter.onPresentImage(holder.img,hotList.get(position).getGifPath());
+        presenter.onPresentImage(holder.img,hotList.get(position).getGifPath(),CommUtil.getScreenWidth()/3);
 
 
     }

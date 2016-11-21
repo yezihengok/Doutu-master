@@ -16,8 +16,6 @@ import com.yzi.doutu.R;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 
-import static com.yzi.doutu.R.id.imageView;
-
 /**
  * Created by yzh-t105 on 2016/10/8.
  */

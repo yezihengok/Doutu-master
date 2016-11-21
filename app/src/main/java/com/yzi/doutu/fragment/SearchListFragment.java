@@ -16,9 +16,7 @@ import android.widget.LinearLayout;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.yzi.doutu.R;
-import com.yzi.doutu.adapter.AllTypeAdapter;
 import com.yzi.doutu.adapter.HotListAdapter;
-import com.yzi.doutu.adapter.KeySeacrhAdapter;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.bean.NewPic;
 import com.yzi.doutu.service.DouApplication;
@@ -28,6 +26,7 @@ import com.yzi.doutu.utils.PraseUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +34,9 @@ import okhttp3.Call;
 
 import static com.yzi.doutu.R.id.imageView;
 import static com.yzi.doutu.utils.CommUtil.closeWaitDialog;
+import static com.yzi.doutu.utils.CommUtil.isWeiBaopen;
+import static com.yzi.doutu.utils.CommUtil.onDownLoad;
+import static com.yzi.doutu.utils.CommUtil.shareQQ;
 
 /**
  * Created by yzh-t105 on 2016/10/8.
@@ -84,7 +86,7 @@ public class SearchListFragment extends Fragment implements CommInterface.OnItem
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         searchList=new ArrayList<>();
-        searchListAdapter = new HotListAdapter(getActivity(),searchList,1);
+        searchListAdapter = new HotListAdapter(getActivity(),searchList,1,null);
         searchListAdapter.setItemWidth(ITEM);
         searchListAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(searchListAdapter);
@@ -163,32 +165,25 @@ public class SearchListFragment extends Fragment implements CommInterface.OnItem
     @Override
     public void onItemClick(View view, int position) {
 
-
+        DataBean dataBean= searchList.get(position);
         if(CommUtil.QQ.equals(CommUtil.FLAG)){
-            CommUtil.onDownLoad(searchList.get(position),getActivity(),1);
-            //分享后，关闭当前dialog
-            DouApplication.getInstance().removeAllActivity();
+            //是否开启了尾巴分享
+            if (isWeiBaopen()) {
+                //使用QQ SDK分享
+                CommUtil.onDownLoad(dataBean,getActivity(),3);
+            } else {
+                CommUtil.onDownLoad(dataBean,getActivity(),1);
+            }
+
         }else if(CommUtil.WeChat.equals(CommUtil.FLAG)){
-            CommUtil.onDownLoad(searchList.get(position),getActivity(),2);
-            //分享后，关闭当前dialog
-            DouApplication.getInstance().removeAllActivity();
+            if (isWeiBaopen()) {
+                CommUtil.onDownLoad(dataBean,getActivity(),5);
+            } else {
+                CommUtil.onDownLoad(dataBean,getActivity(),2);
+            }
         }
-
-
-
-       // onDownLoad(url,getActivity());  //这种是带应用小尾巴的分享
-
-//        CommUtil.getInstance().showSharePop(getActivity(),
-//                searchList.get(position).getGifPath(),searchList.get(position).getName());
-//        CommUtil.backgroundAlpha( getActivity(),1f);
-
-
-
-        //使用微信SDK分享需要微信开发平台申请APPID（注册APP需要填写APP官网地址，臣妾办不到阿..）
-//        mShareManager = WechatShareManager.getInstance(getActivity());
-//        WechatShareManager.ShareContentPicture scp = (WechatShareManager.ShareContentPicture)
-//                mShareManager.getShareContentPicture(R.mipmap.collection_null);
-//        mShareManager.shareByWebchat(scp, WechatShareManager.WECHAT_SHARE_TYPE_FRENDS);
+        //分享后，关闭当前dialog
+        DouApplication.getInstance().removeAllActivity();
     }
 
 

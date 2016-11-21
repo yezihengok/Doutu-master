@@ -1,12 +1,10 @@
 package com.yzi.doutu.service;
 
-import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,8 +30,6 @@ import com.yzi.doutu.activity.SearchDialogActivity;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.HandlerUtil;
 import com.yzi.doutu.utils.SharedUtils;
-
-import java.util.List;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -182,8 +178,8 @@ public class WindowService extends Service {
             //调整悬浮窗显示的停靠位置为左侧置顶
             wmParams.gravity = Gravity.TOP | Gravity.LEFT;
             // 以屏幕左上角为原点，设置x、y初始值，相对于gravity
-            wmParams.x = CommUtil.getScreenWidth(this);
-            wmParams.y = CommUtil.getScreenHeight(this) / 2;
+            wmParams.x = CommUtil.getScreenWidth();
+            wmParams.y = CommUtil.getScreenHeight() / 2;
             //CommUtil.showToast("wmParams.x="+wmParams.x+"===wmParams.y:"+wmParams.y);
             //设置悬浮窗口长宽数据
             wmParams.width = LayoutParams.MATCH_PARENT;
