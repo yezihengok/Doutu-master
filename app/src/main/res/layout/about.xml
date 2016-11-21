@@ -74,14 +74,5 @@
                 style="@style/txt_14sp" />
         </LinearLayout>
     </ScrollView>
-    <TextView
-        android:id="@+id/Copyright"
-        android:visibility="gone"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginBottom="3dp"
-        style="@style/txt_12sp"
-        android:text="Copyright(c) 2016 版权没有 翻版不究" />
+
 </RelativeLayout>

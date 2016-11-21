@@ -32,16 +32,17 @@
                 <EditText
                     android:id="@+id/ed_msg"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerInParent="true"
                     android:background="@drawable/gifdialog_shape_bg"
-                    android:lineSpacingExtra="5dp"
+                    android:padding="3dp"
+                    android:maxLines="1"
                     android:text="呵呵哒"
                     android:textStyle="bold"
                     android:gravity="center"
                     android:textColor="@color/subscribe_tip_text"
-                    android:ems="10"
+                    android:ems="11"
                     android:textSize="18sp" />
             </RelativeLayout>
 

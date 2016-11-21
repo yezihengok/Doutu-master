@@ -1,30 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_content"
     android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/titlet"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/main_blue_light">
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingTop="8dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="12dp"
+            android:src="@mipmap/grey_back" />
+        <TextView
+            android:paddingTop="8dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:id="@+id/tvtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:textSize="14sp"
+            android:text="表情" />
 
-    <include layout="@layout/titles" />
+
+        <TextView
+            android:paddingTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:id="@+id/tvRight"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:paddingLeft="10dp"
+            android:paddingRight="12dp"
+            android:background="@drawable/background_tabs"
+            android:text="保存/分享"/>
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottomla"
+        android:layout_below="@+id/titlet"
         android:fillViewport="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:weightSum="1"
+            android:background="@android:color/white"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:padding="12dp"
-                android:layout_weight="0.45">
-                <com.yzi.doutu.view.MyRelativeLayout
-                    android:id="@+id/modifyLayout"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                android:layout_weight="0.38">
+                <LinearLayout
+                    android:id="@+id/mainLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     />
             </LinearLayout>
 
@@ -32,10 +75,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.55"
+                android:layout_weight="0.62"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:layout_marginTop="10dp"
                 android:background="@color/bg_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
@@ -60,20 +102,21 @@
                             android:text="帮助说明" />
 
                         <TextView
+                            android:id="@+id/tvMul"
                             style="@style/txt_13sp"
                             android:layout_width="wrap_content"
                             android:layout_marginTop="3dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginLeft="1dp"
                             android:layout_height="wrap_content"
-                            android:text="*点击图片任意位置即可添加一行可拖动缩放文字.\n*点击选中文字后，可更改文字的内容以及颜色." />
+                            android:text="@string/tv_Mul" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="45dp"
+                        android:layout_height="40dp"
                         android:gravity="center_vertical"
 
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:orientation="horizontal">
                         <TextView
                             android:id="@+id/tvcc"
@@ -93,9 +136,9 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="45dp"
+                        android:layout_height="40dp"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginBottom="5dp"
                         android:orientation="horizontal">
                         <TextView
                             android:id="@+id/tv_typeface"
@@ -144,32 +187,35 @@
                             </LinearLayout>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="@drawable/edittext_bg"
-                        android:orientation="horizontal">
-                        <EditText
-                            android:id="@+id/edWords"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:paddingLeft="10dp"
-                            android:textColor="@color/main_black_grey"
-                            android:hint="请输入文字"
-                            android:background="@null"
-                            android:textSize="14sp" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/btn_bg_color_pick_icon" />
-                    </LinearLayout>
-
-
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomla"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/edittext_bg"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/edWords"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:textColor="@color/main_black_grey"
+            android:hint="请输入文字"
+            android:background="@null"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/addTextImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/btn_bg_color_pick_icon" />
+    </LinearLayout>
+</RelativeLayout>
