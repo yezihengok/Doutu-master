@@ -1,0 +1,30 @@
+
+
+<resources>
+  <string name="app_name">恒妹子斗图</string>
+
+  <string name="toolbar_title" translatable="false">表情</string>
+  <string name="action_settings" translatable="false">settings</string>
+  <string name="open" translatable="false">打开</string>
+  <string name="close" translatable="false">关闭</string>
+  <string name="plusone" translatable="false">【】</string>
+  <string name="item_clicked" translatable="false">item clicked！</string>
+  <string name="item_longclicked" translatable="false">item long clicked！</string>
+  <string name="about_desc">
+      \n\t\t斗图App，在当今无图不聊天的环境下，作者闲暇之余自制写的一个APP分享给大家。其中借鉴了一些开源框架
+      自己也封装了很多工具类在项目中。本着学习的心态将会把app 源码开源放到Github。时间匆忙可能遗留存在一些bug。
+
+      \n\t\t 图片内容均来源于互联网搜索。APP不作任何商业用途，仅供学习使用 欢迎大家交流学习！
+       \n
+       \n\t作者：yzh
+       \n\t邮箱：q295658413@163.com
+    </string>
+    <string name="new_desc">
+        \n\t•新增悬浮球功能，可以运行在QQ后台发图了！
+        \n\t•新增图片收藏，发过的图片不怕再也找不到啦
+        \n\t•新增拍照或者从相册选择图片，改图支持本地图片了呢！
+        \n\t•新增GIF动图添加文字功能 \n\t斗图还在发静图？动图才是王道！（暂不支持背景透明的GIF）
+        </string>
+      <string name="github">\tGithub地址：https://github.com/yezihengok</string>
+    <string name="tv_Mul">*多文字添加：%1$s.\n*开启时,更改了文字、颜色、字体则该文字将不可再次更改.</string>
+</resources>
