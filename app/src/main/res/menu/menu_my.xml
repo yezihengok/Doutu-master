@@ -5,8 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".main.MainActivity">
   <item
+      android:id="@+id/action_picTake"
+      android:title="从相册选取"
+      android:orderInCategory="100"
+      app:showAsAction="never"/>
+  <item
       android:id="@+id/action_settings"
       android:title="关于"
       android:orderInCategory="100"
       app:showAsAction="never"/>
+
 </menu>
