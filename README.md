@@ -20,6 +20,7 @@
    Tips：关于微信分享SDK机制，是我微信开发者平台注册我自己的机器打包的签名才能分享成功的，你自己运行项目的签名和我机器打包的签名肯定是不一样的。
    所以微信分享大家看看代码实现就好，要实现微信分享需要你到微信开发者中心注册。至于效果app我已上架至应用宝
 * 应用宝下载地址：http://sj.qq.com/myapp/detail.htm?apkName=com.yzi.doutu
+* 百度应用市场下载地址：http://shouji.baidu.com/software/10379397.html
 
 ####效果动图：
 
