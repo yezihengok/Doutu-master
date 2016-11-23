@@ -60,7 +60,7 @@ public class CollectionFragment extends Fragment implements CommInterface.OnItem
     }
 
     public void getFavorites() {
-        List<DataBean> favorites= DBTools.getInstance(getActivity()).getFavorites(false);
+        List<DataBean> favorites= DBTools.getInstance().getFavorites(false);
         if(favorites!=null&&!favorites.isEmpty()){
             beanList=new ArrayList<>(favorites);
             mAdapter.setHotList(beanList);

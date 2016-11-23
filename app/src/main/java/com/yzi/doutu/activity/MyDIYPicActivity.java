@@ -68,7 +68,7 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
 
 
     public void getFavorites() {
-        List<DataBean> favorites= DBTools.getInstance(this).getMades();
+        List<DataBean> favorites= DBTools.getInstance().getMades();
         if(favorites!=null&&!favorites.isEmpty()){
             beanList=new ArrayList<>(favorites);
             mAdapter.setHotList(beanList);
@@ -113,7 +113,7 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
                             , new CommInterface.setClickListener() {
                         @Override
                         public void onResult() {
-                            DBTools.getInstance(MyDIYPicActivity.this).deleteAll_made();
+                            DBTools.getInstance().deleteAll_made();
                             mAdapter.setHotList(null);
                             mAdapter.notifyDataSetChanged();
                             SimpleFileUtils.delFile(ImageUtils.FILE_DIY_PATH,0,null);

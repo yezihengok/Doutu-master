@@ -198,7 +198,7 @@ public class MainActivity extends BaseActivity
         View view= LayoutInflater.from(this).inflate(R.layout.header_nav,null);
         header_img= (ImageView) view.findViewById(R.id.header_img);
         header_img.setOnClickListener(this);
-        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,CommUtil.dip2px(this,210));
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,CommUtil.dip2px(210));
         view.setLayoutParams(lp);
         mNavigationView.addHeaderView(view);
 

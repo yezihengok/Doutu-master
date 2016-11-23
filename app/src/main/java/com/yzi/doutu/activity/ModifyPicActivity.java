@@ -244,7 +244,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
             dataBean= (DataBean) getIntent().getSerializableExtra("dataBean");
             //如果不是从我的制作界面进来的,dataBean改为从数据库读取
             if(!"DIY".equals(dataBean.getFormWhere())){
-                DataBean bean=DBTools.getInstance(context).madeById(String.valueOf(dataBean.getId()));
+                DataBean bean=DBTools.getInstance().madeById(String.valueOf(dataBean.getId()));
                 if(bean!=null){
                     dataBean=bean;
                 }
@@ -319,7 +319,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
             mainLayout.addView(operateView);
             operateView.setMultiAdd(false); //true可以添加多个文字
 
-            textObj = operateUtils.getTextObject(words, operateView,6, 0,CommUtil.dip2px(context,50));
+            textObj = operateUtils.getTextObject(words, operateView,6, 0,CommUtil.dip2px(50));
             updateTextObj();
         }else{
 
@@ -351,7 +351,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
                 setTypeface(2);
                 break;
             case R.id.addTextImg:
-                textObj = operateUtils.getTextObject(words, operateView,6, 0,CommUtil.dip2px(context,50));
+                textObj = operateUtils.getTextObject(words, operateView,6, 0,CommUtil.dip2px(50));
                 updateTextObj();
                 break;
             case R.id.tvMul:
@@ -398,7 +398,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
             CommUtil.onDownLoad(dataBean,context,0);
         }
 
-        DBTools.getInstance(context).addMades(dataBean);
+        DBTools.getInstance().addMades(dataBean);
 
     }
 

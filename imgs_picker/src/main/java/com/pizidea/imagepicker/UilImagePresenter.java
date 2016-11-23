@@ -23,6 +23,7 @@ import android.database.Observable;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.gifdecoder.GifDecoder;
@@ -58,30 +59,30 @@ public class UilImagePresenter implements ImagePresenter {
                 .into(imageView);
     }
 
-    //常规的加载方式
-    @Override
+
     public void onPresentImage(ImageView imageView, String imageUri) {
+
         Glide.with(imageView.getContext())
                 .load(imageUri)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 //.crossFade()
-                .thumbnail(0.5f)
-                .centerCrop()
+                .thumbnail(0.4f)
+                //.centerCrop()
+                .fitCenter()
                 .error(R.drawable.default_img)
                 .into(imageView);
     }
 
-    //选择确定时使用该加载方式
+    //常规的加载方式
     @Override
     public void onPresentImage(ImageView imageView, String imageUri, int size) {
-
         Glide.with(imageView.getContext())
                 // .load(new File(imageUri))
                 .load(imageUri)
                 //   .priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .thumbnail(0.5f)
-                //.override(size/4*3, size/4*3)
+                .override(size/4*3, size/4*3)
                 .centerCrop()
                 .dontAnimate()
                 .placeholder(R.drawable.default_img)
@@ -97,6 +98,7 @@ public class UilImagePresenter implements ImagePresenter {
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 //.placeholder(R.drawable.icons)
                 //.error(R.mipmap.ic_launcher)
+                .thumbnail(0.5f)
                 .transform(new GlideCircleTransform(imageView.getContext()))
                 .into(imageView);
     }
@@ -137,12 +139,13 @@ public class UilImagePresenter implements ImagePresenter {
      * @param imageUri
      * @param imageView
      */
-    public void displayGif(ImageView imageView, String imageUri) {
+    public void displayGif(ImageView imageView, String imageUri,int size) {
         Glide.with(imageView.getContext()).
                 load(imageUri)
                 .asGif()
                 .dontAnimate()
-                //.thumbnail(0.5f)
+                .thumbnail(0.5f)
+                .override(size/4*3, size/4*3)
                 .centerCrop()
                 .error(R.drawable.default_img)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)

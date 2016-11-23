@@ -185,8 +185,8 @@ public class WindowService extends Service {
             wmParams.width = LayoutParams.MATCH_PARENT;
             wmParams.height = LayoutParams.MATCH_PARENT;
             // 设置悬浮窗口长宽数据
-            wmParams.width = CommUtil.dip2px(this, 45);
-            wmParams.height = CommUtil.dip2px(this, 45);
+            wmParams.width = CommUtil.dip2px(45);
+            wmParams.height = CommUtil.dip2px(45);
         }
 
 
@@ -227,7 +227,7 @@ public class WindowService extends Service {
                 }
 
                 //以下模拟长按
-                //按下的时间 大于1.5S 且移动距离过小者视为长按操作。
+                //按下的时间 大于1.2S 且移动距离过小者视为长按操作。
                 switch (event.getAction()) {
 
                     case MotionEvent.ACTION_DOWN:
@@ -247,7 +247,7 @@ public class WindowService extends Service {
                         break;
                     case MotionEvent.ACTION_UP:
                         long moveTime = System.currentTimeMillis() - currentMS;
-                        if(moveTime>1300&&(moveX<70||moveY<70)){
+                        if(moveTime>1200&&(moveX<70||moveY<70)){
                             handler.sendEmptyMessage(LONG_TAG);
                             return true;//消费掉事件不在传递
                         }

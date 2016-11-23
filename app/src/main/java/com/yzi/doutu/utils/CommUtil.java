@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import static com.yzi.doutu.R.id.imageView;
 import static com.yzi.doutu.utils.ContextUtil.getApplicationContext;
 
 /**
@@ -96,15 +97,39 @@ public class CommUtil {
         return SharedUtils.getBoolean(WEIBA, DouApplication.getInstance(), WEIBA, true);
     }
 
+    /**
+     * 默认头像的网络图片地址
+     **/
     public static final String ICON = "http://h.hiphotos.baidu.com/image/pic/item/34fae6cd7b899e51601a7b9c40a7d933c9950da5.jpg";
+    /**
+     * 最热表情图片列表
+     **/
     public static final String HOT_URL = "http://api.jiefu.tv/app2/api/dt/item/hotList.html";
     //public static final String HOT_URL = "http://api.jiefu.tv/app2/api/dt/item/newList.html";
+    /**
+     * 最新表情图片列表
+     **/
     public static final String NEW_URL = "http://api.jiefu.tv/app2/api/dt/shareItem/newList.html";
+    /**
+     * 真人表情图片列表
+     **/
     public static final String REALMAN_URL = "http://api.jiefu.tv/app2/api/dt/tag/getByType.html";
+    /**
+     * 真人表情图片列表
+     **/
     public static final String REALMANINFO_URL = "http://api.jiefu.tv/app2/api/dt/item/getByTag.html";
+    /**
+     * 表情分类列表
+     **/
     public static final String ALLTYPE = "http://api.jiefu.tv/app2/api/dt/tag/allList.html";
+    /**
+     * 表情分类列表详情
+     **/
     //public static final String ALLTYPEBYID="http://api.jiefu.tv/app2/api/dt/shareItem/getByTag.html";
     public static final String ALLTYPEBYID = "http://api.jiefu.tv/app2/api/dt/item/getByTag.html";
+    /**
+     * 关键字搜索表情
+     **/
     public static final String KEYWORD_SEARCH = "http://api.jiefu.tv/app2/api/dt/shareItem/search.html";
 
     private static CommUtil commUtil;
@@ -274,7 +299,7 @@ public class CommUtil {
         } else if (flag == 6) {
             //因为微信朋友圈无法接收gif,所以这里如果发送的是gif 我复制一个静态图在发到朋友圈
             if (isGif(filePath)) {
-               final String newPath = ImageUtils.FILE_ROOT_PATH + "/new.jpg";
+                final String newPath = ImageUtils.FILE_ROOT_PATH + "/new.jpg";
                 saveCompressFile(filePath, newPath
                         , new CommInterface.setFinishListener() {
                             @Override
@@ -424,8 +449,9 @@ public class CommUtil {
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 //.crossFade()
                 .thumbnail(0.5f)
+                .override(dip2px(130),dip2px(130))
                 .centerCrop()
-                .error(com.example.yzh.mylibrary.R.drawable.default_img)
+                .error(R.drawable.default_img)
                 .into(share_img);
 
         share_name.setText(dataBean.getName());
@@ -460,16 +486,16 @@ public class CommUtil {
 
                     case R.id.share_save://收藏&删除
                         if ("newlist".equals(tag)) {
-                            DBTools.getInstance(context).addFavorites(dataBean);
+                            DBTools.getInstance().addFavorites(dataBean);
                             showToast("已收藏");
                             pop.dismiss();
 
                         } else {
 
                             if ("Favorites".equals(tag)) {
-                                DBTools.getInstance(context).remove(dataBean.getId());
+                                DBTools.getInstance().remove(dataBean.getId());
                             } else if ("DIY".equals(tag)) {
-                                DBTools.getInstance(context).deleteByid_made(String.valueOf(dataBean.getId()));
+                                DBTools.getInstance().deleteByid_made(String.valueOf(dataBean.getId()));
                             }
 
                             pop.dismiss();
@@ -518,6 +544,10 @@ public class CommUtil {
 
     }
 
+    public void getDialog(){
+
+    }
+
     /**
      * 公用的 弹出GIF添加文字的dialog
      *
@@ -547,10 +577,19 @@ public class CommUtil {
         ImageView gifDialogImg = (ImageView) showDialog.findViewById(R.id.gifDialogImg);
         final EditText edmsg = (EditText) showDialog.findViewById(R.id.ed_msg);
 
-        new UilImagePresenter().onImage(gifDialogImg, dataBean.getGifPath());
+        // new UilImagePresenter().onImage(gifDialogImg, dataBean.getGifPath());
+        Glide.with(context)
+                .load(dataBean.getGifPath())
+                .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                //.crossFade()
+                .thumbnail(0.5f)
+                .error(R.drawable.default_img)
+                .into(gifDialogImg);
+
 
         lyShowFrame.getLayoutParams().width = width - 120;
-        edmsg.getLayoutParams().width = dip2px(context, 200);
+        edmsg.getLayoutParams().width = dip2px(200);
         String txt = dataBean.getName();
         if (!TextUtils.isEmpty(txt)) {
             edmsg.setTypeface(CommUtil.getTypeface(SharedUtils.getString(null, "typeface", null), Typeface.BOLD));
@@ -632,7 +671,7 @@ public class CommUtil {
                                         }
 
 
-                                        DBTools.getInstance(context).addMades(dataBean);
+                                        DBTools.getInstance().addMades(dataBean);
                                         SimpleFileUtils.delFile(ImageUtils.FILE_ROOT_PATH, 0, null);//清空分解的文件夹
                                         if (listener != null)
                                             listener.onFinish();
@@ -808,8 +847,8 @@ public class CommUtil {
     }
 
 
-    public static int dip2px(Context context, float dipValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
+    public static int dip2px( float dipValue) {
+        final float scale = DouApplication.getInstance().getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
     }
 

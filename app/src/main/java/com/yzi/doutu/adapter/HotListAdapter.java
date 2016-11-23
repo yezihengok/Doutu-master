@@ -90,11 +90,11 @@ public class HotListAdapter extends RecyclerView.Adapter<HotListAdapter.ViewHold
 
 
         if(flag!=1){
-            lp.height = CommUtil.getScreenWidth()/itemWidth- CommUtil.dip2px(mContext,20);
+            lp.height = CommUtil.getScreenWidth()/itemWidth- CommUtil.dip2px(20);
             holder.mTextView.setText(hotList.get(position).getName());
         }else{
             holder.mTextView.setVisibility(View.GONE);
-            lp.height = CommUtil.getScreenWidth()/itemWidth-CommUtil.dip2px(mContext,20);
+            lp.height = CommUtil.getScreenWidth()/itemWidth-CommUtil.dip2px(20);
         }
         holder.img.setLayoutParams(lp);
 

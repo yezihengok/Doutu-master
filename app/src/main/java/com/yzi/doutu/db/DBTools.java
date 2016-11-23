@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.yzi.doutu.bean.DataBean;
+import com.yzi.doutu.service.DouApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +23,10 @@ public class DBTools {
     private static DBHelpers dbHelpers;
     private static DBTools dbTools;
 
-    public static DBTools getInstance(Context context) {
+    public static DBTools getInstance() {
         if (dbTools == null) {
             dbTools = new DBTools();
-            dbHelpers = new DBHelpers(context);
+            dbHelpers = new DBHelpers(DouApplication.getInstance());
         }
         return dbTools;
     }

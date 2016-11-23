@@ -65,7 +65,7 @@ public class KeySeacrhAdapter extends RecyclerView.Adapter<KeySeacrhAdapter.View
         }
 
         ViewGroup.LayoutParams lp = holder.img.getLayoutParams();
-        lp.height = CommUtil.getScreenWidth()/4-CommUtil.dip2px(mContext,20);
+        lp.height = CommUtil.getScreenWidth()/4-CommUtil.dip2px(20);
         holder.mTextView.setText(hotList.get(position).getName());
         presenter.onPresentImage(holder.img,hotList.get(position).getGifPath(),CommUtil.getScreenWidth()/3);
 

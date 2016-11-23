@@ -64,7 +64,7 @@ public class MyFavoritesActivity extends BaseActivity implements CommInterface.O
 
 
     public void getFavorites() {
-        List<DataBean> favorites= DBTools.getInstance(this).getFavorites(false);
+        List<DataBean> favorites= DBTools.getInstance().getFavorites(false);
         if(favorites!=null&&!favorites.isEmpty()){
             beanList=new ArrayList<>(favorites);
             mAdapter.setHotList(beanList);
@@ -99,7 +99,7 @@ public class MyFavoritesActivity extends BaseActivity implements CommInterface.O
                             , new CommInterface.setClickListener() {
                         @Override
                         public void onResult() {
-                            DBTools.getInstance(MyFavoritesActivity.this).removeAll();
+                            DBTools.getInstance().removeAll();
                             mAdapter.setHotList(null);
                             mAdapter.notifyDataSetChanged();
                         }
