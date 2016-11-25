@@ -14,7 +14,7 @@ import com.yzi.doutu.R;
 import com.yzi.doutu.utils.CommUtil;
 
 /**
- * Created by yzh on 2016/11/11
+ * Created by yzh on 2016/11/11.
  */
 public class AboutActivity extends BaseActivity {
 

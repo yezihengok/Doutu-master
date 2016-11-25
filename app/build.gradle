@@ -19,6 +19,16 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  signingConfigs {
+    ////这里使用的指定key运行项目
+    debug {
+      storeFile file("E:\\YZH\\Doutu-master-master\\keys\\doutu.keys")
+      keyAlias 'doutu'
+      keyPassword '123456'
+      storePassword '123456'
+    }
+  }
+
 }
 
 dependencies {
