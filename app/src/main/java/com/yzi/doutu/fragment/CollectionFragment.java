@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.yzi.doutu.R;
 import com.yzi.doutu.adapter.HotListAdapter;
+import com.yzi.doutu.adapter.HotTemplateAdapter;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.service.DouApplication;
@@ -23,15 +24,15 @@ import java.util.List;
 
 import static com.yzi.doutu.utils.CommUtil.isWeiBaopen;
 
-/**
- * Created by yzh-t105 on 2016/10/8.
+/**我的收藏
+ * Created by yzh-t105 on 2016/10/10.
  */
 
 public class CollectionFragment extends Fragment implements CommInterface.OnItemClickListener{
 
     private XRecyclerView mRecyclerView;
     private LinearLayout noDataLayout;
-    private HotListAdapter mAdapter;
+    private HotTemplateAdapter mAdapter;
 
     private List<DataBean> beanList;
     private int ITEM=4;
@@ -52,8 +53,9 @@ public class CollectionFragment extends Fragment implements CommInterface.OnItem
         mRecyclerView.setLoadingMoreEnabled(false);
         mRecyclerView.setPullRefreshEnabled(false);
         beanList=new ArrayList<>();
-        mAdapter = new HotListAdapter(getActivity(),beanList,1,null);
-        mAdapter.setItemWidth(ITEM);
+//        mAdapter = new HotListAdapter(getActivity(),beanList,1,null);
+//        mAdapter.setItemWidth(ITEM);
+        mAdapter = new HotTemplateAdapter(getActivity(),beanList,ITEM);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
         getFavorites();

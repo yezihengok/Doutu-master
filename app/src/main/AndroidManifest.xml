@@ -43,6 +43,11 @@
     <activity android:name=".activity.MyFavoritesActivity"/>
     <activity android:name=".activity.MyDIYPicActivity"/>
     <activity android:name=".activity.AboutActivity"/>
+    <activity android:name=".activity.HotTemplateActivity"/>
+    <activity android:name=".activity.AllpicInfoActivity"/>
+
+
+
     <activity
         android:name=".permission.HelpActivity"
         android:launchMode="singleTop"

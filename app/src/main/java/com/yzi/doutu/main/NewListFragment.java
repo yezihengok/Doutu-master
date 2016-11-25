@@ -142,7 +142,7 @@ public class NewListFragment extends Fragment
                         CommUtil.closeWaitDialog();
                         refreshComplete(listPage);
 
-                        if(time<2){
+                        if(time<1){
                             setData((NewPic) SharedUtils.getObject("newList",getActivity()));
                         }
 

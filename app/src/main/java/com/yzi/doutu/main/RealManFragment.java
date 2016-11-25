@@ -109,7 +109,7 @@ public class RealManFragment extends Fragment
                         Log.e("", e.toString());
                         CommUtil.closeWaitDialog();
                         mSwipeRefreshLayout.setRefreshing(false);
-                        if(time<2){
+                        if(time<1){
                             setData((NewPic) SharedUtils.getObject("realList",getActivity()));
                         }
                     }

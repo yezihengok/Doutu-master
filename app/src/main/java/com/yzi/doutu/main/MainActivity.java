@@ -40,6 +40,7 @@ import com.pizidea.imagepicker.ui.ImagesGridActivity;
 import com.yzi.doutu.R;
 import com.yzi.doutu.activity.AboutActivity;
 import com.yzi.doutu.activity.BaseActivity;
+import com.yzi.doutu.activity.HotTemplateActivity;
 import com.yzi.doutu.activity.ModifyPicActivity;
 import com.yzi.doutu.activity.MoreTypeActivity;
 import com.yzi.doutu.activity.MyDIYPicActivity;
@@ -86,6 +87,7 @@ public class MainActivity extends BaseActivity
     private FragmentPagerAdapter mViewPagerAdapter;
 
     private int page= 0;
+    AllListFragment allListFragment;
     NewListFragment listFragment;
     HotListFragment hotListFragment;
     RealManFragment realManFragment;
@@ -148,7 +150,9 @@ public class MainActivity extends BaseActivity
         mFragments.add(listFragment);
         hotListFragment=new HotListFragment(mTabLayout);
         realManFragment=new RealManFragment();
-        mFragments.add(hotListFragment);
+        allListFragment=new AllListFragment();
+        mFragments.add(allListFragment);
+        //mFragments.add(hotListFragment);
         mFragments.add(realManFragment);
         presenter = new UilImagePresenter();
         AndroidImagePicker.getInstance().setOnPictureTakeCompleteListener(this);//watching Picture taking
@@ -262,9 +266,10 @@ public class MainActivity extends BaseActivity
                 switch (menuItem.getItemId()) {
                     case R.id.nav_menu_home:
                         msgString = (String) menuItem.getTitle();
-                        SharedUtils.putString("",MainActivity.this,"icon_img",null);
-                        presenter.onPresentCircleImage(header_img,
-                                SharedUtils.getString("",MainActivity.this,"icon_img",CommUtil.ICON),0);
+//                        SharedUtils.putString("",MainActivity.this,"icon_img",null);
+//                        presenter.onPresentCircleImage(header_img,
+//                                SharedUtils.getString("",MainActivity.this,"icon_img",CommUtil.ICON),0);
+                        toActivity(HotTemplateActivity.class);
                         break;
 
                     case R.id.nav_menu_categories:

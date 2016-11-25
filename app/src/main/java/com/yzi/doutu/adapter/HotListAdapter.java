@@ -103,7 +103,7 @@ public class HotListAdapter extends RecyclerView.Adapter<HotListAdapter.ViewHold
         if("showMade".equals(dataform)){
             url=hotList.get(position).getMadeUrl();
         }
-        if (url.endsWith("gif") ||url.endsWith("GIF")) {
+        if (CommUtil.isGif(url)) {
             ((UilImagePresenter)presenter).displayGif(holder.img,url,CommUtil.getScreenWidth()/3);
         }else{
             presenter.onPresentImage(holder.img,url,CommUtil.getScreenWidth()/3);
