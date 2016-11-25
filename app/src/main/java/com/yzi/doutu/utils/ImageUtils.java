@@ -92,6 +92,13 @@ public class ImageUtils {
     }
 
 
+    /**
+     *
+     * @param options
+     * @param reqWidth 期望的高
+     * * @param reqHeight 期望的宽
+     * @return
+     */
     public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
@@ -337,6 +344,7 @@ public class ImageUtils {
         Bitmap bitmap = Bitmap.createBitmap(width,height,
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
+
         canvas.scale(scaleW,scaleH);
         v.draw(canvas);
         return bitmap;
@@ -496,7 +504,8 @@ public class ImageUtils {
         BufferedOutputStream bos = null;
         try {
             bos = new BufferedOutputStream(new FileOutputStream(new File(fileNames)));
-            compressBitmap(tempBitmap).compress(Bitmap.CompressFormat.JPEG, 100, bos);
+           // compressBitmap(tempBitmap).compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            tempBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
             bos.close();
         } catch (Exception e) {
@@ -518,7 +527,8 @@ public class ImageUtils {
         BufferedOutputStream bos = null;
         try {
             bos = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
-            compressBitmap(tempBitmap).compress(Bitmap.CompressFormat.JPEG, 100, bos);
+//            compressBitmap(tempBitmap).compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            tempBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
             bos.close();
         } catch (Exception e) {
@@ -526,7 +536,7 @@ public class ImageUtils {
         }
     }
 
-    public static String saveBitmapToFiles(Bitmap tempBitmap,final DataBean dataBean) {
+    public static String saveBitmapToFiles(Bitmap tempBitmap,final DataBean dataBean,int height,int width) {
         if (TextUtils.isEmpty(getFilesPath(FILE_DIY_PATH))) {
             return null;
         }
@@ -537,7 +547,8 @@ public class ImageUtils {
         BufferedOutputStream bos;
         try {
             bos = new BufferedOutputStream(new FileOutputStream(new File(fileNames)));
-            compressBitmap(tempBitmap).compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            compressBitmap(tempBitmap,height,width).compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            //tempBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
             bos.close();
 
@@ -571,7 +582,7 @@ public class ImageUtils {
      * @param image
      * @return
      */
-    public static Bitmap compressBitmap(Bitmap image) {
+    public static Bitmap compressBitmap(Bitmap image,int height,int width) {
         //防止对本数据进行就该
         Bitmap tempBitmap = image;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -581,10 +592,10 @@ public class ImageUtils {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(isBm, null, options);
 
+        int size=1;
         //重新设置压缩比
-        options.inSampleSize =1;
-      //  options.inSampleSize = calculateInSampleSize(options, 250, 250);// TODO: 250  根据自己的需求 动态设置 暂时不需要压缩尺寸
-
+        size = calculateInSampleSize(options, height, width);// TODO:  根据自己的需求 动态设置
+        options.inSampleSize =size;
         options.inJustDecodeBounds = false;
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;//降低图片从ARGB888到RGB565
         isBm = new ByteArrayInputStream(baos.toByteArray());

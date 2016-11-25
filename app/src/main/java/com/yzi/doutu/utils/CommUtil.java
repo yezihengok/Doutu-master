@@ -132,6 +132,14 @@ public class CommUtil {
      **/
     public static final String KEYWORD_SEARCH = "http://api.jiefu.tv/app2/api/dt/shareItem/search.html";
 
+    /**
+     * 热门模板
+     **/
+    public static final String TEMP_HOT= "http://mobile.bugua.com/template/hot/list/";
+    /**
+     * 全部表情分类
+     */
+    public static final String ALLPIC="http://mobile.bugua.com/folder/cherrypick/";
     private static CommUtil commUtil;
 
     public static CommUtil getInstance() {
@@ -837,7 +845,7 @@ public class CommUtil {
     public void toAddText(DataBean dataBean, final Context context, final CommInterface.setFinishListener finishListener) {
         String URL = dataBean.getGifPath();
 
-        if (isGif(URL)) {
+        if (isGif(URL)&&dataBean.is_gif()) {
             showgifMaker(context, dataBean, finishListener);
         } else {
             Intent intent = new Intent(context, ModifyPicActivity.class);

@@ -126,7 +126,7 @@ public class HotListFragment extends Fragment
                         Log.e("", e.toString());
                         CommUtil.closeWaitDialog();
                         refreshComplete(page);
-                        if(time<2){
+                        if(time<1){
                             setData((NewPic) SharedUtils.getObject("hotList",getActivity()),page);
                         }
                     }

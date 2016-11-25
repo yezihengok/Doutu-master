@@ -3,6 +3,7 @@ package com.yzi.doutu.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -13,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yzi.doutu.service.DouApplication;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -126,6 +130,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
     }
 
+
+    @NonNull
+    public Map<String, String> getHeaders() {
+        Map<String, String> headers=new LinkedHashMap<>();
+        headers.put("ticket","26craSjgyQqhVSiDvR7BRk");
+        //headers.put("ticket","34snDpjJWBdCDSac5w3EWN");
+        headers.put("yl-os","android");
+        headers.put("yl-client","fighting");
+        headers.put("yl-ver","5001200");
+        return headers;
+    }
 
 
     @Override

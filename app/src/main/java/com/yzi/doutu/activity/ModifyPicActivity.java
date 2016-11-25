@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.yzi.doutu.R.id.modifyLayout;
 import static com.yzi.doutu.utils.CommUtil.closeWaitDialog;
 import static com.yzi.doutu.utils.CommUtil.dip2px;
 import static com.yzi.doutu.utils.CommUtil.showWaitDialog;
@@ -226,7 +227,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
             words="来自相册的图片~";
 
             //先保存一下未添加文字之前的图片作为原图
-            showPath = ImageUtils.saveBitmapToFiles(showBitmap, dataBean);
+            showPath = ImageUtils.saveBitmapToFiles(showBitmap, dataBean,showBitmap.getHeight(),showBitmap.getWidth());
             Log.v("","相册选来的原图已保存至:" + showPath);
 
             //从相册选图过来的 需要new一个DataBean
@@ -384,9 +385,12 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
 
     private void save() {
         operateView.save();
-        // bitmap = ImageUtils.createViewBitmap(modifyLayout,0.3f);
-        bitmap = ImageUtils.createViewBitmap(operateView,HEIGHT,WIDTH);
-        String filePath = ImageUtils.saveBitmapToFiles(bitmap, dataBean);
+
+        bitmap = ImageUtils.createViewBitmap(operateView,1);
+       // bitmap=ImageUtils.scaleWithWH(bitmap,HEIGHT,WIDTH);
+     //   bitmap = ImageUtils.createViewBitmap(operateView,HEIGHT,WIDTH);
+
+        String filePath = ImageUtils.saveBitmapToFiles(bitmap, dataBean,HEIGHT,WIDTH);
         Log.v("","已保存至:" + filePath);
 
         dataBean.setName(words);

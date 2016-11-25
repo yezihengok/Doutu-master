@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.yzi.doutu.R;
 import com.yzi.doutu.adapter.HotListAdapter;
+import com.yzi.doutu.adapter.HotTemplateAdapter;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.utils.CommInterface;
@@ -23,11 +24,12 @@ public class MyFavoritesActivity extends BaseActivity implements CommInterface.O
 ,View.OnClickListener{
 
     private XRecyclerView mRecyclerView;
-    private HotListAdapter mAdapter;
+    private HotTemplateAdapter mAdapter;
 
     private int hotPage = 0;
     private List<DataBean> beanList; //
     private TextView tvRight;
+    int ITEM=4;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +53,13 @@ public class MyFavoritesActivity extends BaseActivity implements CommInterface.O
         mRecyclerView = (XRecyclerView)this.findViewById(R.id.xrecyclerview);
 
         tvRight.setOnClickListener(this);
-        GridLayoutManager layoutManager = new GridLayoutManager(this,3);
+        GridLayoutManager layoutManager = new GridLayoutManager(this,ITEM);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setLoadingMoreEnabled(false);
         mRecyclerView.setPullRefreshEnabled(false);
         beanList=new ArrayList<>();
-        mAdapter = new HotListAdapter(this,beanList,1,null);
+       // mAdapter = new HotListAdapter(this,beanList,1,null);
+        mAdapter = new HotTemplateAdapter(this,beanList,ITEM);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
         getFavorites();

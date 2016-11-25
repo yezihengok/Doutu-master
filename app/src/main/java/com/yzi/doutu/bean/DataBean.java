@@ -23,9 +23,19 @@ public  class DataBean implements Serializable {
     private int typeId;
     private int weight;
 
+    private boolean is_gif=true;//热门模板接口 才有的,需要根据这个判断是否是gif
     //sqlite 所需字段
     private String madeUrl; // 制作的图片地址
     private String fileName;//文件名
+
+
+    public boolean is_gif() {
+        return is_gif;
+    }
+
+    public void setIs_gif(boolean is_gif) {
+        this.is_gif = is_gif;
+    }
 
     public String getFileName() {
         return fileName;

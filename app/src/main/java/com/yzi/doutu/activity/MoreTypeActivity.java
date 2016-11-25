@@ -59,7 +59,7 @@ public class MoreTypeActivity extends BaseActivity implements CommInterface.OnIt
         this.typeName = (TextView) findViewById(R.id.typeName);
         inflater=LayoutInflater.from(MoreTypeActivity.this);
         beanList=new ArrayList<>();
-        ((TextView)findViewById(R.id.tvtitle)).setText("表情分类");
+        ((TextView)findViewById(R.id.tvtitle)).setText("模板分类");
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +91,7 @@ public class MoreTypeActivity extends BaseActivity implements CommInterface.OnIt
                     public void onError(Call call, Exception e, int id) {
                         Log.e("", e.toString());
                         CommUtil.closeWaitDialog();
-                        if(time<2){
+                        if(time<1){
                             setData((AllType) SharedUtils.getObject("allType",context));
                         }
                     }
@@ -118,10 +118,10 @@ public class MoreTypeActivity extends BaseActivity implements CommInterface.OnIt
         if (beanList != null&&beanList.size()>0) {
 
             //分类还到第一位置
-//            AllType.DataBean dataBean=beanList.get(beanList.size()-1);
-//            beanList.remove(beanList.get(beanList.size()-1));
-//            beanList.add(0,dataBean);
-            Collections.shuffle(beanList);//随机打乱一下list顺序
+            AllType.DataBean dataBean=beanList.get(beanList.size()-1);
+            beanList.remove(beanList.get(beanList.size()-1));
+            beanList.add(0,dataBean);
+            //Collections.shuffle(beanList);//随机打乱一下list顺序
             for (int i = 0; i <beanList.size() ; i++) {
                View v=inflater.inflate(R.layout.activity_moretype_item,null);
                 addtype(beanList.get(i).getDtTypeModel(), v,i);

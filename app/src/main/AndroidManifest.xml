@@ -28,7 +28,6 @@
         android:label="@string/app_name">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
-
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
 
@@ -44,6 +43,11 @@
     <activity android:name=".activity.MyFavoritesActivity"/>
     <activity android:name=".activity.MyDIYPicActivity"/>
     <activity android:name=".activity.AboutActivity"/>
+    <activity android:name=".activity.HotTemplateActivity"/>
+    <activity android:name=".activity.AllpicInfoActivity"/>
+
+
+
     <activity
         android:name=".permission.HelpActivity"
         android:launchMode="singleTop"
