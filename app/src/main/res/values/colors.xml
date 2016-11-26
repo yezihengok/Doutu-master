@@ -50,6 +50,7 @@
   <color name="subscribe_activity_bg">#ffefefef</color>
   <color name="subscribe_bg">#fff5f5f5</color>
   <color name="subscribe_seperate_line">#ffcdcdcd</color>
+  <color name="subscribe_line">#b3cdcdcd</color>
   <color name="background_tab_pressed">#33999999</color>
 
   <color name="aplsh">#20000000</color>

@@ -1,29 +1,19 @@
 package com.yzi.doutu.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.pizidea.imagepicker.ImagePresenter;
 import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
-import com.yzi.doutu.activity.MoreTypeListActivity;
-import com.yzi.doutu.bean.AllType;
 import com.yzi.doutu.bean.DataBean;
-import com.yzi.doutu.bean.HotTemplate;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 
 import java.util.List;
-
-import static com.yzi.doutu.R.id.rootLayout;
 
 /**
  *
@@ -43,7 +33,7 @@ public class HotTemplateAdapter extends RecyclerView.Adapter<HotTemplateAdapter.
     public Context mContext;
     public List<DataBean> hotList;
     public LayoutInflater mLayoutInflater;
-    ImagePresenter presenter;
+    UilImagePresenter presenter;
     int itemW;//一行有多少个tiem
     public HotTemplateAdapter(Context mContext, List<DataBean> hotList,int itemW) {
         this.mContext = mContext;
@@ -82,7 +72,7 @@ public class HotTemplateAdapter extends RecyclerView.Adapter<HotTemplateAdapter.
         lp.height = CommUtil.getScreenWidth()/itemW-CommUtil.dip2px(10);
         holder.img.setLayoutParams(lp);
         String url=hotList.get(position).getPicPath();
-        presenter.onPresentImage(holder.img,url,CommUtil.getScreenWidth()/3);
+        presenter.displayImg(holder.img,url,CommUtil.getScreenWidth()/3);
 
     }
     //获取数据的数量

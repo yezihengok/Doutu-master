@@ -4,7 +4,7 @@
 
   <string-array name="tab_titles">
     <item>最新表情包</item>
-    <item>最热表情包</item>
+    <item>主题表情包</item>
     <item>真人表情包</item>
   </string-array>
 </resources>

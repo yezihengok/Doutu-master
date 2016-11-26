@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -216,7 +217,6 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
         if(formWhere!=null){
 
             fileUri=bundle.getParcelable("fileUri");
-
             try {
                 showBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(),fileUri);
             } catch (FileNotFoundException e) {
@@ -235,6 +235,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
                 dataBean=new DataBean();
                 dataBean.setGifPath(showPath);// GifPath该字段只有在从相册选图时，该地址会保存截图的本地文件路径
                 dataBean.setName(words);
+                dataBean.setId((int)System.currentTimeMillis());
                 WIDTH=HEIGHT=showBitmap.getWidth();//相册选来的图片保存我稍微设置大一点
             }
 
@@ -270,7 +271,6 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
 
         edWords.setText(words);
         edWords.setSelection(words.length());
-
 
         // 延迟每次延迟10 毫秒 隔1秒执行一次
         timer.schedule(task, 10, 1000);

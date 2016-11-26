@@ -65,7 +65,13 @@ public class AllpicInfoActivity extends BaseActivity implements CommInterface.On
             }
         });
         if(listBean.getFolder()!=null){
-            ((TextView)findViewById(R.id.tvtitle)).setText(listBean.getFolder().getName());
+            String title=listBean.getFolder().getName();
+            if(title.length()>=9){
+                ((TextView)findViewById(R.id.tvtitle)).setText(title.substring(0,9)+"...");
+            }else{
+                ((TextView)findViewById(R.id.tvtitle)).setText(title);
+            }
+
         }
         tvRight= (TextView) findViewById(R.id.tvRight);
         setTextValues(tvRight,"");

@@ -19,25 +19,12 @@
 package com.pizidea.imagepicker;
 
 import android.content.Context;
-import android.database.Observable;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.gifdecoder.GifDecoder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.bumptech.glide.request.target.Target;
 import com.example.yzh.mylibrary.R;
-
-import java.util.concurrent.TimeUnit;
-
-import static android.R.attr.duration;
 
 /**
  * <b>desc your class</b><br/>
@@ -155,6 +142,21 @@ public class UilImagePresenter implements ImagePresenter {
         //设置播放次数和播放监听的时候，不应加上.asGif()
     }
 
+    public void displayImg(ImageView imageView, String imageUri,int size) {
+        Glide.with(imageView.getContext()).
+                load(imageUri)
+                .asBitmap()
+                .dontAnimate()
+                .thumbnail(0.5f)
+                .override(size/4*3, size/4*3)
+                .centerCrop()
+                .error(R.drawable.default_img)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(imageView);
+
+        //.into(new GlideDrawableImageViewTarget(holder.img, 2));//显示循序播放gif 为2次。默认GIF播放是无限循环的，
+        //设置播放次数和播放监听的时候，不应加上.asGif()
+    }
 
     /**
      * 加载drawable图片

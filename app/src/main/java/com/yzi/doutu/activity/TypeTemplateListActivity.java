@@ -10,37 +10,32 @@ import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.yzi.doutu.R;
 import com.yzi.doutu.adapter.HotListAdapter;
-import com.yzi.doutu.adapter.HotTemplateAdapter;
-import com.yzi.doutu.bean.AllType;
 import com.yzi.doutu.bean.DataBean;
-import com.yzi.doutu.bean.HotTemplate;
+import com.yzi.doutu.bean.NewPic;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;
-import com.yzi.doutu.utils.SharedUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Call;
 
 /**
- * 热门表情模板
- * Created by yzh-t105 on 2016/11/22.
+ * Created by yzh-t105 on 2016/9/22.
  */
-public class HotTemplateActivity extends BaseActivity implements CommInterface.OnItemClickListener{
+public class TypeTemplateListActivity extends BaseActivity implements CommInterface.OnItemClickListener{
 
     private XRecyclerView mRecyclerView;
-    private HotTemplateAdapter mAdapter;
+    private HotListAdapter mAdapter;
 
     private int hotPage = 0;
-    private List<DataBean> hotList;
-    private int lastId;//最后一个id
-    int ITEM=3;
+    private List<DataBean> hotList; //
+
+    private int id;
+    private String name;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,24 +46,26 @@ public class HotTemplateActivity extends BaseActivity implements CommInterface.O
     }
 
     private void initView() {
-
+        id=getIntent().getExtras().getInt("id");
+        name=getIntent().getExtras().getString("name");
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        ((TextView)findViewById(R.id.tvtitle)).setText("热门模板");
+        ((TextView)findViewById(R.id.tvtitle)).setText(name);
+        ((TextView)findViewById(R.id.tvRight)).setText("");
         mRecyclerView = (XRecyclerView)this.findViewById(R.id.xrecyclerview);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this,ITEM);
+        GridLayoutManager layoutManager = new GridLayoutManager(this,3);
         mRecyclerView.setLayoutManager(layoutManager);
 
         mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
         mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
         mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
         hotList=new ArrayList<>();
-        mAdapter = new HotTemplateAdapter(this,hotList,ITEM);
+        mAdapter = new HotListAdapter(this,hotList);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
@@ -88,14 +85,11 @@ public class HotTemplateActivity extends BaseActivity implements CommInterface.O
 
     public void getHotList() {
         Log.v("", "getHotList");
-        Map<String, String> params =new LinkedHashMap<>();
-        params.put("cls","0");
-        if(lastId>0){
-            params.put("last_id",String.valueOf(lastId));
-        }
-        OkHttpUtils.get().url(CommUtil.TEMP_HOT)
-                .headers(getHeaders())
-                .params(params)
+
+        OkHttpUtils.get().url(CommUtil.ALLTYPEBYID)
+                .addParams("pageNum", String.valueOf(hotPage))
+                .addParams("pageSize", "20")
+                .addParams("tagId",String.valueOf(id))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -103,9 +97,6 @@ public class HotTemplateActivity extends BaseActivity implements CommInterface.O
                         Log.e("", e.toString());
                         CommUtil.closeWaitDialog();
                         refreshComplete(hotPage);
-                        if(hotPage<1){
-                            setData((HotTemplate)SharedUtils.getObject("HotTemplateActivity",HotTemplateActivity.this));
-                        }
                     }
 
                     @Override
@@ -113,45 +104,21 @@ public class HotTemplateActivity extends BaseActivity implements CommInterface.O
                         Log.d("", response);
                         refreshComplete(hotPage);
                         CommUtil.closeWaitDialog();
-
-                        HotTemplate template = PraseUtils.parseJsons(response, HotTemplate.class);
-                        if (template != null) {
-                            setData(template);
+                        NewPic newPic = PraseUtils.parseJsons(response, NewPic.class);
+                        if (newPic != null) {
+                            if (newPic.getData() != null) {
+                                if (hotPage==0){
+                                    hotList.clear();
+                                }
+                                hotPage++;
+                                hotList.addAll(newPic.getData());
+                                Log.d("", "hotList.size():" + hotList.size());
+                                mAdapter.notifyDataSetChanged();
+                            }
 
                         }
                     }
                 });
-    }
-
-    private void setData(HotTemplate template) {
-        if (template.getTemplates() != null) {
-            if (hotPage==0){
-                hotList.clear();
-            }
-
-            //因为之前写的 数据操作都是以dataBean为基准的,所以把数据塞过去
-            for (HotTemplate.TemplatesBean templatesBean:template.getTemplates()){
-                 String ids =String.valueOf(templatesBean.getId());
-                if(!"6022".equals(ids)&& !"6023".equals(ids)&&!"13225".equals(ids)){//这几个是辣鸡数据不显示
-                    DataBean dataBean=new DataBean();
-                    dataBean.setId(templatesBean.getId());
-                    dataBean.setGifPath(templatesBean.getFpic());
-                    dataBean.setPicPath(templatesBean.getFthumb());
-                    dataBean.setName(templatesBean.getText());
-                    dataBean.setIs_gif(templatesBean.isIs_gif());
-                    hotList.add(dataBean);
-                }
-
-            }
-            lastId=template.getLast_id();
-            if(hotPage==0){
-                SharedUtils.putObject("HotTemplateActivity",template,HotTemplateActivity.this);
-            }
-            hotPage++;
-
-            Log.d("", "hotList.size():" + hotList.size());
-            mAdapter.notifyDataSetChanged();
-        }
     }
 
 
@@ -166,6 +133,7 @@ public class HotTemplateActivity extends BaseActivity implements CommInterface.O
     @Override
     public void onItemClick(View view, int position) {
 
+        //CommUtil.getInstance().showSharePop(this, hotList.get(position));
         CommUtil.getInstance().toAddText( hotList.get(position),this,null);
     }
 

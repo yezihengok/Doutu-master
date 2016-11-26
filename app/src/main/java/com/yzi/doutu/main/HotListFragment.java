@@ -37,6 +37,7 @@ import okhttp3.Call;
 /**
  * Created by yzh on 2016/09/25.
  */
+@Deprecated  //暂时没添加至首页
 public class HotListFragment extends Fragment
         implements CommInterface.OnItemClickListener{
 

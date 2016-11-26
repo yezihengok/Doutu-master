@@ -31,7 +31,7 @@ public class AllListAdapter extends RecyclerView.Adapter<AllListAdapter.ViewHold
     public Context mContext;
     public List<AllPic.ListBean> list;
     public LayoutInflater mLayoutInflater;
-    ImagePresenter presenter;
+    UilImagePresenter presenter;
 
 
     public void setlist(List<AllPic.ListBean> list) {
@@ -92,7 +92,7 @@ public class AllListAdapter extends RecyclerView.Adapter<AllListAdapter.ViewHold
         if (imgs!= null && !imgs.isEmpty()) {
             for (int i = 0; i <imgs.size() ; i++) {
                 //holder.imgViews[i].setLayoutParams(lp);
-                presenter.onPresentImage(holder.imgViews[i],
+                presenter.displayImg(holder.imgViews[i],
                         imgs.get(i),height);
             }
         }

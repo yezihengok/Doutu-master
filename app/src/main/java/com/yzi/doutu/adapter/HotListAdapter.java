@@ -31,8 +31,14 @@ public class HotListAdapter extends RecyclerView.Adapter<HotListAdapter.ViewHold
     public Context mContext;
     public List<DataBean> hotList;
     public LayoutInflater mLayoutInflater;
-    ImagePresenter presenter;
+    UilImagePresenter presenter;
     String dataform;
+
+    boolean justShowBitmap=false;
+    /**只显示静态图片**/
+    public void setJustShowBitmap(boolean justShowBitmap) {
+        this.justShowBitmap = justShowBitmap;
+    }
 
     public void setHotList(List<DataBean> hotList) {
         this.hotList = hotList;
@@ -87,14 +93,11 @@ public class HotListAdapter extends RecyclerView.Adapter<HotListAdapter.ViewHold
             });
         }
         ViewGroup.LayoutParams lp = holder.img.getLayoutParams();
-
-
+        lp.height = CommUtil.getScreenWidth()/itemWidth-CommUtil.dip2px(8);
         if(flag!=1){
-            lp.height = CommUtil.getScreenWidth()/itemWidth- CommUtil.dip2px(20);
             holder.mTextView.setText(hotList.get(position).getName());
         }else{
             holder.mTextView.setVisibility(View.GONE);
-            lp.height = CommUtil.getScreenWidth()/itemWidth-CommUtil.dip2px(20);
         }
         holder.img.setLayoutParams(lp);
 
@@ -103,10 +106,10 @@ public class HotListAdapter extends RecyclerView.Adapter<HotListAdapter.ViewHold
         if("showMade".equals(dataform)){
             url=hotList.get(position).getMadeUrl();
         }
-        if (CommUtil.isGif(url)) {
-            ((UilImagePresenter)presenter).displayGif(holder.img,url,CommUtil.getScreenWidth()/3);
+        if (CommUtil.isGif(url)&&!justShowBitmap) {
+            presenter.displayGif(holder.img,url,CommUtil.getScreenWidth()/3);
         }else{
-            presenter.onPresentImage(holder.img,url,CommUtil.getScreenWidth()/3);
+            presenter.displayImg(holder.img,url,CommUtil.getScreenWidth()/3);
         }
 
     }

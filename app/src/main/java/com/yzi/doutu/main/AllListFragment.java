@@ -35,7 +35,7 @@ import java.util.Random;
 
 import okhttp3.Call;
 
-/**
+/**主题表情包
  * Created by yzh on 2016/11/24.
  */
 public class AllListFragment extends Fragment

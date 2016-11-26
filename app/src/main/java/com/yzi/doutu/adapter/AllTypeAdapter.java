@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.pizidea.imagepicker.ImagePresenter;
 import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
-import com.yzi.doutu.activity.MoreTypeListActivity;
+import com.yzi.doutu.activity.TypeTemplateListActivity;
 import com.yzi.doutu.bean.AllType;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
@@ -79,7 +79,7 @@ public class AllTypeAdapter extends RecyclerView.Adapter<AllTypeAdapter.ViewHold
         holder.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mContext, MoreTypeListActivity.class);
+                Intent intent=new Intent(mContext, TypeTemplateListActivity.class);
                 intent.putExtra("id",hotList.get(position).getId());
                 intent.putExtra("name",hotList.get(position).getName());
                 mContext.startActivity(intent);

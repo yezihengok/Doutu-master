@@ -11,7 +11,7 @@
     <item
         android:id="@+id/nav_menu_categories"
         android:icon="@mipmap/ic_sort_by_alpha_white_48dp"
-        android:title="制图分类"/>
+        android:title="分类制图"/>
     <item
         android:id="@+id/nav_menu_fav"
         android:icon="@mipmap/tabb"

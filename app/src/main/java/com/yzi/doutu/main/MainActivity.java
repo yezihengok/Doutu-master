@@ -42,7 +42,7 @@ import com.yzi.doutu.activity.AboutActivity;
 import com.yzi.doutu.activity.BaseActivity;
 import com.yzi.doutu.activity.HotTemplateActivity;
 import com.yzi.doutu.activity.ModifyPicActivity;
-import com.yzi.doutu.activity.MoreTypeActivity;
+import com.yzi.doutu.activity.TypeTemplateActivity;
 import com.yzi.doutu.activity.MyDIYPicActivity;
 import com.yzi.doutu.activity.MyFavoritesActivity;
 import com.yzi.doutu.adapter.FragmentPagerAdapter;
@@ -61,7 +61,6 @@ import static android.view.View.OnClickListener;
 import static com.yzi.doutu.utils.CommUtil.WEIBA;
 import static com.yzi.doutu.utils.CommUtil.isWeiBaopen;
 import static com.yzi.doutu.utils.ImageUtils.DOWN_PATH;
-import static com.yzi.doutu.utils.ImageUtils.ROOT_PATH;
 
 /**
  * Created by yzh on 2016/09/25.
@@ -148,7 +147,7 @@ public class MainActivity extends BaseActivity
         listFragment = new NewListFragment(mTabLayout);
         listFragment.setArguments(mBundle);
         mFragments.add(listFragment);
-        hotListFragment=new HotListFragment(mTabLayout);
+        //hotListFragment=new HotListFragment(mTabLayout);
         realManFragment=new RealManFragment();
         allListFragment=new AllListFragment();
         mFragments.add(allListFragment);
@@ -220,7 +219,7 @@ public class MainActivity extends BaseActivity
         mViewPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager(), mFragments,mTitles);
         mViewPager.setAdapter(mViewPagerAdapter);
         // 设置ViewPager最大缓存的页面个数
-        mViewPager.setOffscreenPageLimit(mTitles.length);
+        //mViewPager.setOffscreenPageLimit(mTitles.length);
         // 给ViewPager添加页面动态监听器（为了让Toolbar中的Title可以变化相应的Tab的标题）
         mViewPager.addOnPageChangeListener(this);
 
@@ -274,7 +273,7 @@ public class MainActivity extends BaseActivity
 
                     case R.id.nav_menu_categories:
                         msgString = (String) menuItem.getTitle();
-                        Intent intent=new Intent(MainActivity.this,MoreTypeActivity.class);
+                        Intent intent=new Intent(MainActivity.this,TypeTemplateActivity.class);
                         startActivity(intent);
                         // mDrawerLayout.closeDrawers();
                         break;
@@ -395,23 +394,29 @@ public class MainActivity extends BaseActivity
             return true;
         }else if(id==R.id.action_picTake){
 
-            AndroidImagePicker.getInstance().setSelectMode(AndroidImagePicker.Select_Mode.MODE_SINGLE);
-            AndroidImagePicker.getInstance().setShouldShowCamera(true);
-            final Intent intent=new Intent(this,ImagesGridActivity.class);
-            intent.putExtra("isCrop", true);
-            startActivity(intent);
-            //裁剪监听
-            AndroidImagePicker.getInstance().setCropCompleteListener(new AndroidImagePicker.OnCropCompleteListener() {
+            PermissionUtil.getInstance().request(new String[]{Manifest.permission.CAMERA},new PermissionResultAdapter() {
+                //已授予
                 @Override
-                public void cropComplete(Uri fileUri, Bitmap bitmap) {
+                public void onPermissionGranted(String... permissions) {
+                    pickPicture();
+                }
 
-                    Bundle bundle=new Bundle();
-                    bundle.putString("formWhere","takePic");
-                    bundle.putParcelable("fileUri",fileUri);
-                    Intent intent1=new Intent(MainActivity.this, ModifyPicActivity.class);
-                    intent1.putExtras(bundle);
-                   // startActivity(intent);
-                    MainActivity.this.onActivityResult(CROP,RESULT_OK,intent1);
+                //已禁止权限
+                @Override
+                public void onPermissionDenied(String... permissions) {
+                    CommUtil.showDialog(context, "亲您已经禁止过拍照权限。请去权限管理勾选吧", "好的",
+                            null, new CommInterface.setClickListener() {
+                                @Override
+                                public void onResult() {
+                                    CommUtil.getAppDetailSettingIntent(MainActivity.this);
+                                    CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
+                                }
+                            },null);
+                }
+                //已拒绝权限，但可以在提示
+                @Override
+                public void onRationalShow(String... permissions) {
+                    //Toast.makeText(SecondActivity.this, permissions[0] + " is rational", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -419,6 +424,31 @@ public class MainActivity extends BaseActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 从相册选图
+     */
+    private void pickPicture() {
+        AndroidImagePicker.getInstance().setSelectMode(AndroidImagePicker.Select_Mode.MODE_SINGLE);
+        AndroidImagePicker.getInstance().setShouldShowCamera(true);
+        final Intent intent=new Intent(this,ImagesGridActivity.class);
+        intent.putExtra("isCrop", true);
+        startActivity(intent);
+        //裁剪监听
+        AndroidImagePicker.getInstance().setCropCompleteListener(new AndroidImagePicker.OnCropCompleteListener() {
+            @Override
+            public void cropComplete(Uri fileUri, Bitmap bitmap) {
+
+                Bundle bundle=new Bundle();
+                bundle.putString("formWhere","takePic");
+                bundle.putParcelable("fileUri",fileUri);
+                Intent intent1=new Intent(MainActivity.this, ModifyPicActivity.class);
+                intent1.putExtras(bundle);
+                // startActivity(intent);
+                MainActivity.this.onActivityResult(CROP,RESULT_OK,intent1);
+            }
+        });
     }
 
     @Override public void onPageSelected(int position) {
@@ -465,7 +495,16 @@ public class MainActivity extends BaseActivity
                     }
                     //已禁止权限
                     @Override
-                    public void onPermissionDenied(String... permissions) {}
+                    public void onPermissionDenied(String... permissions) {
+                        CommUtil.showDialog(context, "亲您已经禁止过拍照权限。请去权限管理勾选吧", "好的",
+                                null, new CommInterface.setClickListener() {
+                            @Override
+                            public void onResult() {
+                                CommUtil.getAppDetailSettingIntent(MainActivity.this);
+                                CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
+                            }
+                        },null);
+                    }
                     //已拒绝权限，但可以在提示
                     @Override
                     public void onRationalShow(String... permissions) {

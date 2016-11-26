@@ -104,6 +104,7 @@ public class RealManInfoListActivity extends BaseActivity implements GradationSc
         realList=new ArrayList<>();
         realListAdapter = new HotListAdapter(this,realList);
         realListAdapter.setOnItemClickListener(this);
+        realListAdapter.setJustShowBitmap(true);
         mRecyclerView.setAdapter(realListAdapter);
 
         getRealManList();

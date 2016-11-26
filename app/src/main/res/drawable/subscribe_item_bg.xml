@@ -5,14 +5,14 @@
     <item android:state_focused="true">
         <shape>
             <stroke android:width="0.5dip" android:color="@color/subscribe_item_disabled_stroke" />
-            <solid android:color="@color/subscribe_seperate_line" />
+            <solid android:color="@color/subscribe_line" />
         </shape>
     </item>
 
     <item android:state_pressed="true">
         <shape>
             <stroke android:width="0.5dip" android:color="@color/subscribe_item_pressed_stroke" />
-            <solid android:color="@color/subscribe_seperate_line" />
+            <solid android:color="@color/subscribe_line" />
         </shape>
     </item>
 
