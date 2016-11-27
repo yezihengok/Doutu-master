@@ -21,7 +21,7 @@
    所以微信分享大家看看代码实现就好，要实现微信分享需要你到微信开发者中心注册。
   至于要看效果 app我已上架至应用市场
 * 应用宝下载地址：http://sj.qq.com/myapp/detail.htm?apkName=com.yzi.doutu
-* 百度应用市场下载地址：http://shouji.baidu.com/software/10379397.html
+* 百度应用市场下载地址：http://shouji.baidu.com/software/10409708.html
 
 ####效果动图：
 
