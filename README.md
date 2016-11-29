@@ -13,7 +13,7 @@
 * Gilde操作使用：加载圆形图、利用Gilde下载图片。
 * popWindow+属性动画实现的通知效果
 * QQ 微信SDK 分享使用、直接调用微信QQ分享界面
-* SwipeRefreshLayout和RecyclerView结合实现下拉刷新，以及的用法，还有RecyclerView中item的点击事件的实现方法等...
+* SwipeRefreshLayout和RecyclerView结合实现下拉刷新，以及的用法 还有TabLayout CardView 等等 Material Design风格使用例子...
 * 其它DEMO中运用到的框架
    感谢：xrecyclerview、glide、okhttputils opengit等开源作者
 
