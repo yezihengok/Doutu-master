@@ -247,7 +247,7 @@ public class WindowService extends Service {
                         break;
                     case MotionEvent.ACTION_UP:
                         long moveTime = System.currentTimeMillis() - currentMS;
-                        if(moveTime>1200&&(moveX<70||moveY<70)){
+                        if(moveTime>1000&&(moveX<100||moveY<100)){
                             handler.sendEmptyMessage(LONG_TAG);
                             return true;//消费掉事件不在传递
                         }
@@ -293,6 +293,7 @@ public class WindowService extends Service {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 remove();
+                                onDestroy();
                             }
                         });
 

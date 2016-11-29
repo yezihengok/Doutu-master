@@ -20,7 +20,7 @@ public class SharedUtils
 {
 
 	// 配置文件名称
-	public static final String SHARED_NAME = "ABC";
+	public static final String SHARED_NAME = "doutu";
 
 	private static SharedPreferences getInstance(Context context, int mode, String shareName)
 	{
@@ -199,7 +199,7 @@ public class SharedUtils
 		if(context==null||obj==null){
 			return;
 		}
-		SharedPreferences sp = context.getSharedPreferences("newObj",
+		SharedPreferences sp = context.getSharedPreferences(key,
 				Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sp.edit();
 
@@ -228,7 +228,7 @@ public class SharedUtils
 	}
 
 	public static Object getObject(String key,Context context){
-		SharedPreferences sp = context.getSharedPreferences("newObj",
+		SharedPreferences sp = context.getSharedPreferences(key,
 				Context.MODE_PRIVATE);
 		String serStr = sp.getString(key, "");
 		ByteArrayInputStream bai = null;

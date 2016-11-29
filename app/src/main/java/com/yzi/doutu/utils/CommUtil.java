@@ -240,7 +240,7 @@ public class CommUtil {
                     @Override
                     public void onDownLoadFailed() {
                         // 图片保存失败
-                        //closeWaitDialog();
+                        closeWaitDialog();
                         showToast("获取图片失败");
                     }
                 });
@@ -275,7 +275,7 @@ public class CommUtil {
 
                     @Override
                     public void onDownLoadFailed() {
-                        //closeWaitDialog();
+                        closeWaitDialog();
                         showToast("获取图片失败");
                     }
                 });

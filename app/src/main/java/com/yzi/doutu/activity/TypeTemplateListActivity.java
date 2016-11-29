@@ -66,6 +66,7 @@ public class TypeTemplateListActivity extends BaseActivity implements CommInterf
         mRecyclerView.setArrowImageView(R.drawable.iconfont_downgrey);
         hotList=new ArrayList<>();
         mAdapter = new HotListAdapter(this,hotList);
+        mAdapter.setJustShowBitmap(true);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {

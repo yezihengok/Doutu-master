@@ -242,10 +242,10 @@ public class MainActivity extends BaseActivity
     }
 
     private void setweiba() {
-        if(SharedUtils.getBoolean(WEIBA,this,WEIBA,false)){
-            weiba_item.setTitle("QQ分享尾巴: 开");
+        if(CommUtil.isWeiBaopen()){
+            weiba_item.setTitle("分享尾巴: 开");
         }else{
-            weiba_item.setTitle("QQ分享尾巴: 关");
+            weiba_item.setTitle("分享尾巴: 关");
         }
     }
 
@@ -297,9 +297,9 @@ public class MainActivity extends BaseActivity
                             @Override
                             public void onResult() {
                                 if(isWeiBaopen()){
-                                    SharedUtils.putBoolean(WEIBA,MainActivity.this,WEIBA,false);
+                                    SharedUtils.putBoolean(null,context,WEIBA,false);
                                 }else{
-                                    SharedUtils.putBoolean(WEIBA,MainActivity.this,WEIBA,true);
+                                    SharedUtils.putBoolean(null,context,WEIBA,true);
                                 }
                                 setweiba();
                             }
@@ -326,7 +326,7 @@ public class MainActivity extends BaseActivity
 
                             }
                         }else{
-                            CommUtil.showToast("不要我点了，已经开启啦~");
+                            CommUtil.showToast("不要点我了，已经开启啦~");
                         }
 
                         break;

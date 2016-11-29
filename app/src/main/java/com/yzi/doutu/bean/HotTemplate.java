@@ -43,7 +43,7 @@ public class HotTemplate implements Serializable{
         this.templates = templates;
     }
 
-    public static class TemplatesBean {
+    public static class TemplatesBean implements Serializable{
         /**
          * with_text : ["你这个逼的装法是谁教你的，太厉害了！","你丑到我了","从前有个人欠我钱。后来他死了！","想要就直说嘛","她的值日取消，懂？","我这人从不记仇，一般有仇当场我就报了","只因为在人群中多看了你女朋友一眼","别再用你上古时期的图跟爸爸斗了","你说这话我就不爱听了","你不要紧张，我不是什么好人"]
          * is_gif : false

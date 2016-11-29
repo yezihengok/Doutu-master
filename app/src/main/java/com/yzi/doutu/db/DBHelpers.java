@@ -90,6 +90,19 @@ public class DBHelpers extends SQLiteOpenHelper {
 		Cursor cursor=db.query(TABLE_NAME, null, null, null, null, null, null);
 		return cursor;
 	}
+
+	/**
+	 * 查询起止条数的内容 (分页查询使用)
+	 * @param start
+	 * @param end
+     * @return
+     */
+	public Cursor select(int start,int end){
+		SQLiteDatabase db=this.getWritableDatabase();
+		//select * from table limit 0,10
+		Cursor cursor=db.rawQuery("select * from "+TABLE_NAME+" limit "+start+","+end, null);
+		return cursor;
+	}
 	
 	/**
 	 * 根据图片查询该条数据的_id

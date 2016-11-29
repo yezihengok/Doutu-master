@@ -23,7 +23,7 @@
     <item
         android:id="@+id/nav_menu_feedback"
         android:icon="@mipmap/icon_black_list"
-        android:title="QQ分享尾巴: 开" />
+        android:title="分享尾巴: 开" />
     <item
         android:id="@+id/nav_menu_setting"
         android:icon="@mipmap/ic_settings_white_48dp"

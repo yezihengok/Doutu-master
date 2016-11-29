@@ -35,18 +35,19 @@ public class DBTools {
 
     /**
      * 获取收藏的列表
-     *
-     * @param fromCatch 是否取缓存 操作更新过SQLite 传false
+     * @param start 查询条数的起止数，都为0则视为查询全部
+     * @param end
      * @return
      */
-    public List<DataBean> getFavorites(boolean fromCatch) {
-        if (infos != null && !infos.isEmpty()) {
-            if (fromCatch)
-                return infos;
-        }
+    public List<DataBean> getFavorites(int start,int end) {
 
         infos = new ArrayList<>();
-        cursor = dbHelpers.select();
+        if(start==0&&end==0){
+            cursor = dbHelpers.select();
+        }else{
+            cursor = dbHelpers.select(start,end);
+        }
+
         if (cursor.getCount() <= 0) {
             return infos;
         }
@@ -103,13 +104,18 @@ public class DBTools {
 
     /**
      * 获取制作的列表
-     *
+     * @param start 查询条数的起止数，都为0则视为查询全部
+     * @param end
      * @return
      */
-    public List<DataBean> getMades() {
+    public List<DataBean> getMades(int start,int end) {
 
         infos = new ArrayList<>();
-        cursor = select_made();
+        if(start==0&&end==0){
+            cursor = select_made();
+        }else{
+            cursor = select_made(start,end);
+        }
         if (cursor.getCount() <= 0) {
             return infos;
         }
@@ -197,7 +203,11 @@ public class DBTools {
         Cursor cursor=db.query(dbHelpers.TABLE_MADE, null, null, null, null, null, null);
         return cursor;
     }
-
+    public Cursor select_made(int start,int end){
+        SQLiteDatabase db=dbHelpers.getWritableDatabase();
+        Cursor cursor=db.rawQuery("select * from "+dbHelpers.TABLE_MADE+" limit "+start+","+end, null);
+        return cursor;
+    }
 
     /**
      * 新增

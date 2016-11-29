@@ -72,7 +72,8 @@ public class HotTemplateAdapter extends RecyclerView.Adapter<HotTemplateAdapter.
         lp.height = CommUtil.getScreenWidth()/itemW-CommUtil.dip2px(10);
         holder.img.setLayoutParams(lp);
         String url=hotList.get(position).getPicPath();
-        presenter.displayImg(holder.img,url,CommUtil.getScreenWidth()/3);
+       // presenter.displayImg(holder.img,url,CommUtil.getScreenWidth()/3);
+        presenter.onPresentImage(holder.img,url,CommUtil.getScreenWidth()/3);
 
     }
     //获取数据的数量

@@ -89,6 +89,7 @@ public class QQShareManager {
 
     public void toQShare(String url) {
         Bundle params = new Bundle();
+        //params.putString(QQShare.SHARE_TO_QQ_TARGET_URL,  "http://a.app.qq.com/o/simple.jsp?pkgname=com.yzi.doutu");//这条分享消息被好友点击后的跳转URL
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL,url);
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME,CommUtil.getInstance().getString( R.string.app_name));
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);

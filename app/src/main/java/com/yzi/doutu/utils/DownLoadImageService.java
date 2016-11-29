@@ -60,9 +60,9 @@ public class DownLoadImageService implements Runnable {
                 }
                 String name;
                 if (url.endsWith("gif") || url.endsWith("GIF")) {
-                    name = "/" + dataBean.getId()+ ".gif";
+                    name =dataBean.getId()+ ".gif";
                 } else {
-                    name = "/" +dataBean.getId()+ ".jpg";
+                    name =dataBean.getId()+ ".jpg";
                 }
                 cppyFile(file, pathStr, name);
             }
@@ -116,18 +116,18 @@ public class DownLoadImageService implements Runnable {
      *
      * @param fileOld     原文件File
      * @param pathNew     新文件路径  /storage/emulated/0/
-     * @param newFileName 新文件名称 /a.jpg
+     * @param newFileName 新文件名称 a.jpg
      */
     public void cppyFile(File fileOld, final String pathNew,final String newFileName) {
         //File fileOld = new File(fileOld);
-        File fileNew = new File(pathNew);
-        if (!fileNew.exists()) {
-            fileNew.mkdir();
+        File files = new File(pathNew);
+        if (!files.exists()) {
+            files.mkdir();
         }
         if (fileOld.exists()) {
             try {
                 FileInputStream in = new FileInputStream(fileOld);
-                FileOutputStream out = new FileOutputStream(fileNew+newFileName);
+                FileOutputStream out = new FileOutputStream(pathNew+newFileName);
                 //使用BufferedInputStream读资源比FileInputStream读取资源的效率高
                 BufferedInputStream bufferedIn = new BufferedInputStream(in);
                 BufferedOutputStream bufferedOut = new BufferedOutputStream(out);
@@ -146,23 +146,28 @@ public class DownLoadImageService implements Runnable {
                     }
                 });
 
-
                 return;
             } catch (ArrayIndexOutOfBoundsException e) {
                 e.printStackTrace();
+                error();
             } catch (IOException e) {
                 e.printStackTrace();
+                error();
             }
+        }else{
+            error();
         }
 
+    }
+
+
+    public void error(){
         HandlerUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 callBack.onDownLoadFailed();
             }
         });
-
     }
-
 }
 

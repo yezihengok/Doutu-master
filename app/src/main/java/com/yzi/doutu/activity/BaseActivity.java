@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yzi.doutu.service.DouApplication;
+import com.yzi.doutu.share.WechatShareManager;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -153,6 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 return true;
             case KeyEvent.KEYCODE_MENU:
+
                 return super.onKeyDown(keyCode, event);
             case KeyEvent.KEYCODE_BACK:
 

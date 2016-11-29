@@ -83,7 +83,7 @@ public class WechatShareManager {
         }
         switch (shareContent.getShareWay()) {
             case WECHAT_SHARE_WAY_TEXT:
-                shareText(shareContent, shareType);
+                shareText(shareContent.getContent(), shareType);
                 break;
             case WECHAT_SHARE_WAY_PICTURE:
                 if(TextUtils.isEmpty(shareContent.getPicPath())){
@@ -166,11 +166,11 @@ public class WechatShareManager {
     /*
      * 获取文本分享对象
      */
-    public ShareContent getShareContentText(String content) {
+    public  ShareContent getShareContentText(String content) {
         if (mShareContentText == null) {
             mShareContentText = new ShareContentText(content);
         }
-        return (ShareContentText) mShareContentText;
+        return mShareContentText;
     }
 
     /**
@@ -349,8 +349,7 @@ public class WechatShareManager {
     /*
      * 分享文字
      */
-    private void shareText(ShareContent shareContent, int shareType) {
-        String text = shareContent.getContent();
+    public void shareText(String text, int shareType) {
         //初始化一个WXTextObject对象
         WXTextObject textObj = new WXTextObject();
         textObj.text = text;

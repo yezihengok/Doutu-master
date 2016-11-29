@@ -14,6 +14,7 @@ import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
+import com.yzi.doutu.utils.HandlerUtil;
 import com.yzi.doutu.utils.ImageUtils;
 import com.yzi.doutu.utils.SimpleFileUtils;
 
@@ -31,6 +32,9 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
 
     private List<DataBean> beanList; //
     private TextView tvRight;
+
+    int ITEM=3;//item个数
+    int COUNT=20;//分页加载条数
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,27 +59,66 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
         mRecyclerView = (XRecyclerView)this.findViewById(R.id.xrecyclerview);
 
         tvRight.setOnClickListener(this);
-        GridLayoutManager layoutManager = new GridLayoutManager(this,3);
+        GridLayoutManager layoutManager = new GridLayoutManager(this,ITEM);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setLoadingMoreEnabled(false);
-        mRecyclerView.setPullRefreshEnabled(false);
+        mRecyclerView.setLoadingMoreEnabled(true);
+        mRecyclerView.setPullRefreshEnabled(true);
         beanList=new ArrayList<>();
         mAdapter = new HotListAdapter(this,beanList,1,"showMade");
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
-        getFavorites();
+        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                getFavorites(true);
+            }
+            @Override
+            public void onLoadMore() {
+                getFavorites(false);
+            }
+        });
+        mRecyclerView.setRefreshing(true);
     }
 
+    List<DataBean> favorites;
+    /**
+     * 获取我的收藏数据
+     * @param isrefresh 是否为初始刷新，否则视为上拉加载
+     */
+    public void getFavorites(final boolean isrefresh) {
+        favorites=new ArrayList<>();
+        if(isrefresh){
+            beanList.clear();
+            favorites= DBTools.getInstance().getMades(0,COUNT);
+            setData(isrefresh);
+        }else{
+            HandlerUtil.runOnUiThreadDelay(new Runnable() {
+                @Override
+                public void run() {
+                    favorites= DBTools.getInstance().getMades(beanList.size(),beanList.size()+COUNT);
+                    setData(isrefresh);
+                }
+            },300);
+        }
 
-    public void getFavorites() {
-        List<DataBean> favorites= DBTools.getInstance().getMades();
+
+    }
+
+    private void setData(boolean isrefresh) {
         if(favorites!=null&&!favorites.isEmpty()){
-            beanList=new ArrayList<>(favorites);
+            beanList.addAll(favorites);
             mAdapter.setHotList(beanList);
             mAdapter.notifyDataSetChanged();
+        }else{
+            CommUtil.showToast("没有更多了");
+        }
+
+        if(isrefresh){
+            mRecyclerView.refreshComplete();
+        }else{
+            mRecyclerView.loadMoreComplete();
         }
     }
-
 
 
     @Override
@@ -87,7 +130,7 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
 //                runOnUiThread(new Runnable() {
 //                    @Override
 //                    public void run() {
-                        getFavorites();
+                        getFavorites(true);
 //                    }
 //                });
             }
@@ -101,7 +144,7 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==0x123&&resultCode==RESULT_OK){
-            getFavorites();
+            getFavorites(true);
         }
     }
 

@@ -13,6 +13,7 @@ import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
+import com.yzi.doutu.utils.HandlerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,10 @@ public class MyFavoritesActivity extends BaseActivity implements CommInterface.O
     private XRecyclerView mRecyclerView;
     private HotTemplateAdapter mAdapter;
 
-    private int hotPage = 0;
     private List<DataBean> beanList; //
     private TextView tvRight;
-    int ITEM=4;
+    int ITEM=4;//item个数
+    int COUNT=30;//分页加载条数
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,27 +56,66 @@ public class MyFavoritesActivity extends BaseActivity implements CommInterface.O
         tvRight.setOnClickListener(this);
         GridLayoutManager layoutManager = new GridLayoutManager(this,ITEM);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setLoadingMoreEnabled(false);
-        mRecyclerView.setPullRefreshEnabled(false);
+        mRecyclerView.setLoadingMoreEnabled(true);
+        mRecyclerView.setPullRefreshEnabled(true);
         beanList=new ArrayList<>();
        // mAdapter = new HotListAdapter(this,beanList,1,null);
         mAdapter = new HotTemplateAdapter(this,beanList,ITEM);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
-        getFavorites();
+
+        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                getFavorites(true);
+            }
+            @Override
+            public void onLoadMore() {
+                getFavorites(false);
+            }
+        });
+        mRecyclerView.setRefreshing(true);
     }
 
-
-    public void getFavorites() {
-        List<DataBean> favorites= DBTools.getInstance().getFavorites(false);
-        if(favorites!=null&&!favorites.isEmpty()){
-            beanList=new ArrayList<>(favorites);
-            mAdapter.setHotList(beanList);
-            mAdapter.notifyDataSetChanged();
+    List<DataBean> favorites;
+    /**
+     * 获取我的收藏数据
+     * @param isrefresh 是否为初始刷新，否则视为上拉加载
+     */
+    public void getFavorites(final boolean isrefresh) {
+        favorites=new ArrayList<>();
+        if(isrefresh){
+            beanList.clear();
+            favorites= DBTools.getInstance().getFavorites(0,COUNT);
+            setData(isrefresh);
+        }else{
+            HandlerUtil.runOnUiThreadDelay(new Runnable() {
+                @Override
+                public void run() {
+                    favorites= DBTools.getInstance().getFavorites(beanList.size(),beanList.size()+COUNT);
+                    setData(isrefresh);
+                }
+            },300);
         }
 
+
     }
 
+    private void setData(boolean isrefresh) {
+        if(favorites!=null&&!favorites.isEmpty()){
+            beanList.addAll(favorites);
+            mAdapter.setHotList(beanList);
+            mAdapter.notifyDataSetChanged();
+        }else{
+            CommUtil.showToast("没有更多了");
+        }
+
+        if(isrefresh){
+            mRecyclerView.refreshComplete();
+        }else{
+            mRecyclerView.loadMoreComplete();
+        }
+    }
 
 
     @Override
@@ -84,7 +124,7 @@ public class MyFavoritesActivity extends BaseActivity implements CommInterface.O
         CommUtil.getInstance().showSharePop(this, beanList.get(position), new CommInterface.setFinishListener() {
             @Override
             public void onFinish() {
-                getFavorites();
+                getFavorites(true);
             }
         });
     }

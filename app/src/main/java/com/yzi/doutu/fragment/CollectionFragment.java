@@ -18,9 +18,11 @@ import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.service.DouApplication;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
+import com.yzi.doutu.utils.HandlerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static com.yzi.doutu.utils.CommUtil.isWeiBaopen;
 
@@ -35,7 +37,8 @@ public class CollectionFragment extends Fragment implements CommInterface.OnItem
     private HotTemplateAdapter mAdapter;
 
     private List<DataBean> beanList;
-    private int ITEM=4;
+    int ITEM=4;//item个数
+    int COUNT=20;//分页加载条数
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container
@@ -50,24 +53,66 @@ public class CollectionFragment extends Fragment implements CommInterface.OnItem
         noDataLayout= (LinearLayout) view.findViewById(R.id.noDataLayout);
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),ITEM);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setLoadingMoreEnabled(false);
-        mRecyclerView.setPullRefreshEnabled(false);
+        mRecyclerView.setLoadingMoreEnabled(true);
+        mRecyclerView.setPullRefreshEnabled(true);
         beanList=new ArrayList<>();
 //        mAdapter = new HotListAdapter(getActivity(),beanList,1,null);
 //        mAdapter.setItemWidth(ITEM);
         mAdapter = new HotTemplateAdapter(getActivity(),beanList,ITEM);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
-        getFavorites();
+        mRecyclerView.setLoadingMoreProgressStyle(new Random().nextInt(28));
+        mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                getFavorites(true);
+            }
+            @Override
+            public void onLoadMore() {
+                getFavorites(false);
+            }
+        });
+        mRecyclerView.setRefreshing(true);
     }
 
-    public void getFavorites() {
-        List<DataBean> favorites= DBTools.getInstance().getFavorites(false);
+     List<DataBean> favorites;
+    /**
+     * 获取我的收藏数据
+     * @param isrefresh 是否为初始刷新，否则视为上拉加载
+     */
+    public void getFavorites(final boolean isrefresh) {
+        favorites=new ArrayList<>();
+        if(isrefresh){
+            beanList.clear();
+            favorites= DBTools.getInstance().getFavorites(0,COUNT);
+            setData(isrefresh);
+        }else{
+            HandlerUtil.runOnUiThreadDelay(new Runnable() {
+                @Override
+                public void run() {
+                    favorites= DBTools.getInstance().getFavorites(beanList.size(),beanList.size()+COUNT);
+                    setData(isrefresh);
+                }
+            },300);
+
+        }
+
+    }
+
+    private void setData(boolean isrefresh) {
         if(favorites!=null&&!favorites.isEmpty()){
-            beanList=new ArrayList<>(favorites);
+            beanList.addAll(favorites);
             mAdapter.setHotList(beanList);
             mAdapter.notifyDataSetChanged();
             noDataLayout.setVisibility(View.GONE);
+        }else{
+           // CommUtil.showToast("没有更多了");
+        }
+
+        if(isrefresh){
+            mRecyclerView.refreshComplete();
+        }else{
+            mRecyclerView.loadMoreComplete();
         }
     }
 

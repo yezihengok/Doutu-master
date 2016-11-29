@@ -59,6 +59,7 @@ public class HotTemplateActivity extends BaseActivity implements CommInterface.O
             }
         });
         ((TextView)findViewById(R.id.tvtitle)).setText("热门模板");
+        ((TextView)findViewById(R.id.tvRight)).setVisibility(View.GONE);
         mRecyclerView = (XRecyclerView)this.findViewById(R.id.xrecyclerview);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this,ITEM);
