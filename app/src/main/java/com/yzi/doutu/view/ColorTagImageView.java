@@ -14,7 +14,8 @@ public class ColorTagImageView extends ImageView {
 
     private int[] mColors = new int[]{
             Color.parseColor("#eb6564"),
-            Color.parseColor("#eb65c8"),
+            Color.parseColor("#FF4081"),
+            //Color.parseColor("#eb65c8"),
             Color.parseColor("#b264eb"),
             Color.parseColor("#47abff"),
             Color.parseColor("#64ebda"),
