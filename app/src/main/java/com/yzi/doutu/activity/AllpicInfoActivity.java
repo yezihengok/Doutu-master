@@ -29,6 +29,7 @@ import java.util.Map;
 import okhttp3.Call;
 
 import static android.R.attr.id;
+import static com.yzi.doutu.utils.CommUtil.DDSQ;
 
 /**
  *全部表情详情界面
@@ -113,7 +114,8 @@ public class AllpicInfoActivity extends BaseActivity implements CommInterface.On
         }
          //"http://mobile.bugua.com/user/social/5507583/folder/17";
 
-        StringBuffer buffer=new StringBuffer("http://mobile.bugua.com/user/social/");
+        //StringBuffer buffer=new StringBuffer("http://mobile.bugua.com/user/social/");
+        StringBuffer buffer=new StringBuffer(DDSQ+"/user/social/");
         buffer.append(listBean.getUser().getId());
         buffer.append("/folder/");
         buffer.append(listBean.getFolder().getId());

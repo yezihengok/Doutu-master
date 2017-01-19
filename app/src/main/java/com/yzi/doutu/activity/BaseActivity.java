@@ -135,8 +135,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @NonNull
     public Map<String, String> getHeaders() {
         Map<String, String> headers=new LinkedHashMap<>();
-        headers.put("ticket","26craSjgyQqhVSiDvR7BRk");
-        //headers.put("ticket","34snDpjJWBdCDSac5w3EWN");
+        //headers.put("ticket","26craSjgyQqhVSiDvR7BRk");
+        headers.put("ticket","yCb3B5E2dgsRQZdajvzKSM");
         headers.put("yl-os","android");
         headers.put("yl-client","fighting");
         headers.put("yl-ver","5001200");

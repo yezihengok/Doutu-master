@@ -144,11 +144,16 @@ public class AllListFragment extends Fragment
                     listBeen.clear();
                 }
 
-                lastId=allPic.getLast_id();
+                if(allPic.getLast_id()!=0){
+                    lastId=allPic.getLast_id();
+                }
+
                 listBeen.addAll(allPic.getList());
 
                 Log.d("", "listBeen.size():" + listBeen.size());
                 listBeenAdapter.notifyDataSetChanged();
+            }else{
+                CommUtil.showToast("没有更多了");
             }
             if(hotPage==0){
                 SharedUtils.putObject("allPic",allPic,getActivity());

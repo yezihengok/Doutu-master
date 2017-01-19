@@ -132,14 +132,16 @@ public class CommUtil {
      **/
     public static final String KEYWORD_SEARCH = "http://api.jiefu.tv/app2/api/dt/shareItem/search.html";
 
+
+    public static final String DDSQ="http://mobile.shenmeiguan.cn";//http://mobile.bugua.com
     /**
      * 热门模板
      **/
-    public static final String TEMP_HOT= "http://mobile.bugua.com/template/hot/list/";
+    public static final String TEMP_HOT= DDSQ+"/template/hot/list/";
     /**
      * 全部表情分类
      */
-    public static final String ALLPIC="http://mobile.bugua.com/folder/cherrypick/";
+    public static final String ALLPIC=DDSQ+"/folder/cherrypick/";
     private static CommUtil commUtil;
 
     public static CommUtil getInstance() {
@@ -242,6 +244,7 @@ public class CommUtil {
                         // 图片保存失败
                         closeWaitDialog();
                         showToast("获取图片失败");
+                        SimpleFileUtils.deleteFile(new File(ImageUtils.ROOT_PATH+"DOWN"),null);
                     }
                 });
         //启动图片下载线程
@@ -277,6 +280,7 @@ public class CommUtil {
                     public void onDownLoadFailed() {
                         closeWaitDialog();
                         showToast("获取图片失败");
+                        SimpleFileUtils.deleteFile(new File(ImageUtils.ROOT_PATH+"DOWN"),null);
                     }
                 });
         new Thread(service).start();        //启动图片下载线程

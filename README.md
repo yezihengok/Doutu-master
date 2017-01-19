@@ -18,7 +18,7 @@
    感谢：xrecyclerview、glide、okhttputils opengit等开源作者
 
    Tips：关于微信分享SDK机制，是我微信开发者平台注册我自己的机器打包的签名才能分享成功的，你自己运行项目的签名和我机器打包的签名肯定是不一样的。
-   所以微信分享大家看看代码实现就好，要实现微信分享需要你到微信开发者中心注册。
+
   至于要看效果 app我已上架至应用市场
 * 应用宝下载地址：http://sj.qq.com/myapp/detail.htm?apkName=com.yzi.doutu
 * 百度应用市场下载地址：http://shouji.baidu.com/s?wd=%E6%81%92%E5%A6%B9%E5%AD%90%E6%96%97%E5%9B%BE&data_type=app&f=header_software%40input%40btn_search&from=as
