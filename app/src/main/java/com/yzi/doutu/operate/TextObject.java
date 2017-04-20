@@ -84,8 +84,9 @@ public class TextObject extends ImageObject
 		paint.setTextSize(textSize);
 		paint.setTypeface(typeface);
 		paint.setColor(color);
-		paint.setStyle(Paint.Style.FILL);
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 		paint.setDither(true);
+		paint.setStrokeWidth(3); //设置描边宽度
 		paint.setFlags(Paint.SUBPIXEL_TEXT_FLAG);
 		String lines[] = text.split("\n");
 
