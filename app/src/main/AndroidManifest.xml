@@ -46,7 +46,7 @@
     <activity android:name=".activity.AboutActivity"/>
     <activity android:name=".activity.HotTemplateActivity"/>
     <activity android:name=".activity.AllpicInfoActivity"/>
-
+    <activity android:name=".activity.MyThemeFavoritesActivity"/>
 
 
     <activity

@@ -25,6 +25,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.gifdecoder.GifDecoder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.yzi.doutu.R;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBTools;
@@ -441,34 +448,34 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
 
 
     //打算Glide分解gif每一帧保存至本地，然而好像用Gilde拿不到每一帧的bitmap？
-//    public void display(final ImageView imageView, String imageUri) {
-//
-//        Glide.with(imageView.getContext())
-//                .load(imageUri)
-//                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-//                //.into(imageView);
-//                .into(new SimpleTarget<GlideDrawable>() {
-//                    @Override
-//                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-//                        imageView.setImageDrawable(resource);
-//                        if (resource instanceof GifDrawable){
-//                            int duration = 0;
-//                            // 计算动画时长
-//                            GifDrawable drawable = (GifDrawable) resource;
-//                            GifDecoder decoder = drawable.getDecoder();
-//                            Log.v("","图片帧数:" + drawable.getFrameCount());
-//                            for (int i = 0; i < drawable.getFrameCount(); i++) {
-//                                duration += decoder.getDelay(i);
-//                                Bitmap bitmap=decoder.getNextFrame();
-//                                String fileName=dataBean.getName()+i+ ".jpg";
-//                                String filePath = ImageUtils.saveBitmapToFile(bitmap, fileName);
-//                                Log.v("","已保存至:" + filePath);
-//                            }
-//                        }
-//                    }
-//                });
-//
-//    }
+    public void display(final ImageView imageView, String imageUri) {
+
+        Glide.with(imageView.getContext())
+                .load(imageUri)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                //.into(imageView);
+                .into(new SimpleTarget<GlideDrawable>() {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                        imageView.setImageDrawable(resource);
+                        if (resource instanceof GifDrawable){
+                            int duration = 0;
+                            // 计算动画时长
+                            GifDrawable drawable = (GifDrawable) resource;
+                            GifDecoder decoder = drawable.getDecoder();
+                            Log.v("","图片帧数:" + drawable.getFrameCount());
+                            for (int i = 0; i < drawable.getFrameCount(); i++) {
+                                duration += decoder.getDelay(i);
+                                Bitmap bitmap=decoder.getNextFrame();
+                                String fileName=dataBean.getName()+i+ ".jpg";
+                                String filePath = ImageUtils.saveBitmapToFile(bitmap, fileName);
+                                Log.v("","已保存至:" + filePath);
+                            }
+                        }
+                    }
+                });
+
+    }
 
 
 }

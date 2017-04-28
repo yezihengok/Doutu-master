@@ -42,6 +42,7 @@ import com.yzi.doutu.activity.AboutActivity;
 import com.yzi.doutu.activity.BaseActivity;
 import com.yzi.doutu.activity.HotTemplateActivity;
 import com.yzi.doutu.activity.ModifyPicActivity;
+import com.yzi.doutu.activity.MyThemeFavoritesActivity;
 import com.yzi.doutu.activity.TypeTemplateActivity;
 import com.yzi.doutu.activity.MyDIYPicActivity;
 import com.yzi.doutu.activity.MyFavoritesActivity;
@@ -209,9 +210,9 @@ public class MainActivity extends BaseActivity
         //给NavigationView填充Menu菜单，也可在xml中使用app:menu="@menu/menu_nav"来设置
         mNavigationView.inflateMenu(R.menu.menu_nav);
 
-        weiba_item=mNavigationView.getMenu().getItem(4);
-        qx_item=mNavigationView.getMenu().getItem(5);
-        cache_item=mNavigationView.getMenu().getItem(6);
+        weiba_item=mNavigationView.getMenu().getItem(5);
+        qx_item=mNavigationView.getMenu().getItem(6);
+        cache_item=mNavigationView.getMenu().getItem(7);
         // 自己写的方法，设置NavigationView中menu的item被选中后要执行的操作
         onNavgationViewMenuItemSelected(mNavigationView);
 
@@ -283,7 +284,9 @@ public class MainActivity extends BaseActivity
                         startActivity(new Intent(MainActivity.this,MyFavoritesActivity.class));
                         // mDrawerLayout.closeDrawers();
                         break;
-
+                    case R.id.nav_menu_favTheme:
+                        startActivity(new Intent(MainActivity.this,MyThemeFavoritesActivity.class));
+                        break;
                     case R.id.nav_menu_made:
 
                         startActivity(new Intent(MainActivity.this,MyDIYPicActivity.class));
@@ -297,9 +300,9 @@ public class MainActivity extends BaseActivity
                             @Override
                             public void onResult() {
                                 if(isWeiBaopen()){
-                                    SharedUtils.putBoolean(null,context,WEIBA,false);
+                                    SharedUtils.putBoolean(WEIBA,context,WEIBA,false);
                                 }else{
-                                    SharedUtils.putBoolean(null,context,WEIBA,true);
+                                    SharedUtils.putBoolean(WEIBA,context,WEIBA,true);
                                 }
                                 setweiba();
                             }

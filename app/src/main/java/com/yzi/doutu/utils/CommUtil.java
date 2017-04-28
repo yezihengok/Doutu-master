@@ -45,6 +45,7 @@ import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
 import com.yzi.doutu.activity.ModifyPicActivity;
 import com.yzi.doutu.bean.DataBean;
+import com.yzi.doutu.db.DBHelpers;
 import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.service.DouApplication;
 import com.yzi.doutu.service.WindowService;
@@ -507,7 +508,7 @@ public class CommUtil {
                             if ("Favorites".equals(tag)) {
                                 DBTools.getInstance().remove(dataBean.getId());
                             } else if ("DIY".equals(tag)) {
-                                DBTools.getInstance().deleteByid_made(String.valueOf(dataBean.getId()));
+                                DBTools.getInstance().deleteById(String.valueOf(dataBean.getId()), DBHelpers.TABLE_MADE);
                             }
 
                             pop.dismiss();

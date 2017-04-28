@@ -2,7 +2,6 @@
 
 package com.yzi.doutu.main;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +18,8 @@ import com.yzi.doutu.R;
 import com.yzi.doutu.activity.AllpicInfoActivity;
 import com.yzi.doutu.adapter.AllListAdapter;
 import com.yzi.doutu.bean.AllPic;
-import com.yzi.doutu.bean.DataBean;
+import com.yzi.doutu.bean.Theme;
+import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;
@@ -184,6 +184,29 @@ public class AllListFragment extends Fragment
     }
 
     @Override
-    public void onItemLongClick(View view, int position) {
+    public void onItemLongClick(View view, final int position) {
+        CommUtil.showDialog(getContext(), "收藏该主题", "取消", "确定"
+                , null, new CommInterface.setClickListener() {
+            @Override
+            public void onResult() {
+                AllPic.ListBean bean=listBeen.get(position);
+                Theme theme=new Theme();
+                theme.setUserId(String.valueOf(bean.getUser().getId()));
+                theme.setFolderId(String.valueOf(bean.getFolder().getId()));
+                theme.setFolderName(bean.getFolder().getName());
+                List<String> thumbs=bean.getThumbs();
+                if(thumbs!=null){
+                    StringBuffer buffer=new StringBuffer("");
+                    for (int i=0;i<thumbs.size();i++){
+                        buffer.append(thumbs.get(i));
+                        buffer.append(",");
+                    }
+                    theme.setThumbs(buffer.toString());
+                }
+                DBTools.getInstance().addThemes(theme);
+                CommUtil.showToast("已收藏");
+
+            }
+        });
     }
 }

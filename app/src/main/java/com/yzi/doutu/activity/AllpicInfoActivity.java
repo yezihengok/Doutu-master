@@ -14,6 +14,7 @@ import com.yzi.doutu.bean.AllPic;
 import com.yzi.doutu.bean.AllPicInfo;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.bean.HotTemplate;
+import com.yzi.doutu.bean.Theme;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;
@@ -47,6 +48,9 @@ public class AllpicInfoActivity extends BaseActivity implements CommInterface.On
     TextView tvRight;
     int ITEM=4;
     int total =0;
+
+    Theme theme;
+    private String folderId,userId,folderName="";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,21 +63,37 @@ public class AllpicInfoActivity extends BaseActivity implements CommInterface.On
     private void initView() {
 
         listBean= (AllPic.ListBean) getIntent().getSerializableExtra("listBean");
+        theme= (Theme) getIntent().getSerializableExtra("theme");
+        if(listBean!=null){
+            if(listBean.getFolder()!=null) {
+                folderName = listBean.getFolder().getName();
+                folderId= String.valueOf(listBean.getFolder().getId());
+            }
+            if(listBean.getUser()!=null) {
+                userId = String.valueOf(listBean.getUser().getId());
+            }
+        }
+
+        if(theme!=null){
+            folderName=theme.getFolderName();
+            folderId=theme.getFolderId();
+            userId=theme.getUserId();
+        }
+
+
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        if(listBean.getFolder()!=null){
-            String title=listBean.getFolder().getName();
-            if(title.length()>=9){
-                ((TextView)findViewById(R.id.tvtitle)).setText(title.substring(0,9)+"...");
+
+            if(folderName.length()>=9){
+                ((TextView)findViewById(R.id.tvtitle)).setText(folderName.substring(0,9)+"...");
             }else{
-                ((TextView)findViewById(R.id.tvtitle)).setText(title);
+                ((TextView)findViewById(R.id.tvtitle)).setText(folderName);
             }
 
-        }
         tvRight= (TextView) findViewById(R.id.tvRight);
         setTextValues(tvRight,"");
         mRecyclerView = (XRecyclerView)this.findViewById(R.id.xrecyclerview);
@@ -116,9 +136,9 @@ public class AllpicInfoActivity extends BaseActivity implements CommInterface.On
 
         //StringBuffer buffer=new StringBuffer("http://mobile.bugua.com/user/social/");
         StringBuffer buffer=new StringBuffer(DDSQ+"/user/social/");
-        buffer.append(listBean.getUser().getId());
+        buffer.append(userId);
         buffer.append("/folder/");
-        buffer.append(listBean.getFolder().getId());
+        buffer.append(folderId);
 
         Map<String, String> params =new LinkedHashMap<>();
         params.put("page_size","30");
@@ -168,9 +188,7 @@ public class AllpicInfoActivity extends BaseActivity implements CommInterface.On
                 dataBean.setId(bean.getOnline_id());
                 dataBean.setGifPath(bean.getUrl());
                 dataBean.setPicPath(bean.getThumb());
-                if(listBean.getFolder()!=null){
-                    dataBean.setName(listBean.getFolder().getName());
-                }
+                dataBean.setName(folderName);
                 hotList.add(dataBean);
 
             }

@@ -15,11 +15,11 @@ import static android.R.attr.id;
  */
 public class DBHelpers extends SQLiteOpenHelper {
 	
-	private final static int DB_VERSION=2;
+	private final static int DB_VERSION=3;
 	private final static String DB_NAME="userInfo.db";
 	private final static String TABLE_NAME="favorites";
 	public final static String TABLE_MADE="made";
-	
+	public final static String TABLE_THEME="favoritesTheme";
 	public DBHelpers(Context context) {
 		super(context,DB_NAME , null, DB_VERSION);
 	}
@@ -29,6 +29,7 @@ public class DBHelpers extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("create table "+TABLE_NAME+"( _id integer primary key autoincrement,id text,name text,url text)");
 		db.execSQL("create table "+TABLE_MADE+"( _id integer primary key autoincrement,id text,name text,url text,madeUrl text,fileName text)");
+		db.execSQL("create table "+TABLE_THEME+"( _id integer primary key autoincrement,id text,userId text,folderId text,folderName text,thumbs text)");
 		//db.execSQL("insert into "+TABLE_NAME+"(name,psotalcode,address,province,city,area) values(?,?,?)",new String[]{"测试1","测试2","测试3"});
 		 
 	}
@@ -36,11 +37,19 @@ public class DBHelpers extends SQLiteOpenHelper {
 
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		String sql = "DROP TABLE IF EXISTS " + TABLE_NAME;
-		String sql2 = "DROP TABLE IF EXISTS " + TABLE_MADE;
-		db.execSQL(sql);
-		db.execSQL(sql2);
-		onCreate(db);
+		if(newVersion==3){
+			//newVersion==3时，原应用是没有TABLE_THEME 这张表的
+			db.execSQL("create table "+TABLE_THEME+"( _id integer primary key autoincrement,id text,userId text,folderId text,folderName text,thumbs text)");
+		}else{
+			String sql = "DROP TABLE IF EXISTS " + TABLE_NAME;
+			String sql2 = "DROP TABLE IF EXISTS " + TABLE_MADE;
+			String sql3 = "DROP TABLE IF EXISTS " + TABLE_THEME;
+			db.execSQL(sql);
+			db.execSQL(sql2);
+			db.execSQL(sql3);
+			onCreate(db);
+		}
+
 	}
 	
 	/**

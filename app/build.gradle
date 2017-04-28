@@ -4,14 +4,14 @@ apply plugin: 'com.android.application'
 
 android {
   compileSdkVersion 23
-  buildToolsVersion '23.0.2'
+  buildToolsVersion '25.0.0'
 
   defaultConfig {
     applicationId "com.yzi.doutu"
     minSdkVersion 14
     targetSdkVersion 23
-    versionCode 10
-    versionName "1.3.2"
+    versionCode 12
+    versionName "1.3.4"
   }
   buildTypes {
     release {
@@ -20,6 +20,21 @@ android {
     }
   }
 
+  signingConfigs {
+    ////这里使用的指定key运行项目
+    debug {
+      storeFile file("E:\\YZH\\Doutu-master\\keys\\doutu.keys")
+      keyAlias 'doutu'
+      keyPassword '123456'
+      storePassword '123456'
+    }
+    release {
+      storeFile file("E:\\YZH\\Doutu-master\\keys\\doutu.keys")
+      keyAlias 'doutu'
+      keyPassword '123456'
+      storePassword '123456'
+    }
+  }
 }
 
 dependencies {

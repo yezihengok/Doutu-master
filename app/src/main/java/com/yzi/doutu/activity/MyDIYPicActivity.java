@@ -11,6 +11,7 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.yzi.doutu.R;
 import com.yzi.doutu.adapter.HotListAdapter;
 import com.yzi.doutu.bean.DataBean;
+import com.yzi.doutu.db.DBHelpers;
 import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
@@ -108,11 +109,12 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
         if(favorites!=null&&!favorites.isEmpty()){
             beanList.addAll(favorites);
             mAdapter.setHotList(beanList);
-            mAdapter.notifyDataSetChanged();
+
         }else{
+            mAdapter.setHotList(null);
             CommUtil.showToast("没有更多了");
         }
-
+        mAdapter.notifyDataSetChanged();
         if(isrefresh){
             mRecyclerView.refreshComplete();
         }else{
@@ -156,7 +158,7 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
                             , new CommInterface.setClickListener() {
                         @Override
                         public void onResult() {
-                            DBTools.getInstance().deleteAll_made();
+                            DBTools.getInstance().deleteAll(DBHelpers.TABLE_MADE);
                             mAdapter.setHotList(null);
                             mAdapter.notifyDataSetChanged();
                             SimpleFileUtils.delFile(ImageUtils.FILE_DIY_PATH,0,null);

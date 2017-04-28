@@ -12,15 +12,16 @@ import android.widget.TextView;
 import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
 import com.yzi.doutu.bean.AllPic;
+import com.yzi.doutu.bean.Theme;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 
 import java.util.List;
 
 /**
- * 主题列表adapter
+ * 收藏的主题列表adapter
  */
-public class AllListAdapter extends RecyclerView.Adapter<AllListAdapter.ViewHolder> {
+public class AllThemeListAdapter extends RecyclerView.Adapter<AllThemeListAdapter.ViewHolder> {
 
 
     public CommInterface.OnItemClickListener mOnItemClickListener;
@@ -30,12 +31,12 @@ public class AllListAdapter extends RecyclerView.Adapter<AllListAdapter.ViewHold
     }
 
     public Context mContext;
-    public List<AllPic.ListBean> list;
+    public List<Theme> list;
     public LayoutInflater mLayoutInflater;
     UilImagePresenter presenter;
 
 
-    public void setlist(List<AllPic.ListBean> list) {
+    public void setlist(List<Theme> list) {
         this.list = list;
     }
 
@@ -45,7 +46,7 @@ public class AllListAdapter extends RecyclerView.Adapter<AllListAdapter.ViewHold
         this.itemWidth = itemWidth;
     }
 
-    public AllListAdapter(Context mContext, List<AllPic.ListBean> list) {
+    public AllThemeListAdapter(Context mContext, List<Theme> list) {
         this.mContext = mContext;
         mLayoutInflater = LayoutInflater.from(mContext);
         presenter = new UilImagePresenter();
@@ -86,15 +87,13 @@ public class AllListAdapter extends RecyclerView.Adapter<AllListAdapter.ViewHold
  //       lp.height = CommUtil.getScreenWidth() / itemWidth - CommUtil.dip2px(30);
 //        holder.img1.setLayoutParams(lp);
 
-        if (list.get(position).getFolder() != null) {
-            holder.mTextView.setText(list.get(position).getFolder().getName());
-        }
-        List<String> imgs=list.get(position).getThumbs();
-        if (imgs!= null && !imgs.isEmpty()) {
-            for (int i = 0; i <imgs.size() ; i++) {
+        holder.mTextView.setText(list.get(position).getFolderName());
+
+        String []thumes=list.get(position).getThumbs().split(",");
+        if (thumes!= null && thumes.length>0) {
+            for (int i = 0; i <thumes.length ; i++) {
                 //holder.imgViews[i].setLayoutParams(lp);
-                presenter.displayImg(holder.imgViews[i],
-                        imgs.get(i),height);
+                presenter.displayImg(holder.imgViews[i], thumes[i],height);
             }
         }
 

@@ -53,7 +53,7 @@ public class AllPicInfo implements Serializable{
         this.emotions = emotions;
     }
 
-    public static class EmotionsBean {
+    public static class EmotionsBean implements Serializable{
         /**
          * url : http://wxq.pic.bugua.com/554415d412bd21864c9f3613dffbdf74.jpeg
          * online_id : 2079643

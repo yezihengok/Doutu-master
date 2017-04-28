@@ -105,11 +105,12 @@ public class MyFavoritesActivity extends BaseActivity implements CommInterface.O
         if(favorites!=null&&!favorites.isEmpty()){
             beanList.addAll(favorites);
             mAdapter.setHotList(beanList);
-            mAdapter.notifyDataSetChanged();
+
         }else{
+            mAdapter.setHotList(null);
             CommUtil.showToast("没有更多了");
         }
-
+        mAdapter.notifyDataSetChanged();
         if(isrefresh){
             mRecyclerView.refreshComplete();
         }else{
