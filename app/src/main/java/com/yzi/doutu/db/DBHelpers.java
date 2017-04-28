@@ -34,7 +34,6 @@ public class DBHelpers extends SQLiteOpenHelper {
 		 
 	}
 
-
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		if(newVersion==3){
