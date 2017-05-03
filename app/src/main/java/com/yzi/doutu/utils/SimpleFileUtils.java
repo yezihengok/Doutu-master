@@ -166,12 +166,12 @@ public class SimpleFileUtils {
         if (getFileOrFilesSize(filePath) >= 1048576 * size) {
             //String path = context.getFilesDir().getPath().toString() +filePath;
             Log.d("", filePath);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
                     deleteFile(new File(filePath), listener);
-                }
-            }).start();
+//                }
+//            }).start();
 
         }
     }

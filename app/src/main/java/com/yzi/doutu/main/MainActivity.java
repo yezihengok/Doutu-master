@@ -346,14 +346,8 @@ public class MainActivity extends BaseActivity
                                         @Override
                                         public void finish(boolean isOk) {
                                             if(isOk){
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        cache_item.setTitle("分享的图片缓存："
-                                                                +SimpleFileUtils.getAutoFileOrFilesSize(DOWN_PATH));
-                                                    }
-                                                });
-
+                                                cache_item.setTitle("分享的图片缓存："
+                                                        +SimpleFileUtils.getAutoFileOrFilesSize(DOWN_PATH));
                                             }
                                         }
                                     });
