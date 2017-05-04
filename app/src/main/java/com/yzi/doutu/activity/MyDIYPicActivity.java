@@ -21,6 +21,9 @@ import com.yzi.doutu.utils.SimpleFileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import static com.yzi.doutu.utils.CommUtil.DETAIL;
 
 /**我的制作
  * Created by yzh-t105 on 2016/11/01.
@@ -71,11 +74,23 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                getFavorites(true);
+                HandlerUtil.runOnUiThreadDelay(new Runnable() {
+                    @Override
+                    public void run() {
+                        getFavorites(true);
+                    }
+                },DETAIL);
+
             }
             @Override
             public void onLoadMore() {
-                getFavorites(false);
+                HandlerUtil.runOnUiThreadDelay(new Runnable() {
+                    @Override
+                    public void run() {
+                        getFavorites(false);
+                    }
+                },DETAIL);
+
             }
         });
         mRecyclerView.setRefreshing(true);
@@ -87,19 +102,17 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
      * @param isrefresh 是否为初始刷新，否则视为上拉加载
      */
     public void getFavorites(final boolean isrefresh) {
+        mRecyclerView.setRefreshProgressStyle(new Random().nextInt(28));
+        mRecyclerView.setLoadingMoreProgressStyle(new Random().nextInt(28));
         favorites=new ArrayList<>();
         if(isrefresh){
             beanList.clear();
             favorites= DBTools.getInstance().getMades(0,COUNT);
             setData(isrefresh);
         }else{
-            HandlerUtil.runOnUiThreadDelay(new Runnable() {
-                @Override
-                public void run() {
-                    favorites= DBTools.getInstance().getMades(beanList.size(),beanList.size()+COUNT);
-                    setData(isrefresh);
-                }
-            },300);
+            favorites= DBTools.getInstance().getMades(beanList.size(),beanList.size()+COUNT);
+            setData(isrefresh);
+
         }
 
 
@@ -108,12 +121,10 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
     private void setData(boolean isrefresh) {
         if(favorites!=null&&!favorites.isEmpty()){
             beanList.addAll(favorites);
-            mAdapter.setHotList(beanList);
-
         }else{
-            mAdapter.setHotList(null);
             CommUtil.showToast("没有更多了");
         }
+        mAdapter.setHotList(beanList);
         mAdapter.notifyDataSetChanged();
         if(isrefresh){
             mRecyclerView.refreshComplete();

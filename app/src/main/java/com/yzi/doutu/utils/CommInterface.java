@@ -10,9 +10,7 @@ import java.io.File;
  */
 public class CommInterface {
 
-   public interface PageListener{
-       void pageChange(int page);
-    }
+
 
     public  interface setFinishListener{
         void onFinish();

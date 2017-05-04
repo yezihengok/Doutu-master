@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -52,15 +54,18 @@ import com.yzi.doutu.permission.PermissionUtil;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.ContextUtil;
+import com.yzi.doutu.utils.HandlerUtil;
 import com.yzi.doutu.utils.SharedUtils;
 import com.yzi.doutu.utils.SimpleFileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.string.ok;
 import static android.view.View.OnClickListener;
 import static com.yzi.doutu.utils.CommUtil.WEIBA;
 import static com.yzi.doutu.utils.CommUtil.isWeiBaopen;
+import static com.yzi.doutu.utils.CommUtil.showToast;
 import static com.yzi.doutu.utils.ImageUtils.DOWN_PATH;
 
 /**
@@ -68,7 +73,7 @@ import static com.yzi.doutu.utils.ImageUtils.DOWN_PATH;
  */
 public class MainActivity extends BaseActivity
         implements ViewPager.OnPageChangeListener, OnClickListener
-        ,AndroidImagePicker.OnPictureTakeCompleteListener {
+        , AndroidImagePicker.OnPictureTakeCompleteListener {
 
     private DrawerLayout mDrawerLayout;
     private CoordinatorLayout mCoordinatorLayout;
@@ -86,37 +91,44 @@ public class MainActivity extends BaseActivity
     // ViewPager的数据适配器
     private FragmentPagerAdapter mViewPagerAdapter;
 
-    private int page= 0;
+    private int page = 0;
     AllListFragment allListFragment;
     NewListFragment listFragment;
     HotListFragment hotListFragment;
     RealManFragment realManFragment;
-    private String TAG=this.getClass().getSimpleName();
+    private String TAG = this.getClass().getSimpleName();
 
     ImageView header_img;
     ImagePresenter presenter;
-    MenuItem qx_item,weiba_item,cache_item;
+    MenuItem qx_item, weiba_item, cache_item;
 
-    boolean isopen=false;
-    private int CROP=0x111;
+    boolean isopen = false;
+    private int CROP = 0x111;
     private Context context;
-    @Override protected void onCreate(Bundle savedInstanceState) {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.yzi.doutu.R.layout.activity_my);
         application.addActivity(this);
-        context=this;
+        context = this;
         ContextUtil.setApplicationContext(this);
         // 初始化各种控件
         initViews();
 
         checkBall();
 
+//        SimpleFileUtils.delFile(DOWN_PATH, 500, new CommInterface.DoListener() {
+//            @Override
+//            public void finish(boolean isOk) {
+//            }
+//        });
     }
 
     private void checkBall() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
-            if(CommUtil.hasModule()&&!CommUtil.hasEnable()){
-                CommUtil.showDialog(this,"墙裂建议您去勾选斗图开关，以便于QQ运行时显示斗图球球~", "下次吧", "我喜欢球球",
+            if (CommUtil.hasModule() && !CommUtil.hasEnable()) {
+                CommUtil.showDialog(this, "墙裂建议您去勾选斗图开关，以便于QQ运行时显示斗图球球~", "下次吧", "我喜欢球球",
                         null, new CommInterface.setClickListener() {
                             @Override
                             public void onResult() {
@@ -144,13 +156,13 @@ public class MainActivity extends BaseActivity
         mFragments = new ArrayList<>();
 
         Bundle mBundle = new Bundle();
-        mBundle.putInt("flag",0);
+        mBundle.putInt("flag", 0);
         listFragment = new NewListFragment(mTabLayout);
         listFragment.setArguments(mBundle);
         mFragments.add(listFragment);
         //hotListFragment=new HotListFragment(mTabLayout);
-        realManFragment=new RealManFragment();
-        allListFragment=new AllListFragment();
+        realManFragment = new RealManFragment();
+        allListFragment = new AllListFragment();
         mFragments.add(allListFragment);
         //mFragments.add(hotListFragment);
         mFragments.add(realManFragment);
@@ -161,16 +173,31 @@ public class MainActivity extends BaseActivity
         //initData();
     }
 
+
     private void setDrawerLayout() {
-
         setweiba();
+        setFileSize();
+    }
 
-        if (cache_item != null) {
-            cache_item.setTitle("发送的图片缓存："+SimpleFileUtils.getAutoFileOrFilesSize(DOWN_PATH));
+    boolean canserach=true;//是否可计算文件夹大小状态(避免频繁查询文件夹大小影响UI)
+    /**文件夹大小**/
+    String fileSizes;
+    private  void setFileSize() {
+        if (cache_item != null&&canserach) {
+            canserach=false;
+            fileSizes= SimpleFileUtils
+                    .getAutoFileOrFilesSize(DOWN_PATH, new CommInterface.DoListener() {
+                        @Override
+                        public void finish(boolean isOk) {
+                            canserach=isOk;
+                        }
+                    });
+            cache_item.setTitle("发送的图片缓存：" +fileSizes);
+            Log.e("","发送的图片缓存：" +fileSizes);
         }
 
-
     }
+
 
     private void configViews() {
 
@@ -179,18 +206,19 @@ public class MainActivity extends BaseActivity
 
         // 设置Drawerlayout开关指示器，即Toolbar最左边的那个icon
         ActionBarDrawerToggle mActionBarDrawerToggle =
-                new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open,R.string.close){
+                new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open, R.string.close) {
                     @Override
                     public void onDrawerOpened(View drawerView) {
                         super.onDrawerOpened(drawerView);
                         //展开的时候刷新
                         setDrawerLayout();
-                        isopen=true;
+                        isopen = true;
                     }
+
                     @Override
                     public void onDrawerClosed(View drawerView) {
                         super.onDrawerClosed(drawerView);
-                        isopen=false;
+                        isopen = false;
                     }
                 };
 
@@ -199,10 +227,10 @@ public class MainActivity extends BaseActivity
 
         //给NavigationView填充顶部区域，也可在xml中使用app:headerLayout="@layout/header_nav"来设置
 
-        View view= LayoutInflater.from(this).inflate(R.layout.header_nav,null);
-        header_img= (ImageView) view.findViewById(R.id.header_img);
+        View view = LayoutInflater.from(this).inflate(R.layout.header_nav, null);
+        header_img = (ImageView) view.findViewById(R.id.header_img);
         header_img.setOnClickListener(this);
-        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,CommUtil.dip2px(210));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, CommUtil.dip2px(210));
         view.setLayoutParams(lp);
         mNavigationView.addHeaderView(view);
 
@@ -210,14 +238,14 @@ public class MainActivity extends BaseActivity
         //给NavigationView填充Menu菜单，也可在xml中使用app:menu="@menu/menu_nav"来设置
         mNavigationView.inflateMenu(R.menu.menu_nav);
 
-        weiba_item=mNavigationView.getMenu().getItem(5);
-        qx_item=mNavigationView.getMenu().getItem(6);
-        cache_item=mNavigationView.getMenu().getItem(7);
+        weiba_item = mNavigationView.getMenu().getItem(5);
+        qx_item = mNavigationView.getMenu().getItem(6);
+        cache_item = mNavigationView.getMenu().getItem(7);
         // 自己写的方法，设置NavigationView中menu的item被选中后要执行的操作
         onNavgationViewMenuItemSelected(mNavigationView);
 
         // 初始化ViewPager的适配器，并设置给它
-        mViewPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager(), mFragments,mTitles);
+        mViewPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager(), mFragments, mTitles);
         mViewPager.setAdapter(mViewPagerAdapter);
         // 设置ViewPager最大缓存的页面个数
         //mViewPager.setOffscreenPageLimit(mTitles.length);
@@ -239,19 +267,20 @@ public class MainActivity extends BaseActivity
 
         //用 Glide 加载圆形图片
         presenter.onPresentCircleImage(header_img,
-                SharedUtils.getString("",MainActivity.this,"icon_img",CommUtil.ICON),0);
+                SharedUtils.getString("", MainActivity.this, "icon_img", CommUtil.ICON), 0);
     }
 
     private void setweiba() {
-        if(CommUtil.isWeiBaopen()){
+        if (CommUtil.isWeiBaopen()) {
             weiba_item.setTitle("分享尾巴: 开");
-        }else{
+        } else {
             weiba_item.setTitle("分享尾巴: 关");
         }
     }
 
 
-    boolean show=true;
+    boolean show = true;
+
     /**
      * 设置NavigationView中menu的item被选中后要执行的操作
      *
@@ -259,7 +288,8 @@ public class MainActivity extends BaseActivity
      */
     private void onNavgationViewMenuItemSelected(NavigationView mNav) {
         mNav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override public boolean onNavigationItemSelected(MenuItem menuItem) {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
 
                 String msgString = "";
 
@@ -274,22 +304,22 @@ public class MainActivity extends BaseActivity
 
                     case R.id.nav_menu_categories:
                         msgString = (String) menuItem.getTitle();
-                        Intent intent=new Intent(MainActivity.this,TypeTemplateActivity.class);
+                        Intent intent = new Intent(MainActivity.this, TypeTemplateActivity.class);
                         startActivity(intent);
                         // mDrawerLayout.closeDrawers();
                         break;
 
                     case R.id.nav_menu_fav:
 
-                        startActivity(new Intent(MainActivity.this,MyFavoritesActivity.class));
+                        startActivity(new Intent(MainActivity.this, MyFavoritesActivity.class));
                         // mDrawerLayout.closeDrawers();
                         break;
                     case R.id.nav_menu_favTheme:
-                        startActivity(new Intent(MainActivity.this,MyThemeFavoritesActivity.class));
+                        startActivity(new Intent(MainActivity.this, MyThemeFavoritesActivity.class));
                         break;
                     case R.id.nav_menu_made:
 
-                        startActivity(new Intent(MainActivity.this,MyDIYPicActivity.class));
+                        startActivity(new Intent(MainActivity.this, MyDIYPicActivity.class));
                         // mDrawerLayout.closeDrawers();
                         break;
 
@@ -297,38 +327,38 @@ public class MainActivity extends BaseActivity
 
                         CommUtil.showDialog(context, "-开启可直接分享至QQ空间与朋友圈.\n-关闭时可以分享发送其它不带尾巴.", "我知道了"
                                 , null, new CommInterface.setClickListener() {
-                            @Override
-                            public void onResult() {
-                                if(isWeiBaopen()){
-                                    SharedUtils.putBoolean(WEIBA,context,WEIBA,false);
-                                }else{
-                                    SharedUtils.putBoolean(WEIBA,context,WEIBA,true);
-                                }
-                                setweiba();
-                            }
-                        },null);
+                                    @Override
+                                    public void onResult() {
+                                        if (isWeiBaopen()) {
+                                            SharedUtils.putBoolean(WEIBA, context, WEIBA, false);
+                                        } else {
+                                            SharedUtils.putBoolean(WEIBA, context, WEIBA, true);
+                                        }
+                                        setweiba();
+                                    }
+                                }, null);
 
 
                         break;
 
                     case R.id.nav_menu_setting:
 
-                        if(!CommUtil.getAppOps(MainActivity.this)){
-                            if(show){
+                        if (!CommUtil.getAppOps(MainActivity.this)) {
+                            if (show) {
                                 CommUtil.showToast("再次点击可跳转 应用详情 勾选【悬浮窗权限】");
-                                show=false;
-                            }else{
+                                show = false;
+                            } else {
 
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                    Uri.parse("package:" + getPackageName())));
-                                }else{
+                                            Uri.parse("package:" + getPackageName())));
+                                } else {
                                     CommUtil.getAppDetailSettingIntent(MainActivity.this);
                                     CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
                                 }
 
                             }
-                        }else{
+                        } else {
                             CommUtil.showToast("不要点我了，已经开启啦~");
                         }
 
@@ -336,24 +366,34 @@ public class MainActivity extends BaseActivity
 
                     case R.id.nav_menu_clean:
 
-                        if(SimpleFileUtils.getFileOrFilesSize(DOWN_PATH)>1024*1){   //>1Kb
-                            String ss="您确认要清除 "+DOWN_PATH+" 文件夹下所有缓存图片吗?";
-                            CommUtil.showDialog(MainActivity.this,ss, "我要清空", "不了",
-                                    new CommInterface.setClickListener() {
-                                @Override
-                                public void onResult() {
-                                    SimpleFileUtils.delFile(DOWN_PATH, 0, new CommInterface.DoListener() {
-                                        @Override
-                                        public void finish(boolean isOk) {
-                                            if(isOk){
-                                                cache_item.setTitle("分享的图片缓存："
-                                                        +SimpleFileUtils.getAutoFileOrFilesSize(DOWN_PATH));
+                            if(!"0B".equals(fileSizes)){
+                        String ss = "您确认要清除 " + DOWN_PATH + " 文件夹下所有缓存图片吗?";
+                        CommUtil.showDialog(MainActivity.this, ss, "我要清空", "不了",
+                                new CommInterface.setClickListener() {
+                                    @Override
+                                    public void onResult() {
+                                        SimpleFileUtils.delFile(DOWN_PATH, 0, new CommInterface.DoListener() {
+                                            @Override
+                                            public void finish(boolean isOk) {
+                                                if (isOk) {
+
+                                                    final String size=SimpleFileUtils.getAutoFileOrFilesSize(DOWN_PATH,null);
+
+                                                        HandlerUtil.runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                Log.e("","ok---------------");
+                                                                cache_item.setTitle("分享的图片缓存：" +size);
+                                                            }
+                                                        });
+                                                }
                                             }
-                                        }
-                                    });
-                                }
-                            },null);
-                        }
+                                        });
+                                    }
+                                }, null);
+                                  }else{
+                                CommUtil.showToast("已经清空了~");
+                            }
                         break;
                 }
 
@@ -368,30 +408,31 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        show=true;
-        if(!CommUtil.getAppOps(MainActivity.this)){
+        show = true;
+        if (!CommUtil.getAppOps(MainActivity.this)) {
             qx_item.setTitle("悬浮窗权限: 未开启");
-        }else{
+        } else {
             qx_item.setTitle("悬浮窗权限: 已开启");
         }
     }
 
 
-
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(com.yzi.doutu.R.menu.menu_my, menu);
         return true;
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == com.yzi.doutu.R.id.action_settings) {
             toActivity(AboutActivity.class);
             return true;
-        }else if(id==R.id.action_picTake){
+        } else if (id == R.id.action_picTake) {
 
-            PermissionUtil.getInstance().request(new String[]{Manifest.permission.CAMERA},new PermissionResultAdapter() {
+            PermissionUtil.getInstance().request(new String[]{Manifest.permission.CAMERA}, new PermissionResultAdapter() {
                 //已授予
                 @Override
                 public void onPermissionGranted(String... permissions) {
@@ -408,8 +449,9 @@ public class MainActivity extends BaseActivity
                                     CommUtil.getAppDetailSettingIntent(MainActivity.this);
                                     CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
                                 }
-                            },null);
+                            }, null);
                 }
+
                 //已拒绝权限，但可以在提示
                 @Override
                 public void onRationalShow(String... permissions) {
@@ -429,7 +471,7 @@ public class MainActivity extends BaseActivity
     private void pickPicture() {
         AndroidImagePicker.getInstance().setSelectMode(AndroidImagePicker.Select_Mode.MODE_SINGLE);
         AndroidImagePicker.getInstance().setShouldShowCamera(true);
-        final Intent intent=new Intent(this,ImagesGridActivity.class);
+        final Intent intent = new Intent(this, ImagesGridActivity.class);
         intent.putExtra("isCrop", true);
         startActivity(intent);
         //裁剪监听
@@ -437,20 +479,21 @@ public class MainActivity extends BaseActivity
             @Override
             public void cropComplete(Uri fileUri, Bitmap bitmap) {
 
-                Bundle bundle=new Bundle();
-                bundle.putString("formWhere","takePic");
-                bundle.putParcelable("fileUri",fileUri);
-                Intent intent1=new Intent(MainActivity.this, ModifyPicActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("formWhere", "takePic");
+                bundle.putParcelable("fileUri", fileUri);
+                Intent intent1 = new Intent(MainActivity.this, ModifyPicActivity.class);
                 intent1.putExtras(bundle);
                 // startActivity(intent);
-                MainActivity.this.onActivityResult(CROP,RESULT_OK,intent1);
+                MainActivity.this.onActivityResult(CROP, RESULT_OK, intent1);
             }
         });
     }
 
-    @Override public void onPageSelected(int position) {
+    @Override
+    public void onPageSelected(int position) {
         mToolbar.setTitle(mTitles[position]);
-        page=position;
+        page = position;
     }
 
     @Override
@@ -458,50 +501,53 @@ public class MainActivity extends BaseActivity
 
     }
 
-    @Override public void onPageScrollStateChanged(int state) {
+    @Override
+    public void onPageScrollStateChanged(int state) {
 
     }
 
-    @Override public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
         switch (v.getId()) {
             // FloatingActionButton的点击事件
             case com.yzi.doutu.R.id.id_floatingactionbutton:
-                if(page==0){
-                    XRecyclerView xRecyclerView= (XRecyclerView) findViewById(R.id.xrecyclerview);
+                if (page == 0) {
+                    XRecyclerView xRecyclerView = (XRecyclerView) findViewById(R.id.xrecyclerview);
                     xRecyclerView.smoothScrollToPosition(0);//平滑移动
                     listFragment.refersh();
-                }else if(page==1){
-                    RecyclerView xRecyclerView= (RecyclerView) findViewById(R.id.hotrecyclerview);
+                } else if (page == 1) {
+                    RecyclerView xRecyclerView = (RecyclerView) findViewById(R.id.hotrecyclerview);
                     xRecyclerView.smoothScrollToPosition(0);
-                }
-                else if(page==2){
-                    RecyclerView xRecyclerView= (RecyclerView) findViewById(R.id.id_recyclerview);
+                } else if (page == 2) {
+                    RecyclerView xRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
                     xRecyclerView.smoothScrollToPosition(0);
                 }
                 break;
 
             case R.id.header_img:
-                PermissionUtil.getInstance().request(new String[]{Manifest.permission.CAMERA},new PermissionResultAdapter() {
+                PermissionUtil.getInstance().request(new String[]{Manifest.permission.CAMERA}, new PermissionResultAdapter() {
                     //已授予
                     @Override
                     public void onPermissionGranted(String... permissions) {
 
                         AndroidImagePicker.getInstance().setSelectMode(AndroidImagePicker.Select_Mode.MODE_SINGLE);
                         AndroidImagePicker.getInstance().setShouldShowCamera(true);
-                        startActivityForResult(new Intent(MainActivity.this,ImagesGridActivity.class), 0x123);
+                        startActivityForResult(new Intent(MainActivity.this, ImagesGridActivity.class), 0x123);
                     }
+
                     //已禁止权限
                     @Override
                     public void onPermissionDenied(String... permissions) {
                         CommUtil.showDialog(context, "亲您已经禁止过拍照权限。请去权限管理勾选吧", "好的",
                                 null, new CommInterface.setClickListener() {
-                            @Override
-                            public void onResult() {
-                                CommUtil.getAppDetailSettingIntent(MainActivity.this);
-                                CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
-                            }
-                        },null);
+                                    @Override
+                                    public void onResult() {
+                                        CommUtil.getAppDetailSettingIntent(MainActivity.this);
+                                        CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
+                                    }
+                                }, null);
                     }
+
                     //已拒绝权限，但可以在提示
                     @Override
                     public void onRationalShow(String... permissions) {
@@ -516,13 +562,12 @@ public class MainActivity extends BaseActivity
 
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                if(isopen){
+                if (isopen) {
                     mDrawerLayout.closeDrawers();
-                }else{
+                } else {
                     finish();
                 }
                 return true;
@@ -535,11 +580,11 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onPictureTakeComplete(String picturePath) {
-        Log.v(TAG,"=======调用相机拍照回调======");
+        Log.v(TAG, "=======调用相机拍照回调======");
         CommUtil.showToast("调用相机拍照回调");
-        ImageItem item = new ImageItem(picturePath,"",0);
-        presenter.onPresentCircleImage(header_img,item.path,0);
-        SharedUtils.putString("",MainActivity.this,"icon_img",picturePath);
+        ImageItem item = new ImageItem(picturePath, "", 0);
+        presenter.onPresentCircleImage(header_img, item.path, 0);
+        SharedUtils.putString("", MainActivity.this, "icon_img", picturePath);
     }
 
 
@@ -549,21 +594,21 @@ public class MainActivity extends BaseActivity
         //单选择的图片
         if (requestCode == 0x123) {
             List<ImageItem> imageList = AndroidImagePicker.getInstance().getSelectedImages();
-            if(imageList.size()>0){
-                presenter.onPresentCircleImage(header_img, imageList.get(0).getPath(),0);
-                SharedUtils.putString("",MainActivity.this,"icon_img",imageList.get(0).getPath());
+            if (imageList.size() > 0) {
+                presenter.onPresentCircleImage(header_img, imageList.get(0).getPath(), 0);
+                SharedUtils.putString("", MainActivity.this, "icon_img", imageList.get(0).getPath());
             }
-        }else
+        } else
             //拍照图片
-            if(requestCode == AndroidImagePicker.REQ_CAMERA){
-                if(!TextUtils.isEmpty(AndroidImagePicker.getInstance().getCurrentPhotoPath())){
+            if (requestCode == AndroidImagePicker.REQ_CAMERA) {
+                if (!TextUtils.isEmpty(AndroidImagePicker.getInstance().getCurrentPhotoPath())) {
                     AndroidImagePicker.galleryAddPic(this, AndroidImagePicker.getInstance().getCurrentPhotoPath());
                     AndroidImagePicker.getInstance().notifyPictureTaken();//通知执行 onPictureTakeComplete
-                    Log.i(TAG,"通知执行 onPictureTakeComplete");
-                }else{
-                    Log.i(TAG,"didn't save to your path");
+                    Log.i(TAG, "通知执行 onPictureTakeComplete");
+                } else {
+                    Log.i(TAG, "didn't save to your path");
                 }
-            }else if(requestCode==CROP){
+            } else if (requestCode == CROP) {
                 startActivity(data);
             }
     }

@@ -10,9 +10,6 @@ import android.widget.TextView;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.yzi.doutu.R;
 import com.yzi.doutu.adapter.AllThemeListAdapter;
-import com.yzi.doutu.adapter.HotTemplateAdapter;
-import com.yzi.doutu.bean.AllPic;
-import com.yzi.doutu.bean.Theme;
 import com.yzi.doutu.bean.Theme;
 import com.yzi.doutu.db.DBHelpers;
 import com.yzi.doutu.db.DBTools;
@@ -22,8 +19,9 @@ import com.yzi.doutu.utils.HandlerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-import static com.tencent.mm.sdk.platformtools.MMApplicationContext.getContext;
+import static com.yzi.doutu.utils.CommUtil.DETAIL;
 
 /**我的收藏
  * Created by yzh-t105 on 2017/4/27.
@@ -76,11 +74,23 @@ public class MyThemeFavoritesActivity extends BaseActivity implements CommInterf
         mRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                getFavorites(true);
+                HandlerUtil.runOnUiThreadDelay(new Runnable() {
+                    @Override
+                    public void run() {
+                        getFavorites(true);
+                    }
+                },DETAIL);
+
             }
             @Override
             public void onLoadMore() {
-                getFavorites(false);
+                HandlerUtil.runOnUiThreadDelay(new Runnable() {
+                    @Override
+                    public void run() {
+                        getFavorites(false);
+                    }
+                },DETAIL);
+
             }
         });
         mRecyclerView.setRefreshing(true);
@@ -92,19 +102,17 @@ public class MyThemeFavoritesActivity extends BaseActivity implements CommInterf
      * @param isrefresh 是否为初始刷新，否则视为上拉加载
      */
     public void getFavorites(final boolean isrefresh) {
+        mRecyclerView.setRefreshProgressStyle(new Random().nextInt(28));
+        mRecyclerView.setLoadingMoreProgressStyle(new Random().nextInt(28));
         favorites=new ArrayList<>();
         if(isrefresh){
             beanList.clear();
             favorites= DBTools.getInstance().getThemes(0,COUNT);
             setData(isrefresh);
         }else{
-            HandlerUtil.runOnUiThreadDelay(new Runnable() {
-                @Override
-                public void run() {
-                    favorites= DBTools.getInstance().getThemes(beanList.size(),beanList.size()+COUNT);
-                    setData(isrefresh);
-                }
-            },300);
+            favorites= DBTools.getInstance().getThemes(beanList.size(),beanList.size()+COUNT);
+            setData(isrefresh);
+
         }
 
 
@@ -113,11 +121,10 @@ public class MyThemeFavoritesActivity extends BaseActivity implements CommInterf
     private void setData(boolean isrefresh) {
         if(favorites!=null&&!favorites.isEmpty()){
             beanList.addAll(favorites);
-            mAdapter.setlist(beanList);
         }else{
-            mAdapter.setlist(null);
             CommUtil.showToast("没有更多了");
         }
+        mAdapter.setlist(beanList);
         mAdapter.notifyDataSetChanged();
         if(isrefresh){
             mRecyclerView.refreshComplete();

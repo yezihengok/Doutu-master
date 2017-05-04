@@ -166,12 +166,12 @@ public class SimpleFileUtils {
         if (getFileOrFilesSize(filePath) >= 1048576 * size) {
             //String path = context.getFilesDir().getPath().toString() +filePath;
             Log.d("", filePath);
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
                     deleteFile(new File(filePath), listener);
-//                }
-//            }).start();
+                }
+            }).start();
 
         }
     }
@@ -181,19 +181,27 @@ public class SimpleFileUtils {
         if (file.exists()) { // 判断文件是否存在
             if (file.isFile()) { // 判断是否是文件
                 file.delete(); //删除
+
             } else if (file.isDirectory()) { // 否则如果它是一个目录
                 File files[] = file.listFiles(); // 声明目录下所有的文件 files[];
-                for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
-                    deleteFile(files[i], listener); // 把每个文件 用这个方法进行迭代
+                if(files!=null&&files.length>0){
+                    for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
+                        deleteFile(files[i], listener); // 把每个文件 用这个方法进行迭代
+                        if (i==files.length-1 &&listener != null) {
+                            listener.finish(true);
+                            Log.e("", "已刪除全部");
+                        }
+                    }
+                }else{
+                    listener.finish(true);
+                    Log.e("", "已刪除全部");
                 }
-            }
-            if (listener != null) {
-                listener.finish(true);
+
             }
 
-            Log.e("", "已刪除");
         } else {
             Log.e("", "文件不存在！" + "\n");
+
         }
     }
 
@@ -228,7 +236,7 @@ public class SimpleFileUtils {
      * @param filePath 文件路径
      * @return 计算好的带B、KB、MB、GB的字符串
      */
-    public static String getAutoFileOrFilesSize(String filePath) {
+    public static String getAutoFileOrFilesSize(String filePath,CommInterface.DoListener listener) {
         File file = new File(filePath);
         long blockSize = 0;
         try {
@@ -240,8 +248,12 @@ public class SimpleFileUtils {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("获取文件大小", "获取失败!");
+            if(listener!=null){
+                listener.finish(true);
+            }
         }
-        return FormetFileSize(blockSize);
+
+        return FormetFileSize(blockSize,  listener);
     }
 
     /**
@@ -260,6 +272,7 @@ public class SimpleFileUtils {
         } else {
             file.createNewFile();
             Log.e("获取文件大小", "文件不存在!");
+
         }
         return size;
     }
@@ -290,7 +303,7 @@ public class SimpleFileUtils {
      * @param fileS
      * @return
      */
-    private static String FormetFileSize(long fileS) {
+    private static String FormetFileSize(long fileS,CommInterface.DoListener listener) {
         DecimalFormat df = new DecimalFormat("#.00");
         String fileSizeString = "";
         String wrongSize = "0B";
@@ -305,6 +318,10 @@ public class SimpleFileUtils {
             fileSizeString = df.format((double) fileS / 1048576) + "MB";
         } else {
             fileSizeString = df.format((double) fileS / 1073741824) + "GB";
+        }
+
+        if(listener!=null){
+            listener.finish(true);
         }
         return fileSizeString;
     }

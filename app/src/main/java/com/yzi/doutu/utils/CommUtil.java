@@ -89,7 +89,7 @@ public class CommUtil {
     public static final String WeChat = "com.tencent.mm";
     public static final String WEIBA = "Qweiba";
     public static String FLAG;
-
+    public static final long DETAIL=400L;
 
     /**
      * 是否开启了QQ尾巴分享 ,如果开启了调用系统分享改为调用QQSDK分享
