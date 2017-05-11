@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
 import com.yzi.doutu.R;
 import com.yzi.doutu.bean.DataBean;
@@ -42,15 +43,17 @@ public class DownLoadImageService implements Runnable {
         // Bitmap bitmap = null;
         try {
             //直接读取Glide缓存，得到File对象
-            file = Glide.with(context)
-                    .load(url)
-                    .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                    .get();
-//            bitmap = Glide.with(context)
+//            file = Glide.with(context)
 //                    .load(url)
-//                    .asBitmap()
-//                    .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+//                    .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
 //                    .get();
+
+            FutureTarget<File> future = Glide.with(context)
+                    .load(url)
+                    .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+            file = future.get();
+
+
             if (file != null) {
                 String pathStr;
                 if("DIY".equals(dataBean.getFormWhere())){

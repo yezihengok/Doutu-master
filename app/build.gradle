@@ -4,7 +4,7 @@ apply plugin: 'com.android.application'
 
 android {
   compileSdkVersion 23
-  buildToolsVersion '25.0.0'
+  buildToolsVersion '25.0.2'
 
   defaultConfig {
     applicationId "com.yzi.doutu"
@@ -23,13 +23,13 @@ android {
   signingConfigs {
     ////这里使用的指定key运行项目
     debug {
-      storeFile file("E:\\YZH\\Doutu-master\\keys\\doutu.keys")
+      storeFile file("E:\\yzhWorkplace\\Doutu-master\\keys\\doutu.keys")
       keyAlias 'doutu'
       keyPassword '123456'
       storePassword '123456'
     }
     release {
-      storeFile file("E:\\YZH\\Doutu-master\\keys\\doutu.keys")
+      storeFile file("E:\\yzhWorkplace\\Doutu-master\\keys\\doutu.keys")
       keyAlias 'doutu'
       keyPassword '123456'
       storePassword '123456'

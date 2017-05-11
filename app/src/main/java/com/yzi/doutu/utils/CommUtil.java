@@ -223,7 +223,7 @@ public class CommUtil {
 
 
     /**
-     * 利用Glide 把图片下载本地(额...准确的说应该是 从glide缓存里复制图片文件到指定的文件夹)
+     * 利用Glide 把图片下载本地(从glide下载缓存里复制图片文件到指定的文件夹)
      *
      * @param dataBean
      * @param context
