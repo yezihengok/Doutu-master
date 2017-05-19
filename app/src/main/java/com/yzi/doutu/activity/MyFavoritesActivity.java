@@ -7,9 +7,9 @@ import android.widget.TextView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.yzi.doutu.R;
-import com.yzi.doutu.adapter.HotListAdapter;
 import com.yzi.doutu.adapter.HotTemplateAdapter;
 import com.yzi.doutu.bean.DataBean;
+import com.yzi.doutu.db.DBHelpers;
 import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
@@ -155,7 +155,7 @@ public class MyFavoritesActivity extends BaseActivity implements CommInterface.O
                             , new CommInterface.setClickListener() {
                         @Override
                         public void onResult() {
-                            DBTools.getInstance().removeAll();
+                            DBTools.getInstance().deleteAll(DBHelpers.TABLE_NAME);
                             mAdapter.setHotList(null);
                             mAdapter.notifyDataSetChanged();
                         }

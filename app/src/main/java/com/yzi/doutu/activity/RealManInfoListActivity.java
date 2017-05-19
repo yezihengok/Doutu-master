@@ -74,7 +74,7 @@ public class RealManInfoListActivity extends BaseActivity implements GradationSc
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
     }

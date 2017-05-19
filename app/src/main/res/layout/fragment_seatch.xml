@@ -54,7 +54,7 @@
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="点击搜索相关文字的表情"
+        android:text="搜索相关文字的表情"
         style="@style/txt_13sp"/>
 </LinearLayout>
     <Space

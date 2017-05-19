@@ -103,9 +103,10 @@ public class SharedUtils
 	 * 获取数据
 	 *
 	 * */
-	public static String getString(String shareName, Context context, String key)
+	public static String getString(String shareName,String key)
 	{
-		SharedPreferences sharedPreferences = getInstance(context, android.content.Context.MODE_PRIVATE, shareName);
+		SharedPreferences sharedPreferences = getInstance(DouApplication.getInstance()
+				, android.content.Context.MODE_PRIVATE, shareName);
 		return sharedPreferences.getString(key, "");
 
 	}

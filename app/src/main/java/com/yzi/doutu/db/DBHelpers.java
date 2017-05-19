@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static android.R.attr.id;
-
 /**
  *
  * @author yeziheng
@@ -17,7 +15,7 @@ public class DBHelpers extends SQLiteOpenHelper {
 	
 	private final static int DB_VERSION=3;
 	private final static String DB_NAME="userInfo.db";
-	private final static String TABLE_NAME="favorites";
+	public final static String TABLE_NAME="favorites";
 	public final static String TABLE_MADE="made";
 	public final static String TABLE_THEME="favoritesTheme";
 	public DBHelpers(Context context) {
@@ -78,39 +76,21 @@ public class DBHelpers extends SQLiteOpenHelper {
 		db.delete(TABLE_NAME, "_id= ?", new String[]{Integer.toString(_id)});
 	}
 
-	public  void  deleteByid(String id){
-		SQLiteDatabase db=this.getWritableDatabase();
-		db.delete(TABLE_NAME, "id= ?", new String[]{id});
-	}
-
-	/**
-	 * 删除全部
-	 */
-	public  void  deleteAll(){
-		SQLiteDatabase db=this.getWritableDatabase();
-		db.delete(TABLE_NAME,null,null);
-		
-	}
+//	public  void  deleteByid(String id){
+//		SQLiteDatabase db=this.getWritableDatabase();
+//		db.delete(TABLE_NAME, "id= ?", new String[]{id});
+//	}
+//
+//	/**
+//	 * 删除全部
+//	 */
+//	public  void  deleteAll(){
+//		SQLiteDatabase db=this.getWritableDatabase();
+//		db.delete(TABLE_NAME,null,null);
+//
+//	}
 	
-	public Cursor select(){
-		SQLiteDatabase db=this.getWritableDatabase();
-		//Cursor c=db.rawQuery("select * from "+TABLE_NAME, null);
-		Cursor cursor=db.query(TABLE_NAME, null, null, null, null, null, null);
-		return cursor;
-	}
 
-	/**
-	 * 查询起止条数的内容 (分页查询使用)
-	 * @param start
-	 * @param end
-     * @return
-     */
-	public Cursor select(int start,int end){
-		SQLiteDatabase db=this.getWritableDatabase();
-		//select * from table limit 0,10
-		Cursor cursor=db.rawQuery("select * from "+TABLE_NAME+" limit "+start+","+end, null);
-		return cursor;
-	}
 	
 	/**
 	 * 根据图片查询该条数据的_id
@@ -123,11 +103,10 @@ public class DBHelpers extends SQLiteOpenHelper {
 
 		return cursor;
 	}
-	
-	
+
 	public Cursor selectAllByDesc(){
 		SQLiteDatabase db=this.getWritableDatabase();
-		Cursor cursor=db.rawQuery("select * from "+TABLE_NAME+"order by _id desc ", null);
+		Cursor cursor=db.rawQuery("select * from "+TABLE_NAME+" order by _id desc", null);
 
 		return cursor;
 	}

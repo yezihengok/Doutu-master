@@ -1,7 +1,6 @@
 package com.yzi.doutu.db;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -11,8 +10,6 @@ import com.yzi.doutu.service.DouApplication;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.attr.id;
 
 /**
  * Created by yzh on 2015/10/26.
@@ -50,13 +47,13 @@ public class DBTools {
      */
     public Cursor selectAll(String table){
         SQLiteDatabase db=dbHelpers.getWritableDatabase();
-        //Cursor c=db.rawQuery("select * from "+TABLE_NAME, null);
-        Cursor cursor=db.query(table, null, null, null, null, null, null);
+        Cursor cursor=db.rawQuery("select * from "+table+" order by _id desc", null);
+        //Cursor cursor=db.query(table, null, null, null, null, null, null);
         return cursor;
     }
     public Cursor selectAll(int start,int end,String table){
         SQLiteDatabase db=dbHelpers.getWritableDatabase();
-        Cursor cursor=db.rawQuery("select * from "+table+" limit "+start+","+end, null);
+        Cursor cursor=db.rawQuery("select * from "+table+" order by _id desc"+" limit "+start+","+end, null);
         return cursor;
     }
 
@@ -85,9 +82,9 @@ public class DBTools {
 
         infos = new ArrayList<>();
         if(start==0&&end==0){
-            cursor = dbHelpers.select();
+            cursor = selectAll(DBHelpers.TABLE_NAME);
         }else{
-            cursor = dbHelpers.select(start,end);
+            cursor = selectAll(start,end,DBHelpers.TABLE_NAME);
         }
 
         if (cursor.getCount() <= 0) {
@@ -133,13 +130,13 @@ public class DBTools {
         cursor.close();
     }
 
-    public void remove(int id){
-        dbHelpers.deleteByid(String.valueOf(id));
-    }
-
-    public void removeAll(){
-        dbHelpers.deleteAll();
-    }
+//    public void remove(int id){
+//        dbHelpers.deleteByid(String.valueOf(id));
+//    }
+//
+//    public void removeAll(){
+//        dbHelpers.deleteAll();
+//    }
 
 
     //--------------主题收藏表相关------------

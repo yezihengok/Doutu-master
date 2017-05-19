@@ -41,7 +41,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
 import com.yzi.doutu.activity.ModifyPicActivity;
 import com.yzi.doutu.bean.DataBean;
@@ -72,7 +71,6 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static com.yzi.doutu.R.id.imageView;
 import static com.yzi.doutu.utils.ContextUtil.getApplicationContext;
 
 /**
@@ -506,7 +504,7 @@ public class CommUtil {
                         } else {
 
                             if ("Favorites".equals(tag)) {
-                                DBTools.getInstance().remove(dataBean.getId());
+                                DBTools.getInstance().deleteById(String.valueOf(dataBean.getId()), DBHelpers.TABLE_NAME);
                             } else if ("DIY".equals(tag)) {
                                 DBTools.getInstance().deleteById(String.valueOf(dataBean.getId()), DBHelpers.TABLE_MADE);
                             }

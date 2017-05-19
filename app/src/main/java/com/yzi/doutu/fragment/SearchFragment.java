@@ -17,9 +17,11 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.yzi.doutu.R;
+import com.yzi.doutu.share.QQShareManager;
 import com.yzi.doutu.share.WechatShareManager;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
+import com.yzi.doutu.utils.SharedUtils;
 
 /**
  * Created by yzh-t105 on 2016/10/8.
@@ -36,6 +38,7 @@ public class SearchFragment extends Fragment{
     private android.widget.RadioGroup radioGroup;
     private TextView tv_tips,cd_tv;
     RadioButton radioButton1;
+    /**0搜索图片  1发送文字只微信好友 2发送文字至朋友圈 **/
     int type=0;
     public void setSearchListener(CommInterface.SearchListener searchListener) {
         this.searchListener = searchListener;
@@ -63,7 +66,9 @@ public class SearchFragment extends Fragment{
         searchImg.setImageResource(R.drawable.search_anim);
         AnimationDrawable animationDrawable = (AnimationDrawable) searchImg.getDrawable();
         animationDrawable.start();
-
+        String str=SharedUtils.getString(null,"keyWord","");
+        searchEd.setText(str);
+        searchEd.setSelection(str.length());
         searchImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,37 +76,61 @@ public class SearchFragment extends Fragment{
                 if(TextUtils.isEmpty(keyword)){
                     CommUtil.showToast("骚年,没输入文字就不要点我了");
                 }else{
+
                     if(type==0){
-                        if(searchListener!=null)
-                            searchListener.onClick(keyword);
-                    //分享纯文字
+                         //分享文字到QQ
+                        if("on".equals(cd_tv.getTag())){
+                            QQShareManager.getInstance(getActivity()).onClickShare(keyword);
+                        }else{
+                            if(searchListener!=null)
+                                searchListener.onClick(keyword);
+                        }
+
+
+                    //分享纯文字到微信
                     }else if(type==1){
                         WechatShareManager.getInstance(getActivity()).shareText(keyword,WechatShareManager.WECHAT_SHARE_TYPE_TALK);
                     }else if(type==2){
                         WechatShareManager.getInstance(getActivity()).shareText(keyword,WechatShareManager.WECHAT_SHARE_TYPE_FRENDS);
                     }
 
+                    SharedUtils.putString(null,"keyWord",keyword);
                 }
 
             }
         });
-
         cd_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(radioGroup.getVisibility()==View.GONE){
-                    radioGroup.setVisibility(View.VISIBLE);
-                    cd_tv.setTextColor(Color.parseColor("#00afec"));
-                    radioButton1.setChecked(true);
-                    //radioGroup.check();
 
-                }else{
-                    radioGroup.clearCheck();
-                    tv_tips.setText("点击搜索相关文字的表情");
-                    cd_tv.setTextColor(Color.parseColor("#6D6D6D"));
-                    radioGroup.setVisibility(View.GONE);
-                    type=0;
+                if(CommUtil.WeChat.equals(CommUtil.FLAG)){
+                    if(radioGroup.getVisibility()==View.GONE){
+                        radioGroup.setVisibility(View.VISIBLE);
+                        radioButton1.setChecked(true);
+                        cd_tv.setTextColor(Color.parseColor("#00afec"));
+                    }else{
+                        radioGroup.setVisibility(View.GONE);
+                        tv_tips.setText("搜索相关文字的表情");
+                        cd_tv.setTextColor(Color.parseColor("#6D6D6D"));
+                        radioGroup.clearCheck();
+
+                        type=0;
+                    }
+
+                }else if(CommUtil.QQ.equals(CommUtil.FLAG)){
+                    if("off".equals(cd_tv.getTag())){
+                        cd_tv.setTag("on");
+                        tv_tips.setText("发送带尾巴文字给好友");
+                        cd_tv.setTextColor(Color.parseColor("#00afec"));
+                    }else {
+                        cd_tv.setTag("off");
+                        tv_tips.setText("搜索相关文字的表情");
+                        cd_tv.setTextColor(Color.parseColor("#6D6D6D"));
+                    }
                 }
+
+
+
             }
         });
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -110,11 +139,11 @@ public class SearchFragment extends Fragment{
                 switch (checkedId){
                     case R.id.radioButton1:
                         type=1;
-                        tv_tips.setText("点击发送带尾巴文字给好友");
+                        tv_tips.setText("发送带尾巴文字给好友");
                         break;
                     case R.id.radioButton2:
                         type=2;
-                        tv_tips.setText("点击发送带尾巴文字到朋友圈");
+                        tv_tips.setText("发送带尾巴文字到朋友圈");
                         break;
                 }
             }
@@ -125,10 +154,14 @@ public class SearchFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        if(CommUtil.WeChat.equals(CommUtil.FLAG)){
+        if(CommUtil.WeChat.equals(CommUtil.FLAG) ||CommUtil.QQ.equals(CommUtil.FLAG)){
             ciadang.setVisibility(View.VISIBLE);
         }else{
             ciadang.setVisibility(View.GONE);
+        }
+
+        if(CommUtil.QQ.equals(CommUtil.FLAG)){
+            cd_tv.setTag("off");
         }
     }
 }
