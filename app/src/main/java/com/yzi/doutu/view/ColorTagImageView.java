@@ -59,7 +59,11 @@ public class ColorTagImageView extends ImageView {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     if (listener != null) {
-                        listener.onColorChange(mColors[(int) (event.getX() / mEachItemHeght)]);
+                        try {
+                            listener.onColorChange(mColors[(int) (event.getX() / mEachItemHeght)]);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:

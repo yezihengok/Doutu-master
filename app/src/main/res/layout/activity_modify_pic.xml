@@ -56,21 +56,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:weightSum="1"
             android:background="@android:color/white"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="5dp"
                 android:layout_weight="0.38">
-                <LinearLayout
+                <com.yzi.doutu.view.MyRelativeLayout
                     android:id="@+id/mainLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    />
+                    android:orientation="vertical"/>
             </LinearLayout>
-
+<!--            <com.yzi.doutu.view.MyRelativeLayout
+                android:id="@+id/mainLayout"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:padding="5dp"
+                android:orientation="vertical"/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -164,6 +168,15 @@
                                 android:background="@drawable/subscribe_item_bg"
                                 android:text="默认" />
                             <TextView
+                                android:id="@+id/typeface_c"
+                                style="@style/txt_13sp"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="30dp"
+                                android:gravity="center"
+                                android:background="@drawable/subscribe_item_bg"
+                                android:text="华康少女" />
+                            <TextView
                                 android:id="@+id/typeface_b"
                                 style="@style/txt_13sp"
                                 android:layout_width="0dp"
@@ -174,15 +187,7 @@
                                 android:gravity="center"
                                 android:background="@drawable/subscribe_item_bg"
                                 android:text="小丸子" />
-                            <TextView
-                                android:id="@+id/typeface_c"
-                                style="@style/txt_13sp"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="30dp"
-                                android:gravity="center"
-                                android:background="@drawable/subscribe_item_bg"
-                                android:text="华康少女" />
+
 
                             </LinearLayout>
                     </LinearLayout>

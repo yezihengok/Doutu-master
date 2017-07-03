@@ -52,7 +52,14 @@ public class AboutActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        findViewById(R.id.mian).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+			}
+		});
 	}
+
 
 }
 

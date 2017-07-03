@@ -29,8 +29,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static android.R.attr.width;
-
 public class ImageUtils {
     private static final int TYPE_FILE_IMAGE = 1;
     private static final int TYPE_FILE_VEDIO = 2;
@@ -544,13 +542,13 @@ public class ImageUtils {
         String now=CommUtil.getDate();
         final String fileName =now+ ".jpg";
         String fileNames = FILE_DIY_PATH + fileName;
-        BufferedOutputStream bos;
+        BufferedOutputStream out;
         try {
-            bos = new BufferedOutputStream(new FileOutputStream(new File(fileNames)));
-            compressBitmap(tempBitmap,height,width).compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            //tempBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            bos.flush();
-            bos.close();
+            out = new BufferedOutputStream(new FileOutputStream(new File(fileNames)));
+            //compressBitmap(tempBitmap,height,width).compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            tempBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.flush();
+            out.close();
 
             //保证缓存图片的唯一性删掉旧图,替换新的文件名
             if(!TextUtils.isEmpty(dataBean.getFileName())){

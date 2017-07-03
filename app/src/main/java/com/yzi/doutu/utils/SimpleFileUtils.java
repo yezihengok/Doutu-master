@@ -1,11 +1,8 @@
 package com.yzi.doutu.utils;
 
-import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -188,11 +185,13 @@ public class SimpleFileUtils {
                     for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
                         deleteFile(files[i], listener); // 把每个文件 用这个方法进行迭代
                         if (i==files.length-1 &&listener != null) {
+                            if(listener!=null)
                             listener.finish(true);
                             Log.e("", "已刪除全部");
                         }
                     }
                 }else{
+                    if(listener!=null)
                     listener.finish(true);
                     Log.e("", "已刪除全部");
                 }

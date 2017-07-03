@@ -27,5 +27,5 @@
         \n\t•新增GIF动图添加文字功能 \n\t斗图还在发静图？动图才是王道(暂不支持背景透明的GIF)
         </string>
       <string name="github">\tGithub地址：https://github.com/yezihengok</string>
-    <string name="tv_Mul">*多文字添加：%1$s.\n*开启时,更改了文字、颜色、字体则该文字将不可再次更改.</string>
+    <string name="tv_Mul">*点击即可添加、移动文字.\n*可两指操作旋转缩放文字 \n*文字、颜色、字体样式均可更改.</string>
 </resources>

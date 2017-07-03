@@ -9,53 +9,39 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.text.Editable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.gifdecoder.GifDecoder;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.yzi.doutu.R;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBTools;
-import com.yzi.doutu.operate.OperateUtils;
-import com.yzi.doutu.operate.OperateView;
-import com.yzi.doutu.operate.TextObject;
-import com.yzi.doutu.share.QQShareManager;
 import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.ImageUtils;
 import com.yzi.doutu.utils.SharedUtils;
 import com.yzi.doutu.view.ColorTagImageView;
+import com.yzi.doutu.view.MyRelativeLayout;
+import com.yzi.doutu.view.SoftKeyboardStateHelper;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.yzi.doutu.R.id.modifyLayout;
 import static com.yzi.doutu.utils.CommUtil.closeWaitDialog;
-import static com.yzi.doutu.utils.CommUtil.dip2px;
 import static com.yzi.doutu.utils.CommUtil.showWaitDialog;
-import static com.yzi.doutu.utils.CommUtil.toShare;
 
 
 /**
@@ -66,7 +52,7 @@ import static com.yzi.doutu.utils.CommUtil.toShare;
 public class ModifyPicActivity extends BaseActivity implements  View.OnClickListener{
 
     private TextView tvRight;
-    private LinearLayout mainLayout;
+    private MyRelativeLayout mainLayout;
     private com.yzi.doutu.view.ColorTagImageView colortag;
     private android.widget.EditText edWords;
     private TextView tvcc;
@@ -88,15 +74,13 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
     /**mainLayout里当前显示图片的地址**/
     String showPath;
     //保存图片的宽高
-    private int HEIGHT=200;
-    private int WIDTH=200;
+    private int HEIGHT=270;
+    private int WIDTH=270;
 
     String words="新增文字";
-    int wordsColor=Color.BLACK;//文字颜色
+    int wordsColor=Color.WHITE;//文字颜色
     Typeface typeface;
-    TextObject textObj;
-    OperateUtils operateUtils;
-    OperateView operateView;
+    SoftKeyboardStateHelper stateHelper;
     /**是否可添加多个**/
     boolean ismulTxt=true;
     Handler myHandler = new Handler()
@@ -115,9 +99,8 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
                         closeWaitDialog();
                         timer.cancel();
                         fillContent();
-
                     }
-
+                   // mainLayout.getLayoutParams().height=mainLayout.getWidth();
                 }
             }
         }
@@ -136,6 +119,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         context=this;
         application.addActivity(this);
         setContentView(R.layout.activity_modify_pic);
@@ -148,20 +132,9 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
 
     }
 
-    /**
-     * 更新文字对象
-     */
-    public void updateTextObj(){
-        if(textObj != null) {
-            textObj.setText(words);
-            textObj.setColor(wordsColor);
-            textObj.setTypeface(typeface);
-            textObj.commit();
-            operateView.addItem(textObj);
-        }
-    }
+
     private void initView() {
-        operateUtils = new OperateUtils(this);
+
         ((TextView)findViewById(R.id.tvtitle)).setText("制作表情");
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,7 +151,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
         tvcc= (TextView) findViewById(R.id.tvcc);
         tvMul= (TextView) findViewById(R.id.tvMul);
         this.colortag = (ColorTagImageView) findViewById(R.id.color_tag);
-        this.mainLayout = (LinearLayout) findViewById(R.id.mainLayout);
+        this.mainLayout = (MyRelativeLayout) findViewById(R.id.mainLayout);
         tvRight= (TextView) findViewById(R.id.tvRight);
         tvRight.setOnClickListener(this);
         typeface_a.setOnClickListener(this);
@@ -195,7 +168,9 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
 
             tvcc.setTextColor(colors);
             wordsColor=colors;
-            updateTextObj();
+            updateTextObj(true);
+
+
             }
         });
 
@@ -208,7 +183,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
             public void afterTextChanged(Editable s) {
                 if(s.length()>0){
                     words=edWords.getText().toString();
-                    updateTextObj();
+                    updateTextObj(false);
                 }
             }
         });
@@ -216,6 +191,57 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
         typeface_b.setTypeface(CommUtil.getTypeface("新蒂小丸子体",Typeface.NORMAL));
         typeface_c.setTypeface(CommUtil.getTypeface("华康少女",Typeface.NORMAL));
         setTypeface(SharedUtils.getInt(null,"typeface_"));
+
+
+        mainLayout.setTouchCallBack(new MyRelativeLayout.MyRelativeTouchCallBack() {
+            @Override
+            public void touchMoveCallBack(int direction) {}
+            @Override
+            public void onTextViewMoving(TextView textView) {}
+            @Override
+            public void onTextViewMovingDone() {}
+            @Override
+            public void onTextViewClick(TextView textView) {
+                updateTextObj(true);
+            }
+        });
+
+        stateHelper=new SoftKeyboardStateHelper(mainLayout);
+        stateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
+            @Override
+            public void onSoftKeyboardOpened(int keyboardHeightInPx) {
+                mainLayout.getLayoutParams().height=height;
+            }
+            @Override
+            public void onSoftKeyboardClosed() {
+
+            }
+        });
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setSimulateClick(mainLayout);
+            }
+        },1200);
+
+    }
+
+    /**
+     * 更新文字
+     * @param isColorChange
+     */
+    private void updateTextObj(boolean isColorChange) {
+
+        mainLayout.setColor(wordsColor);
+        mainLayout.setMessage(words);
+        mainLayout.setTypeface(typeface);
+        if(mainLayout.getTextView()!=null&&isColorChange){
+            //自定义描边的textview是用反射设置的颜色， 重新执行ondraw（）也无法刷新颜色。移除一下在重新添加颜色就能改变了
+            mainLayout.updateTv();
+        }
+        mainLayout.addTv(false);
+
     }
 
     void initData(){
@@ -285,6 +311,10 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
     }
 
     public void setTypeface(int type){
+
+
+        wordsColor=SharedUtils.getInt(null,"wordsColor");
+        tvcc.setTextColor(wordsColor);
         String  name=null;
         if(type==0){
             edWords.setTypeface(CommUtil.getTypeface(name,Typeface.BOLD));
@@ -306,40 +336,32 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
         }
 
         typeface=CommUtil.getTypeface(name,Typeface.NORMAL);
-        updateTextObj();
+        updateTextObj(true);
         SharedUtils.putString(null,"typeface",name);
         SharedUtils.putInt(null,"typeface_",type);
     }
 
+    int height=0;
     private void fillContent()
     {
-        //showPath 是有可能被 用户跑到文件夹里自己删掉滴。
+        //showPath 是有可能被 用户跑到文件夹里自己删掉 。
         resizeBmp = BitmapFactory.decodeFile(showPath);
         if(resizeBmp!=null){
             //缩放一下bitmap保证bitmap宽高适应view
             resizeBmp = ImageUtils.scaleWithWH(resizeBmp,mainLayout.getWidth(),mainLayout.getHeight());
-            operateView = new OperateView(context, resizeBmp);
-
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    resizeBmp.getWidth(), resizeBmp.getHeight());
-            operateView.setLayoutParams(lp);
-            Log.v("",mainLayout.getWidth()+"--"+resizeBmp.getWidth());
-            mainLayout.addView(operateView);
-            operateView.setMultiAdd(false); //true可以添加多个文字
-
-            textObj = operateUtils.getTextObject(words, operateView,6, 0,CommUtil.dip2px(50));
-            updateTextObj();
+            mainLayout.setBackGroundBitmap(resizeBmp);
+            height=mainLayout.getHeight();
         }else{
 
-            CommUtil.showDialog(context,showPath+"\n图片不存在或者无效!", "知道了"
-                    , null, new CommInterface.setClickListener() {
-                @Override
-                public void onResult() {
-
-                }
-            },null);
+            CommUtil.showDialog(context,showPath+"\n图片不存在或者无效!", "知道了", null,null,null);
         }
-        setMulTxt();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedUtils.putInt(null,"wordsColor",wordsColor);
     }
 
     @Override
@@ -359,42 +381,19 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
                 setTypeface(2);
                 break;
             case R.id.addTextImg:
-                textObj = operateUtils.getTextObject(words, operateView,6, 0,CommUtil.dip2px(50));
-                updateTextObj();
+                mainLayout.removeAllThings();
                 break;
-            case R.id.tvMul:
-                setMulTxt();
-                break;
+
 
         }
     }
 
-    private void setMulTxt() {
-        String open;
-        if(ismulTxt){
-            ismulTxt=false;
-            addTextImg.setVisibility(View.GONE);
-            operateView.setMultiAdd(false);
-            open=String.format(getStrings(R.string.tv_Mul),"关闭");
-        }else{
-            ismulTxt=true;
-            addTextImg.setVisibility(View.VISIBLE);
-            operateView.setMultiAdd(true);
-            open=String.format(getStrings(R.string.tv_Mul),"开启");
-        }
-
-        SpannableString sp=new SpannableString(open);
-        sp.setSpan(new ForegroundColorSpan(Color.parseColor("#00afec"))
-                ,7,11, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-        tvMul.setText(sp);
-    }
 
 
     private void save() {
-        operateView.save();
 
-        bitmap = ImageUtils.createViewBitmap(operateView,1);
-       // bitmap=ImageUtils.scaleWithWH(bitmap,HEIGHT,WIDTH);
+        bitmap = ImageUtils.createViewBitmap(mainLayout,1);
+        bitmap=ImageUtils.scaleWithWH(bitmap,HEIGHT,WIDTH);
      //   bitmap = ImageUtils.createViewBitmap(operateView,HEIGHT,WIDTH);
 
         String filePath = ImageUtils.saveBitmapToFiles(bitmap, dataBean,HEIGHT,WIDTH);
@@ -447,35 +446,23 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
     }
 
 
-    //打算Glide分解gif每一帧保存至本地，然而好像用Gilde拿不到每一帧的bitmap？
-    public void display(final ImageView imageView, String imageUri) {
 
-        Glide.with(imageView.getContext())
-                .load(imageUri)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                //.into(imageView);
-                .into(new SimpleTarget<GlideDrawable>() {
-                    @Override
-                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                        imageView.setImageDrawable(resource);
-                        if (resource instanceof GifDrawable){
-                            int duration = 0;
-                            // 计算动画时长
-                            GifDrawable drawable = (GifDrawable) resource;
-                            GifDecoder decoder = drawable.getDecoder();
-                            Log.v("","图片帧数:" + drawable.getFrameCount());
-                            for (int i = 0; i < drawable.getFrameCount(); i++) {
-                                duration += decoder.getDelay(i);
-                                Bitmap bitmap=decoder.getNextFrame();
-                                String fileName=dataBean.getName()+i+ ".jpg";
-                                String filePath = ImageUtils.saveBitmapToFile(bitmap, fileName);
-                                Log.v("","已保存至:" + filePath);
-                            }
-                        }
-                    }
-                });
-
+    private void setSimulateClick(View view) {
+        float x=100;
+        float y=height-getResources().getDimensionPixelOffset(R.dimen.dp45);
+        long downTime = SystemClock.uptimeMillis();
+        final MotionEvent downEvent = MotionEvent.obtain(downTime, downTime,
+                MotionEvent.ACTION_DOWN, x, y, 0);
+        downTime += 1000;
+        final MotionEvent upEvent = MotionEvent.obtain(downTime, downTime,
+                MotionEvent.ACTION_UP, x, y, 0);
+        view.onTouchEvent(downEvent);
+        view.onTouchEvent(upEvent);
+        downEvent.recycle();
+        upEvent.recycle();
     }
+
+
 
 
 }

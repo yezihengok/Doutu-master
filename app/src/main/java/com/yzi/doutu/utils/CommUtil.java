@@ -23,12 +23,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,6 +43,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.yzi.doutu.R;
 import com.yzi.doutu.activity.ModifyPicActivity;
 import com.yzi.doutu.bean.DataBean;
@@ -205,7 +211,7 @@ public class CommUtil {
         }
         TextView text = null;
         if (toast == null) {
-            toast = Toast.makeText(getApplicationContext(), tip, Toast.LENGTH_SHORT);
+            toast = Toast.makeText(DouApplication.getInstance(), tip, Toast.LENGTH_SHORT);
         } else {
             // toast.setText(tip);
             toast.setDuration(Toast.LENGTH_SHORT);
@@ -639,6 +645,7 @@ public class CommUtil {
      * @param editText
      * @param showDialog
      */
+
     public void decodeGif(final DataBean dataBean, final Context context, final EditText editText
             , final Dialog showDialog, final CommInterface.setFinishListener listener) {
         showWaitDialog(context, "处理中...", false);
@@ -683,7 +690,7 @@ public class CommUtil {
 
 
                                         DBTools.getInstance().addMades(dataBean);
-                                        SimpleFileUtils.delFile(ImageUtils.FILE_ROOT_PATH, 0, null);//清空分解的文件夹
+                                       // SimpleFileUtils.delFile(ImageUtils.FILE_ROOT_PATH, 0, null);//清空分解的文件夹
                                         if (listener != null)
                                             listener.onFinish();
                                     }
@@ -703,6 +710,94 @@ public class CommUtil {
         });
 
     }
+
+    /**
+     * 利用gilde 获得图片文件并拆分每一帧图片bitmap并添加文字保存至本地在合成gif(使用Glide分解分解gif)
+     *
+     * @param dataBean
+     * @param context
+     * @param editText
+     * @param showDialog
+     */
+    public void decodeGifs(final DataBean dataBean, final Context context, final EditText editText
+            , final Dialog showDialog, final CommInterface.setFinishListener listener) {
+        showWaitDialog(context, "处理中...", false);
+        CommUtil.onDownLoad(dataBean, context, new CommInterface.setListener() {
+            @Override
+            public void onResult(final String picpath) {
+                final List<String> paths;
+
+                    paths = new ArrayList<>();
+                ((Activity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Glide.with(context)
+                                .load(picpath)
+                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                //.into(imageView);
+                                .into(new SimpleTarget<GlideDrawable>() {
+                                    @Override
+                                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                                        if (resource instanceof GifDrawable){
+                                            int duration = 0;
+                                            // 计算动画时长
+                                            GifDrawable drawable = (GifDrawable) resource;
+                                            com.bumptech.glide.gifdecoder.GifDecoder decoder = drawable.getDecoder();
+                                            Log.v("display","图片帧数:" + drawable.getFrameCount());
+                                            for (int i = 0; i < drawable.getFrameCount(); i++) {
+                                                duration += decoder.getDelay(i);
+
+                                                decoder.advance();
+                                                Bitmap bitmap=decoder.getNextFrame();
+                                                Bitmap bitmaps = drawTextToBitmap(bitmap, editText);
+
+                                                String fileName=dataBean.getName()+i+ ".jpg";
+                                                String filePath = ImageUtils.saveBitmapToFile(bitmaps, fileName);
+                                                Log.v("display","已保存至:" + filePath);
+                                                paths.add(filePath);
+                                                bitmap.recycle();
+                                                bitmaps.recycle();
+
+                                                if(i==drawable.getFrameCount()-1){
+                                                    ImageUtils.createGif(dataBean, paths, 70, new CommInterface.setListener() {
+                                                        @Override
+                                                        public void onResult(String picpath) {
+                                                            showDialog.dismiss();
+                                                            closeWaitDialog();
+
+                                                            dataBean.setMadeUrl(picpath);
+
+                                                            if (isWeiBaopen()) {
+                                                                showSharePop(context, dataBean, null);
+                                                            } else {
+                                                                onDownLoad(dataBean, context, 0);
+                                                            }
+
+                                                            DBTools.getInstance().addMades(dataBean);
+                                                               SimpleFileUtils.delFile(ImageUtils.FILE_ROOT_PATH, 0, null);//清空分解的文件夹
+                                                            if (listener != null){
+                                                                listener.onFinish();
+                                                            }
+
+                                                        }
+                                                    });
+                                                }
+
+
+                                            }
+                                        }
+                                    }
+                                });
+                    }
+                });
+
+            }
+        });
+
+    }
+
+
 
 
     float scaleWidth = 0;//bitmap被缩放的比例
@@ -1211,4 +1306,58 @@ public class CommUtil {
     public static boolean isGif(String path) {
         return path.endsWith("gif") || path.endsWith("Gif");
     }
+
+
+    /**
+     * 模拟点击事件
+     * @param view
+     */
+    private void setSimulateClick(View view) {
+        float x=view.getLeft();
+        float y=view.getTop();
+        long downTime = SystemClock.uptimeMillis();
+        final MotionEvent downEvent = MotionEvent.obtain(downTime, downTime,
+                MotionEvent.ACTION_DOWN, x, y, 0);
+        downTime += 1000;
+        final MotionEvent upEvent = MotionEvent.obtain(downTime, downTime,
+                MotionEvent.ACTION_UP, x, y, 0);
+        view.onTouchEvent(downEvent);
+        view.onTouchEvent(upEvent);
+        downEvent.recycle();
+        upEvent.recycle();
+    }
+
+
+    //Glide分解gif每一帧保存至本地
+    public void display(final ImageView imageView, String imageUri) {
+
+        Glide.with(imageView.getContext())
+                .load(imageUri)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                //.into(imageView);
+                .into(new SimpleTarget<GlideDrawable>() {
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                        imageView.setImageDrawable(resource);
+                        if (resource instanceof GifDrawable){
+                            int duration = 0;
+                            // 计算动画时长
+                            GifDrawable drawable = (GifDrawable) resource;
+                            com.bumptech.glide.gifdecoder.GifDecoder decoder = drawable.getDecoder();
+                            Log.v("display","图片帧数:" + drawable.getFrameCount());
+                            for (int i = 0; i < drawable.getFrameCount(); i++) {
+                                duration += decoder.getDelay(i);
+
+                                decoder.advance();
+                                Bitmap bitmap=decoder.getNextFrame();
+                                String fileName="img"+i+ ".jpg";
+                                String filePath = ImageUtils.saveBitmapToFile(bitmap, fileName);
+                                Log.v("display","已保存至:" + filePath);
+                            }
+                        }
+                    }
+                });
+
+    }
+
 }

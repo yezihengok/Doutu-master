@@ -5,4 +5,8 @@
   <dimen name="activity_horizontal_margin">16dp</dimen>
   <dimen name="activity_vertical_margin">16dp</dimen>
   <dimen name="space">5dp</dimen>
+  <dimen name="mindp">12dp</dimen>
+  <dimen name="maxdp">30dp</dimen>
+  <dimen name="dp20">20dp</dimen>
+  <dimen name="dp45">45dp</dimen>
 </resources>
