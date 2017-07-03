@@ -15,6 +15,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -838,6 +839,8 @@ public class CommUtil {
 
         // bitmap = scaleWithWH(bitmap,300,300);
 
+        int color=editText.getCurrentTextColor();//文本颜色
+
         android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
 
         // set default bitmap config if none
@@ -849,6 +852,36 @@ public class CommUtil {
         bitmap = bitmap.copy(bitmapConfig, true);
 
         Canvas canvas = new Canvas(bitmap);
+
+        //画2次文字层叠起来看起来就是描边的文字了
+
+        //在文本底层画出带描边的文本
+        Paint paints = new Paint();
+        paints.setDither(true); //获取跟清晰的图像采样
+        paints.setFilterBitmap(true);//过滤一些
+        paints.setAntiAlias(true);// 去掉边缘锯齿
+        paints.setTypeface(CommUtil.getTypeface(SharedUtils.getString(null, "typeface", null), Typeface.BOLD));
+        paints.setStyle(Paint.Style.FILL_AND_STROKE);
+        paints.setStrokeWidth(4);
+
+        paints.setTextSize(bitmap.getHeight() / 10 );
+        paints.setFakeBoldText(true);
+        //如果字体颜色是黑色描边改为白色，默认描边黑色
+        if(color==Color.BLACK){
+            paints.setColor(Color.WHITE);
+        }else{
+            paints.setColor(Color.BLACK);
+        }
+
+
+        Rect bounds = new Rect();
+        String text = editText.getText().toString();
+        paints.getTextBounds(text, 0, text.length(), bounds);
+
+
+
+        canvas.drawText(text, (bitmap.getWidth() - bounds.width()) / 2, bitmap.getHeight() - bounds.height(), paints);
+
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         // text color - #3D3D3D
         paint.setColor(editText.getCurrentTextColor());
@@ -859,14 +892,13 @@ public class CommUtil {
         paint.setAntiAlias(true);// 去掉边缘锯齿
         paint.setTypeface(CommUtil.getTypeface(SharedUtils.getString(null, "typeface", null), Typeface.BOLD));
 
-        Rect bounds = new Rect();
-        String text = editText.getText().toString();
         paint.getTextBounds(text, 0, text.length(), bounds);
-
         canvas.drawText(text, (bitmap.getWidth() - bounds.width()) / 2, bitmap.getHeight() - bounds.height(), paint);
 
         //画到这里bitmap很可能被拉伸放大了。我在还原d到原来的大小
         //  bitmap = scaleWithWH(bitmap,oldwidth,oldHeight);
+
+
         return bitmap;
     }
 
