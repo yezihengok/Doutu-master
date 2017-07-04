@@ -614,7 +614,7 @@ public class CommUtil {
             edmsg.setText(txt);
             edmsg.setSelection(txt.length());
         }
-
+        edmsg.setTextColor(Color.BLACK);
         colortag.setListener(new ColorTagImageView.OnColorTagChanges() {
             @Override
             public void onColorChange(int color) {
@@ -669,10 +669,23 @@ public class CommUtil {
                                 for (int i = 0; i <= decoder.getFrameCount(); i++) {
                                     GifFrame frame = decoder.next();
                                     String fileName = dataBean.getName() + i + ".jpg";
-                                    Bitmap bitmaps = drawTextToBitmap(frame.image, editText);
-                                    String filePath = ImageUtils.saveBitmapToFile(bitmaps, fileName);
+
+                                    Bitmap bitmap=frame.image;
+                                    if(frame.image.getWidth()*frame.image.getHeight()>250*250){
+
+                                        bitmap=scaleWithWH(bitmap,250,250);
+                                    }
+
+
+                                    Bitmap bitmaps = drawTextToBitmap(bitmap, editText);
+
+                                    String filePath= ImageUtils.saveBitmapToFile(bitmaps, fileName);
+
+
                                     paths.add(filePath);
                                     Log.v("", "已保存至:" + filePath);
+                                    bitmap.recycle();
+                                    bitmaps.recycle();
                                 }
 
                                 ImageUtils.createGif(dataBean, paths, 70, new CommInterface.setListener() {
