@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -14,13 +13,10 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.TextView;
-
 
 import com.example.yzh.mylibrary.R;
 import com.pizidea.imagepicker.crop.util.BitmapLoadUtils;
 
-import java.io.File;
 import java.io.OutputStream;
 
 
@@ -28,7 +24,7 @@ public class CropActivity extends AppCompatActivity {
 
     private static final String TAG = "CropActivity";
 
-    ImageView btn_backpress;
+    ImageView btn_backpress,btn_roat;
 
     UCropView mUCropView;
     GestureCropImageView mGestureCropImageView;
@@ -51,7 +47,7 @@ public class CropActivity extends AppCompatActivity {
         this.mSaveFab = (FloatingActionButton) findViewById(R.id.crop_act_save_fab);
         this.mUCropView = (UCropView) findViewById(R.id.weixin_act_ucrop);
         btn_backpress= (ImageView) findViewById(R.id.btn_backpress);
-
+        btn_roat= (ImageView) findViewById(R.id.btn_roat);
         mGestureCropImageView = mUCropView.getCropImageView();
         mOverlayView = mUCropView.getOverlayView();
 
@@ -70,10 +66,19 @@ public class CropActivity extends AppCompatActivity {
                 finish();
             }
         });
+        btn_roat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rotateByAngle(90);
+            }
+        });
     }
 
 
-
+    private void rotateByAngle(int angle) {
+        mGestureCropImageView.postRotate(angle);
+        mGestureCropImageView.setImageToWrapCropBounds();
+    }
     /**
      * 初始化裁剪View
      */
@@ -81,7 +86,7 @@ public class CropActivity extends AppCompatActivity {
         // 设置允许缩放
         mGestureCropImageView.setScaleEnabled(true);
         // 设置禁止旋转
-        mGestureCropImageView.setRotateEnabled(false);
+        mGestureCropImageView.setRotateEnabled(true);
 
         // 设置外部阴影颜色
         mOverlayView.setDimmedColor(Color.parseColor("#AA000000"));
@@ -146,7 +151,7 @@ public class CropActivity extends AppCompatActivity {
             final Bitmap croppedBitmap = mGestureCropImageView.cropImage();
             if (croppedBitmap != null) {
                 outputStream = getContentResolver().openOutputStream(mOutputUri);
-                croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream);
+                croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream);
                 croppedBitmap.recycle();
 
                 setResultUri(mOutputUri, mGestureCropImageView.getTargetAspectRatio());

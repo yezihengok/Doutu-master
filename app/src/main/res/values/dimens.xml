@@ -8,5 +8,5 @@
   <dimen name="mindp">12dp</dimen>
   <dimen name="maxdp">30dp</dimen>
   <dimen name="dp20">20dp</dimen>
-  <dimen name="dp45">45dp</dimen>
+  <dimen name="dp45">50dp</dimen>
 </resources>
