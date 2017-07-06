@@ -51,7 +51,7 @@ public class NewListAdapter extends RecyclerView.Adapter<NewListAdapter.NewListH
     if(mDatas!=null&&mDatas.size()>0){
       // 随机高度, 模拟瀑布效果.
       for (int i = 0; i < mDatas.size(); i++) {
-        mHeights.add((int) (Math.random() * CommUtil.dip2px(30)) + CommUtil.dip2px(80));
+        mHeights.add((int) (Math.random() * CommUtil.dip2px(35)) + CommUtil.dip2px(75));
       }
     }
 
