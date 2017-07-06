@@ -18,6 +18,7 @@ import android.view.View;
 import com.bumptech.glide.gifencoder.AnimatedGifEncoder;
 import com.yzi.doutu.R;
 import com.yzi.doutu.bean.DataBean;
+import com.yzi.doutu.interfaces.CommInterface;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;

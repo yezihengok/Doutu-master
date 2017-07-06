@@ -20,13 +20,12 @@ import com.yzi.doutu.adapter.HotListAdapter;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.bean.NewPic;
 import com.yzi.doutu.service.DouApplication;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,6 @@ import static com.yzi.doutu.R.id.imageView;
 import static com.yzi.doutu.utils.CommUtil.closeWaitDialog;
 import static com.yzi.doutu.utils.CommUtil.isWeiBaopen;
 import static com.yzi.doutu.utils.CommUtil.onDownLoad;
-import static com.yzi.doutu.utils.CommUtil.shareQQ;
 
 /**
  * Created by yzh-t105 on 2016/10/8.

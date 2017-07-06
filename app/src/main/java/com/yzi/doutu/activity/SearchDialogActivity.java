@@ -18,7 +18,7 @@ import com.yzi.doutu.fragment.SearchFragment;
 import com.yzi.doutu.fragment.SearchListFragment;
 import com.yzi.doutu.main.MainActivity;
 import com.yzi.doutu.service.DouApplication;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.HandlerUtil;
 
 import java.util.ArrayList;

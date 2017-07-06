@@ -9,8 +9,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -44,28 +42,27 @@ import com.yzi.doutu.activity.AboutActivity;
 import com.yzi.doutu.activity.BaseActivity;
 import com.yzi.doutu.activity.HotTemplateActivity;
 import com.yzi.doutu.activity.ModifyPicActivity;
-import com.yzi.doutu.activity.MyThemeFavoritesActivity;
-import com.yzi.doutu.activity.TypeTemplateActivity;
 import com.yzi.doutu.activity.MyDIYPicActivity;
 import com.yzi.doutu.activity.MyFavoritesActivity;
+import com.yzi.doutu.activity.MyThemeFavoritesActivity;
+import com.yzi.doutu.activity.TypeTemplateActivity;
 import com.yzi.doutu.adapter.FragmentPagerAdapter;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.permission.PermissionResultAdapter;
 import com.yzi.doutu.permission.PermissionUtil;
-import com.yzi.doutu.utils.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.ContextUtil;
 import com.yzi.doutu.utils.HandlerUtil;
 import com.yzi.doutu.utils.SharedUtils;
 import com.yzi.doutu.utils.SimpleFileUtils;
+import com.yzi.doutu.utils.TopTips;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.string.ok;
 import static android.view.View.OnClickListener;
 import static com.yzi.doutu.utils.CommUtil.WEIBA;
 import static com.yzi.doutu.utils.CommUtil.isWeiBaopen;
-import static com.yzi.doutu.utils.CommUtil.showToast;
 import static com.yzi.doutu.utils.ImageUtils.DOWN_PATH;
 
 /**
@@ -238,9 +235,9 @@ public class MainActivity extends BaseActivity
         //给NavigationView填充Menu菜单，也可在xml中使用app:menu="@menu/menu_nav"来设置
         mNavigationView.inflateMenu(R.menu.menu_nav);
 
-        weiba_item = mNavigationView.getMenu().getItem(5);
-        qx_item = mNavigationView.getMenu().getItem(6);
-        cache_item = mNavigationView.getMenu().getItem(7);
+        weiba_item = mNavigationView.getMenu().getItem(6);
+        qx_item = mNavigationView.getMenu().getItem(7);
+        cache_item = mNavigationView.getMenu().getItem(8);
         // 自己写的方法，设置NavigationView中menu的item被选中后要执行的操作
         onNavgationViewMenuItemSelected(mNavigationView);
 
@@ -251,7 +248,7 @@ public class MainActivity extends BaseActivity
         //mViewPager.setOffscreenPageLimit(mTitles.length);
         // 给ViewPager添加页面动态监听器（为了让Toolbar中的Title可以变化相应的Tab的标题）
         mViewPager.addOnPageChangeListener(this);
-
+        mViewPager.setCurrentItem(1);
 
         //设置TabLayout的模式
         mTabLayout.setTabMode(TabLayout.MODE_FIXED); //Tab平分当前页面
@@ -322,7 +319,9 @@ public class MainActivity extends BaseActivity
                         startActivity(new Intent(MainActivity.this, MyDIYPicActivity.class));
                         // mDrawerLayout.closeDrawers();
                         break;
-
+                    case R.id.nav_select_pic:
+                        selectPic();
+                        break;
                     case R.id.nav_menu_feedback:
 
                         CommUtil.showDialog(context, "-开启可直接分享至QQ空间与朋友圈.\n-关闭时可以分享发送其它不带尾巴.", "我知道了"
@@ -432,37 +431,41 @@ public class MainActivity extends BaseActivity
             return true;
         } else if (id == R.id.action_picTake) {
 
-            PermissionUtil.getInstance().request(new String[]{Manifest.permission.CAMERA}, new PermissionResultAdapter() {
-                //已授予
-                @Override
-                public void onPermissionGranted(String... permissions) {
-                    pickPicture();
-                }
-
-                //已禁止权限
-                @Override
-                public void onPermissionDenied(String... permissions) {
-                    CommUtil.showDialog(context, "亲您已经禁止过拍照权限。请去权限管理勾选吧", "好的",
-                            null, new CommInterface.setClickListener() {
-                                @Override
-                                public void onResult() {
-                                    CommUtil.getAppDetailSettingIntent(MainActivity.this);
-                                    CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
-                                }
-                            }, null);
-                }
-
-                //已拒绝权限，但可以在提示
-                @Override
-                public void onRationalShow(String... permissions) {
-                    //Toast.makeText(SecondActivity.this, permissions[0] + " is rational", Toast.LENGTH_SHORT).show();
-                }
-            });
+            selectPic();
 
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void selectPic() {
+        PermissionUtil.getInstance().request(new String[]{Manifest.permission.CAMERA}, new PermissionResultAdapter() {
+            //已授予
+            @Override
+            public void onPermissionGranted(String... permissions) {
+                pickPicture();
+            }
+
+            //已禁止权限
+            @Override
+            public void onPermissionDenied(String... permissions) {
+                CommUtil.showDialog(context, "亲您已经禁止过拍照权限。请去权限管理勾选吧", "好的",
+                        null, new CommInterface.setClickListener() {
+                            @Override
+                            public void onResult() {
+                                CommUtil.getAppDetailSettingIntent(MainActivity.this);
+                                CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
+                            }
+                        }, null);
+            }
+
+            //已拒绝权限，但可以在提示
+            @Override
+            public void onRationalShow(String... permissions) {
+                //Toast.makeText(SecondActivity.this, permissions[0] + " is rational", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -518,9 +521,11 @@ public class MainActivity extends BaseActivity
                 } else if (page == 1) {
                     RecyclerView xRecyclerView = (RecyclerView) findViewById(R.id.hotrecyclerview);
                     xRecyclerView.smoothScrollToPosition(0);
+                    new TopTips(context,0,40).show(mTabLayout, "已返回顶端",2000L);
                 } else if (page == 2) {
                     RecyclerView xRecyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
                     xRecyclerView.smoothScrollToPosition(0);
+                    new TopTips(context,0,40).show(mTabLayout, "已返回顶端",2000L);
                 }
                 break;
 

@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.yzi.doutu.R;
 import com.yzi.doutu.share.QQShareManager;
 import com.yzi.doutu.share.WechatShareManager;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.SharedUtils;
 

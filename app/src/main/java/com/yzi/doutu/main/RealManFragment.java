@@ -21,7 +21,7 @@ import com.yzi.doutu.activity.RealManInfoListActivity;
 import com.yzi.doutu.adapter.RealmanAdapter;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.bean.NewPic;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;
 import com.yzi.doutu.utils.SharedUtils;

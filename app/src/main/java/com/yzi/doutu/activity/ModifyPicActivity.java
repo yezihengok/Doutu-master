@@ -27,7 +27,7 @@ import android.widget.TextView;
 import com.yzi.doutu.R;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBTools;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.ImageUtils;
 import com.yzi.doutu.utils.SharedUtils;
@@ -74,15 +74,14 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
     /**mainLayout里当前显示图片的地址**/
     String showPath;
     //保存图片的宽高
-    private int HEIGHT=270;
-    private int WIDTH=270;
+    private int HEIGHT=275;
+    private int WIDTH=275;
 
     String words="新增文字";
     int wordsColor=Color.WHITE;//文字颜色
     Typeface typeface;
     SoftKeyboardStateHelper stateHelper;
-    /**是否可添加多个**/
-    boolean ismulTxt=true;
+
     Handler myHandler = new Handler()
     {
         @Override

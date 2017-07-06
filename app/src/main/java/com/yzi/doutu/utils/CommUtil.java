@@ -53,6 +53,7 @@ import com.yzi.doutu.activity.ModifyPicActivity;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBHelpers;
 import com.yzi.doutu.db.DBTools;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.service.DouApplication;
 import com.yzi.doutu.service.WindowService;
 import com.yzi.doutu.share.QQShareManager;

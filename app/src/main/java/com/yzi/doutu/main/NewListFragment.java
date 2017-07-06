@@ -18,7 +18,7 @@ import com.yzi.doutu.R;
 import com.yzi.doutu.adapter.NewListAdapter;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.bean.NewPic;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;
 import com.yzi.doutu.utils.RecycleViews.SpaceItemDecoration;
@@ -203,6 +203,13 @@ public class NewListFragment extends Fragment
 
     public void refersh(){
         new TopTips(getActivity(),0,40).show(top, "已刷新数据",2000L);
+
+        mRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRecyclerView.setRefreshing(true);
+            }
+        },2000L);
     }
 
     @Override

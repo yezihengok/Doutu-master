@@ -13,9 +13,8 @@ import com.yzi.doutu.adapter.HotTemplateAdapter;
 import com.yzi.doutu.bean.AllPic;
 import com.yzi.doutu.bean.AllPicInfo;
 import com.yzi.doutu.bean.DataBean;
-import com.yzi.doutu.bean.HotTemplate;
 import com.yzi.doutu.bean.Theme;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;
 import com.yzi.doutu.utils.SharedUtils;
@@ -29,7 +28,6 @@ import java.util.Map;
 
 import okhttp3.Call;
 
-import static android.R.attr.id;
 import static com.yzi.doutu.utils.CommUtil.DDSQ;
 
 /**

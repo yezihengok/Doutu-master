@@ -14,7 +14,7 @@ import com.pizidea.imagepicker.ImagePresenter;
 import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
 import com.yzi.doutu.bean.DataBean;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class NewListAdapter extends RecyclerView.Adapter<NewListAdapter.NewListH
     if(mDatas!=null&&mDatas.size()>0){
       // 随机高度, 模拟瀑布效果.
       for (int i = 0; i < mDatas.size(); i++) {
-        mHeights.add((int) (Math.random() * CommUtil.dip2px(30)) + CommUtil.dip2px(70));
+        mHeights.add((int) (Math.random() * CommUtil.dip2px(30)) + CommUtil.dip2px(80));
       }
     }
 

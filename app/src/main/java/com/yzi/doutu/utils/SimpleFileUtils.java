@@ -3,6 +3,8 @@ package com.yzi.doutu.utils;
 import android.os.Environment;
 import android.util.Log;
 
+import com.yzi.doutu.interfaces.CommInterface;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;

@@ -28,7 +28,7 @@ public class TopTips {
     public TopTips(Context context, int bgColor, int height) {
         this.context = context;
         initPop();
-        if(bgColor>0)
+        if(bgColor!=0)
         bg_layout.setBackgroundColor(bgColor);
         if(height>0)
         arert_info.getLayoutParams().height=dip2px(context,height);
