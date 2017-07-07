@@ -16,10 +16,11 @@ import com.yzi.doutu.fragment.CollectionFragment;
 import com.yzi.doutu.fragment.DIYFragment;
 import com.yzi.doutu.fragment.SearchFragment;
 import com.yzi.doutu.fragment.SearchListFragment;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.main.MainActivity;
 import com.yzi.doutu.service.DouApplication;
-import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.HandlerUtil;
+import com.yzi.doutu.utils.SharedUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,7 +125,10 @@ public class SearchDialogActivity extends FragmentActivity implements ViewPager.
                 finish();
             }
         });
-        setTabBg(0);
+
+        int index=SharedUtils.getInt(null,"TabPosition");
+        mViewPager.setCurrentItem(index);
+        setTabBg(index);
     }
 
     @Override
@@ -152,6 +156,7 @@ public class SearchDialogActivity extends FragmentActivity implements ViewPager.
 
 
     public void setTabBg(int position){
+        SharedUtils.putInt(null,"TabPosition",position);
         switch (position){
             case 0:
                 searchLayout.setBackgroundResource(R.color.aplsh);
@@ -177,7 +182,6 @@ public class SearchDialogActivity extends FragmentActivity implements ViewPager.
                 searchLayout.setBackgroundResource(R.color.white);
                 tLayout.setBackgroundResource(R.color.white);
                 break;
-
         }
     }
 

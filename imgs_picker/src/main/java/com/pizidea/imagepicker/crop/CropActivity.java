@@ -151,7 +151,7 @@ public class CropActivity extends AppCompatActivity {
             final Bitmap croppedBitmap = mGestureCropImageView.cropImage();
             if (croppedBitmap != null) {
                 outputStream = getContentResolver().openOutputStream(mOutputUri);
-                croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream);
+                croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 croppedBitmap.recycle();
 
                 setResultUri(mOutputUri, mGestureCropImageView.getTargetAspectRatio());
