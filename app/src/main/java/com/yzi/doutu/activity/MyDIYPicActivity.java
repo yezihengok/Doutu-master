@@ -55,7 +55,7 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
                 finish();
             }
         });
-        ((TextView)findViewById(R.id.tvtitle)).setText("我的制作图片");
+        ((TextView)findViewById(R.id.tvtitle)).setText("我的制作");
         tvRight= (TextView) findViewById(R.id.tvRight);
         tvRight.setText("清空");
 

@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.yzi.doutu.R;
@@ -58,6 +59,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
     private TextView tvcc;
     private ImageView addTextImg;
     private TextView tvMul;
+     ScrollView mScrollView;
     DataBean dataBean;
 
 
@@ -74,10 +76,10 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
     /**mainLayout里当前显示图片的地址**/
     String showPath;
     //保存图片的宽高
-    private int HEIGHT=275;
-    private int WIDTH=275;
+    private int HEIGHT=280;
+    private int WIDTH=280;
 
-    String words="新增文字";
+    String words="请输入文字";
     int wordsColor=Color.WHITE;//文字颜色
     Typeface typeface;
     SoftKeyboardStateHelper stateHelper;
@@ -152,6 +154,8 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
         this.colortag = (ColorTagImageView) findViewById(R.id.color_tag);
         this.mainLayout = (MyRelativeLayout) findViewById(R.id.mainLayout);
         tvRight= (TextView) findViewById(R.id.tvRight);
+
+        mScrollView= (ScrollView) findViewById(R.id.mScrollView);
         tvRight.setOnClickListener(this);
         typeface_a.setOnClickListener(this);
         typeface_b.setOnClickListener(this);
@@ -180,9 +184,13 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
+                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
                 if(s.length()>0){
                     words=edWords.getText().toString();
                     updateTextObj(false);
+                }else{
+                    words="请输入文字";
+                    mainLayout.setMessage(words);
                 }
             }
         });
@@ -209,7 +217,10 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
         stateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
             @Override
             public void onSoftKeyboardOpened(int keyboardHeightInPx) {
+
                 mainLayout.getLayoutParams().height=height;
+                mainLayout.invalidate();
+
             }
             @Override
             public void onSoftKeyboardClosed() {
@@ -381,6 +392,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
                 break;
             case R.id.addTextImg:
                 mainLayout.removeAllThings();
+                //edWords.setText("");
                 break;
 
 
@@ -448,7 +460,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
 
     private void setSimulateClick(View view) {
         float x=100;
-        float y=height-getResources().getDimensionPixelOffset(R.dimen.dp45);
+        float y=height-getResources().getDimensionPixelOffset(R.dimen.dp55);
         long downTime = SystemClock.uptimeMillis();
         final MotionEvent downEvent = MotionEvent.obtain(downTime, downTime,
                 MotionEvent.ACTION_DOWN, x, y, 0);
