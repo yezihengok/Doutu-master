@@ -16,7 +16,7 @@ import com.pizidea.imagepicker.UilImagePresenter;
 import com.yzi.doutu.R;
 import com.yzi.doutu.activity.TypeTemplateListActivity;
 import com.yzi.doutu.bean.AllType;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 
 import java.util.List;

@@ -19,6 +19,10 @@ public class GradationScrollView extends ScrollView {
 
 	private ScrollViewListener scrollViewListener = null;
 
+	public void setScrollViewListener(ScrollViewListener scrollViewListener) {
+		this.scrollViewListener = scrollViewListener;
+	}
+
 	public GradationScrollView(Context context) {
 		super(context);
 	}
@@ -32,9 +36,6 @@ public class GradationScrollView extends ScrollView {
 		super(context, attrs);
 	}
 
-	public void setScrollViewListener(ScrollViewListener scrollViewListener) {
-		this.scrollViewListener = scrollViewListener;
-	}
 
 	@Override
 	protected void onScrollChanged(int x, int y, int oldx, int oldy) {

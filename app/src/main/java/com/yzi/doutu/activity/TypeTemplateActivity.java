@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.yzi.doutu.R;
 import com.yzi.doutu.adapter.AllTypeAdapter;
 import com.yzi.doutu.bean.AllType;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;
 import com.yzi.doutu.utils.RecycleViews.FullyGridLayoutManager;

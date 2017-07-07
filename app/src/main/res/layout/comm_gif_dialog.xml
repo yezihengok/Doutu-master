@@ -41,7 +41,7 @@
                     android:text="呵呵哒"
                     android:textStyle="bold"
                     android:gravity="center"
-                    android:textColor="@color/subscribe_tip_text"
+                    android:textColor="@color/black"
                     android:ems="11"
                     android:textSize="18sp" />
             </RelativeLayout>

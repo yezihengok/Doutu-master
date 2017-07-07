@@ -1,14 +1,12 @@
 package com.yzi.doutu.utils;
 
 import android.content.Context;
-import android.os.Environment;
-import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
-import com.yzi.doutu.R;
 import com.yzi.doutu.bean.DataBean;
+import com.yzi.doutu.interfaces.CommInterface;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -19,7 +17,6 @@ import java.io.IOException;
 
 import static com.yzi.doutu.utils.ImageUtils.DOWN_PATH;
 import static com.yzi.doutu.utils.ImageUtils.FILE_ROOT_PATH;
-import static com.yzi.doutu.utils.ImageUtils.getFilesPath;
 
 /**
  * 图片下载

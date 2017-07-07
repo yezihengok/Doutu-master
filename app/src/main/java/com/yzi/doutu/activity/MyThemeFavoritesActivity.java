@@ -13,7 +13,7 @@ import com.yzi.doutu.adapter.AllThemeListAdapter;
 import com.yzi.doutu.bean.Theme;
 import com.yzi.doutu.db.DBHelpers;
 import com.yzi.doutu.db.DBTools;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.HandlerUtil;
 

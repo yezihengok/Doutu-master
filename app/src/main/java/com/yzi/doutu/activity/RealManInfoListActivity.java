@@ -19,11 +19,11 @@ import com.yzi.doutu.R;
 import com.yzi.doutu.adapter.HotListAdapter;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.bean.RealMan;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;
 import com.yzi.doutu.utils.RecycleViews.FullyGridLayoutManager;
-import com.yzi.doutu.view.GradationScrollView;
+import com.yzi.doutu.view.HeadZoomScrollView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -38,11 +38,11 @@ import static com.yzi.doutu.R.id.listview;
  * Created by yzh-t105 on 2016/9/27.
  */
 
-public class RealManInfoListActivity extends BaseActivity implements GradationScrollView.ScrollViewListener
+public class RealManInfoListActivity extends BaseActivity implements HeadZoomScrollView.OnScrollListener
 ,CommInterface.OnItemClickListener{
     private android.widget.ImageView ivbanner;
     private RecyclerView mRecyclerView;
-    private com.yzi.doutu.view.GradationScrollView scrollview;
+    private HeadZoomScrollView scrollview;
     private android.widget.ImageView back;
     private android.widget.TextView tvtitle;
     private android.widget.ImageView share;
@@ -85,7 +85,7 @@ public class RealManInfoListActivity extends BaseActivity implements GradationSc
         this.share = (ImageView) findViewById(R.id.share);
         this.tvtitle = (TextView) findViewById(R.id.tvtitle);
         this.back = (ImageView) findViewById(R.id.back);
-        this.scrollview = (GradationScrollView) findViewById(R.id.scrollview);
+        this.scrollview = (HeadZoomScrollView) findViewById(R.id.scrollview);
         this.mRecyclerView = (RecyclerView) findViewById(listview);
         this.ivbanner = (ImageView) findViewById(R.id.iv_banner);
         ivbanner.setFocusable(true);
@@ -104,7 +104,7 @@ public class RealManInfoListActivity extends BaseActivity implements GradationSc
         realList=new ArrayList<>();
         realListAdapter = new HotListAdapter(this,realList);
         realListAdapter.setOnItemClickListener(this);
-        realListAdapter.setJustShowBitmap(true);
+        realListAdapter.setJustShowBitmap(false);
         mRecyclerView.setAdapter(realListAdapter);
 
         getRealManList();
@@ -130,25 +130,22 @@ public class RealManInfoListActivity extends BaseActivity implements GradationSc
                         this);
                 height = ivbanner.getHeight()-50;
 
-                scrollview.setScrollViewListener(RealManInfoListActivity.this);
+                scrollview.setOnScrollListener(RealManInfoListActivity.this);
             }
         });
     }
 
 
 
-
     /**
-     * 滑动监听
-     * @param scrollView
+     * 滑动监听实现颜色渐变
      * @param x 当前横向滑动距离
      * @param y 当前纵向滑动距离
-     * @param oldx 之前横向滑动距离
-     * @param oldy 之前纵向滑动距离
+     * @param oldScrollX 之前横向滑动距离
+     * @param oldScrollY 之前纵向滑动距离
      */
     @Override
-    public void onScrollChanged(GradationScrollView scrollView, int x, int y,
-                                int oldx, int oldy) {
+    public void onScrollChanged(int x, int y, int oldScrollX, int oldScrollY) {
         if (y <= 0) {
             //设置默认
             setAlpha(0);
@@ -165,6 +162,7 @@ public class RealManInfoListActivity extends BaseActivity implements GradationSc
             setAlpha(255);
         }
     }
+
 
     /**
      * 设置title元素view的透明度
@@ -234,4 +232,5 @@ public class RealManInfoListActivity extends BaseActivity implements GradationSc
     public void onItemLongClick(View view, int position) {
 
     }
+
 }

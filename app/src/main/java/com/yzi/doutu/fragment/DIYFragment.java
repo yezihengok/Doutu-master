@@ -15,7 +15,7 @@ import com.yzi.doutu.adapter.HotListAdapter;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.service.DouApplication;
-import com.yzi.doutu.utils.CommInterface;
+import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.HandlerUtil;
 

@@ -129,7 +129,7 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
     public void startCropActivity(Uri uri) {
         UCrop.of(uri, mDestinationUri)
                 .withAspectRatio(1, 1)//剪裁的宽高比为1:1
-                .withMaxResultSize(512, 512)//剪裁最大尺寸为512*512
+                .withMaxResultSize(600, 600)//剪裁最大尺寸为600*600
                 .withTargetActivity(CropActivity.class)
                 .start(this);
     }

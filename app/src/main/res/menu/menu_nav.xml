@@ -25,6 +25,11 @@
         android:icon="@mipmap/icon_diy"
         android:title="我的制作"/>
     <item
+        android:id="@+id/nav_select_pic"
+        android:icon="@mipmap/select_pic"
+        android:title="相册选图">
+    </item>
+    <item
         android:id="@+id/nav_menu_feedback"
         android:icon="@mipmap/icon_black_list"
         android:title="分享尾巴: 开" />
@@ -37,5 +42,7 @@
         android:icon="@mipmap/setting_icon_cleanup"
         android:title="图片缓存">
         </item>
+
+
   </group>
 </menu>

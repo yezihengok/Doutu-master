@@ -48,6 +48,7 @@
     </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/mScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomla"
@@ -61,7 +62,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="5dp"
                 android:layout_weight="0.38">
                 <com.yzi.doutu.view.MyRelativeLayout
                     android:id="@+id/mainLayout"
@@ -173,6 +173,7 @@
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="30dp"
+                                android:layout_marginLeft="5dp"
                                 android:gravity="center"
                                 android:background="@drawable/subscribe_item_bg"
                                 android:text="华康少女" />
@@ -220,7 +221,10 @@
         <ImageView
             android:id="@+id/addTextImg"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/btn_bg_color_pick_icon" />
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:src="@mipmap/trash" />
     </LinearLayout>
 </RelativeLayout>
