@@ -564,9 +564,6 @@ public class CommUtil {
 
     }
 
-    public void getDialog(){
-
-    }
 
     /**
      * 公用的 弹出GIF添加文字的dialog
@@ -706,7 +703,7 @@ public class CommUtil {
 
 
                                         DBTools.getInstance().addMades(dataBean);
-                                       // SimpleFileUtils.delFile(ImageUtils.FILE_ROOT_PATH, 0, null);//清空分解的文件夹
+                                        SimpleFileUtils.delFile(ImageUtils.FILE_ROOT_PATH, 0, null);//清空分解的文件夹
                                         if (listener != null)
                                             listener.onFinish();
                                     }

@@ -179,12 +179,13 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
 
         edWords.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+
                 if(s.length()>0){
                     words=edWords.getText().toString();
                     updateTextObj(false);
@@ -217,9 +218,8 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
         stateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
             @Override
             public void onSoftKeyboardOpened(int keyboardHeightInPx) {
-
                 mainLayout.getLayoutParams().height=height;
-                mainLayout.invalidate();
+                //mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
 
             }
             @Override
