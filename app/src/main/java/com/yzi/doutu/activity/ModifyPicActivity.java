@@ -270,17 +270,15 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
             words="来自相册的图片~";
 
             //先保存一下未添加文字之前的图片作为原图
-            showPath = ImageUtils.saveBitmapToFiles(showBitmap, dataBean,showBitmap.getHeight(),showBitmap.getWidth());
+            showPath = ImageUtils.saveBitmapToFiles(showBitmap, null);
             Log.v("","相册选来的原图已保存至:" + showPath);
 
             //从相册选图过来的 需要new一个DataBean
-            if(formWhere!=null){
                 dataBean=new DataBean();
                 dataBean.setGifPath(showPath);// GifPath该字段只有在从相册选图时，该地址会保存截图的本地文件路径
                 dataBean.setName(words);
                 dataBean.setId((int)System.currentTimeMillis());
                 WIDTH=HEIGHT=showBitmap.getWidth();//相册选来的图片保存我稍微设置大一点
-            }
 
         }else{
 
@@ -288,14 +286,14 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
 
             dataBean= (DataBean) getIntent().getSerializableExtra("dataBean");
             //如果不是从我的制作界面进来的,dataBean改为从数据库读取
-            if(!"DIY".equals(dataBean.getFormWhere())){
-                DataBean bean=DBTools.getInstance().madeById(String.valueOf(dataBean.getId()));
-                if(bean!=null){
-                    dataBean=bean;
-                }
-            }
+//            if(!"DIY".equals(dataBean.getFormWhere())){
+//                DataBean bean=DBTools.getInstance().madeById(String.valueOf(dataBean.getId()));
+//                if(bean!=null){
+//                    dataBean=bean;
+//                }
+//            }
 
-            //showPath=dataBean.getGifPath();//这个地址是网络图片地址是不行滴(需要先保存本地)
+            //showPath=dataBean.getGifPath();//这个地址是网络图片地址是不行de (需要先保存本地)
             showPath=null;//没下载好之前先置空
             dataBean.setFormWhere("DIY");//为了保存到临时temp文件下随时清空，才改为的DIY
             CommUtil.onDownLoad(dataBean, context, new CommInterface.setListener() {
@@ -303,6 +301,18 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
                 public void onResult(String picpath) {
                     showPath=picpath;
                     dataBean.setFormWhere(null);
+
+                    if(TextUtils.isEmpty(picpath)){
+                        CommUtil.showDialog(context, showPath + "\n表情原图不存在或已被删除!", "知道了"
+                                , null, new CommInterface.setClickListener() {
+                            @Override
+                            public void onResult() {
+                                setResult(RESULT_CANCELED);
+                                finish();
+                            }
+                        }, null);
+
+                    }
                 }
             });
 
@@ -363,7 +373,9 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
             height=mainLayout.getHeight();
         }else{
 
-            CommUtil.showDialog(context,showPath+"\n图片不存在或者无效!", "知道了", null,null,null);
+            CommUtil.showDialog(context,showPath+"\n表情原图不存在或已被删除!", "知道了", null,null,null);
+            setResult(RESULT_CANCELED);
+            finish();
         }
 
     }
@@ -407,7 +419,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
         bitmap=ImageUtils.scaleWithWH(bitmap,HEIGHT,WIDTH);
      //   bitmap = ImageUtils.createViewBitmap(operateView,HEIGHT,WIDTH);
 
-        String filePath = ImageUtils.saveBitmapToFiles(bitmap, dataBean,HEIGHT,WIDTH);
+        String filePath = ImageUtils.saveBitmapToFiles(bitmap, dataBean);
         Log.v("","已保存至:" + filePath);
 
         dataBean.setName(words);

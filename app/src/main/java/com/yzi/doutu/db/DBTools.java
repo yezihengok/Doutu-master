@@ -11,6 +11,8 @@ import com.yzi.doutu.service.DouApplication;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.yzi.doutu.utils.CommUtil.isGif;
+
 /**
  * Created by yzh on 2015/10/26.
  */
@@ -249,6 +251,7 @@ public class DBTools {
             info.setPicPath(cursor.getString(cursor.getColumnIndex("url")));
             info.setMadeUrl(cursor.getString(cursor.getColumnIndex("madeUrl")));
             info.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
+            info.setIs_gif(isGif(info.getMadeUrl()));
             infos.add(info);
             if (cursor.isLast()) {
                 break;

@@ -535,7 +535,7 @@ public class ImageUtils {
         }
     }
 
-    public static String saveBitmapToFiles(Bitmap tempBitmap,final DataBean dataBean,int height,int width) {
+    public static String saveBitmapToFiles(Bitmap tempBitmap,final DataBean dataBean) {
         if (TextUtils.isEmpty(getFilesPath(FILE_DIY_PATH))) {
             return null;
         }
@@ -551,11 +551,14 @@ public class ImageUtils {
             out.flush();
             out.close();
 
-            //保证缓存图片的唯一性删掉旧图,替换新的文件名
-            if(!TextUtils.isEmpty(dataBean.getFileName())){
-                SimpleFileUtils.deleteFile(new File(FILE_DIY_PATH+dataBean.getFileName()),null);
+            if(dataBean!=null){
+                //保证缓存图片的唯一性删掉旧图,替换新的文件名
+                if(!TextUtils.isEmpty(dataBean.getFileName())){
+                    SimpleFileUtils.deleteFile(new File(FILE_DIY_PATH+dataBean.getFileName()),null);
+                }
+                dataBean.setFileName(fileName);
             }
-            dataBean.setFileName(fileName);
+
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -18,6 +18,7 @@ import com.yzi.doutu.utils.HandlerUtil;
 import com.yzi.doutu.utils.ImageUtils;
 import com.yzi.doutu.utils.SimpleFileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -133,18 +134,25 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
     }
 
 
+    int mPosition;
     @Override
-    public void onItemClick(View view, int position) {
+    public void onItemClick(View view, final int position) {
+        mPosition=position;
         beanList.get(position).setFormWhere("DIY");
         CommUtil.getInstance().showSharePop(this, beanList.get(position),new CommInterface.setFinishListener() {
             @Override
             public void onFinish() {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-                        getFavorites(true);
-//                    }
-//                });
+
+                //删掉SD卡里的制作图片
+                SimpleFileUtils.deleteFile(new File(beanList.get(position).getMadeUrl()),null);
+                //删掉从相册选择截图图片
+                if(!beanList.get(position).getGifPath().startsWith("http")){
+                    SimpleFileUtils.deleteFile(new File(beanList.get(position).getGifPath()),null);
+                }
+
+                //删掉sqlite记录
+                DBTools.getInstance().deleteById(String.valueOf(beanList.get(position).getId()), DBHelpers.TABLE_MADE);
+                getFavorites(true);
             }
         });
     }
@@ -154,11 +162,18 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==0x123&&resultCode==RESULT_OK){
             getFavorites(true);
+        }else if(requestCode==0x123&&resultCode==RESULT_CANCELED){
+            //原图不存在了sqlite删除这条记录
+            DBTools.getInstance().deleteById(String.valueOf(beanList.get(mPosition).getId()), DBHelpers.TABLE_MADE);
+            getFavorites(true);
+
         }
     }
+
 
     @Override
     public void onClick(View v) {

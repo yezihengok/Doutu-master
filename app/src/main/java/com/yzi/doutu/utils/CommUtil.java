@@ -252,6 +252,7 @@ public class CommUtil {
                         closeWaitDialog();
                         showToast("获取图片失败");
                         SimpleFileUtils.deleteFile(new File(ImageUtils.ROOT_PATH+"DOWN"),null);
+                        listener.onResult(null);
                     }
                 });
         //启动图片下载线程

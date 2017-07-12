@@ -65,9 +65,12 @@ public class DownLoadImageService implements Runnable {
                     name =dataBean.getId()+ ".jpg";
                 }
                 cppyFile(file, pathStr, name);
+            }else{
+                error();
             }
         } catch (Exception e) {
             e.printStackTrace();
+            error();
         } finally {
 
         }

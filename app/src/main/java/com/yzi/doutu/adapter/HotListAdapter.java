@@ -67,6 +67,8 @@ public class HotListAdapter extends RecyclerView.Adapter<HotListAdapter.ViewHold
         this.dataform=dataform;
     }
 
+
+
     //创建新View，被LayoutManager所调用
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
