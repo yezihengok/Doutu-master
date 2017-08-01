@@ -57,16 +57,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="#80ffffff"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:layout_weight="0.38">
                 <com.yzi.doutu.view.MyRelativeLayout
                     android:id="@+id/mainLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"/>
             </LinearLayout>
 <!--            <com.yzi.doutu.view.MyRelativeLayout

@@ -7,10 +7,11 @@
   <!-- 蓝色为主色调 -->
   <style name="MyThemeBlue" parent="Theme.AppCompat.Light.NoActionBar">
 
-    <!--选中状态icon的颜色和字体颜色-->
-    <item name="colorPrimary">@color/main_blue_light</item>
-    <item name="colorPrimaryDark">@color/main_blue_dark</item>
-    <item name="colorAccent">@color/main_blue_light</item>
+    <!--5.0+主题上才有效-->
+    <item name="colorPrimary">@color/main_blue_light</item> <!-- 导航栏颜色-->
+    <item name="colorPrimaryDark">@color/main_blue_dark</item><!-- 状态栏颜色-->
+    <item name="colorAccent">@color/main_blue_light</item><!-- 系统控件选中的颜色-->
+    <item name="android:textColorLinkInverse">@color/black</item><!-- 主题文字颜色 如textview默认颜色-->
     <!--正常状态下字体颜色和icon颜色-->
     <item name="android:textColorPrimary">@color/main_white</item>
   </style>

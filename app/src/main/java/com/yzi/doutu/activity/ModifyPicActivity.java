@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -368,8 +369,13 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
         resizeBmp = BitmapFactory.decodeFile(showPath);
         if(resizeBmp!=null){
             //缩放一下bitmap保证bitmap宽高适应view
-            resizeBmp = ImageUtils.scaleWithWH(resizeBmp,mainLayout.getWidth(),mainLayout.getHeight());
+           // resizeBmp = ImageUtils.scaleWithWH(resizeBmp,mainLayout.getWidth(),mainLayout.getHeight());
+            LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(
+                    mainLayout.getWidth()-CommUtil.dip2px(35),mainLayout.getHeight()-CommUtil.dip2px(35));
+            lp.gravity= Gravity.CENTER;
+            mainLayout.setLayoutParams(lp);
             mainLayout.setBackGroundBitmap(resizeBmp);
+           // mainLayout.setBackgroundColor(0x80FF4081);
             height=mainLayout.getHeight();
         }else{
 
@@ -472,7 +478,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
 
     private void setSimulateClick(View view) {
         float x=100;
-        float y=height-getResources().getDimensionPixelOffset(R.dimen.dp55);
+        float y=height-getResources().getDimensionPixelOffset(R.dimen.dp80);
         long downTime = SystemClock.uptimeMillis();
         final MotionEvent downEvent = MotionEvent.obtain(downTime, downTime,
                 MotionEvent.ACTION_DOWN, x, y, 0);
