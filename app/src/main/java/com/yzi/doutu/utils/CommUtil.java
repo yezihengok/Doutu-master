@@ -612,6 +612,7 @@ public class CommUtil {
                 @Override
                 public void onClick(View v) {
                     CommUtil.showToast("分享后请到【我的制作】查看");
+                    pop.dismiss();
                 }
             });
         }
