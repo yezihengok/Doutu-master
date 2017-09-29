@@ -125,7 +125,7 @@ public class MainActivity extends BaseActivity
     private void checkBall() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
             if (CommUtil.hasModule() && !CommUtil.hasEnable()) {
-                CommUtil.showDialog(this, "墙裂建议您去勾选斗图开关，以便于QQ运行时显示斗图球球~", "下次吧", "我喜欢球球",
+                CommUtil.showDialog(this, "墙裂建议您去勾选斗图开关，以便于QQ微信运行时显示斗图悬浮球~", "下次吧", "我要开启球球",
                         null, new CommInterface.setClickListener() {
                             @Override
                             public void onResult() {
@@ -438,6 +438,8 @@ public class MainActivity extends BaseActivity
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     private void selectPic() {
         PermissionUtil.getInstance().request(new String[]{Manifest.permission.CAMERA}, new PermissionResultAdapter() {

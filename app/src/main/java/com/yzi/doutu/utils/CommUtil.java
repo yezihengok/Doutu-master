@@ -1,5 +1,6 @@
 package com.yzi.doutu.utils;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -54,6 +55,8 @@ import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBHelpers;
 import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.interfaces.CommInterface;
+import com.yzi.doutu.permission.PermissionResultAdapter;
+import com.yzi.doutu.permission.PermissionUtil;
 import com.yzi.doutu.service.DouApplication;
 import com.yzi.doutu.service.WindowService;
 import com.yzi.doutu.share.QQShareManager;
@@ -424,13 +427,63 @@ public class CommUtil {
         return DouApplication.getInstance().getString(id);
     }
 
-    ;
 
     // 设置屏幕透明度
     public static void backgroundAlpha(Activity context, float bgAlpha) {
         WindowManager.LayoutParams lp = context.getWindow().getAttributes();
         lp.alpha = bgAlpha; // 0.0~1.0
         context.getWindow().setAttributes(lp);
+    }
+
+
+
+    /**
+     * 请求读写SD卡权限
+     */
+    private void readAndwriteSdCard(final Context context) {
+
+        if(!SharedUtils.getBoolean(null,context,"readAndwriteSdCard")){
+            CommUtil.showDialog(context, "为了您能正常使用并分享表情图。请去允许授予必要的权限", "好的",
+                    null, new CommInterface.setClickListener() {
+                        @Override
+                        public void onResult() {
+
+                            PermissionUtil.getInstance().request(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE
+                                    ,Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionResultAdapter() {
+                                //已授予
+                                @Override
+                                public void onPermissionGranted(String... permissions) {
+                                    Log.v("TAG","已经授予了SD卡读写权限");
+                                    SharedUtils.putBoolean(null,context,"readAndwriteSdCard",true);
+                                }
+
+                                //已禁止权限
+                                @Override
+                                public void onPermissionDenied(String... permissions) {
+                                    SharedUtils.putBoolean(null,context,"readAndwriteSdCard",false);
+                                    CommUtil.showDialog(context, "您禁止了图片缓存功能，为了您正常使用分享表情图。请去权限管理勾选【读写手机存储】权限", "好的",
+                                            null, new CommInterface.setClickListener() {
+                                                @Override
+                                                public void onResult() {
+                                                    CommUtil.getAppDetailSettingIntent(context);
+                                                    CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
+                                                }
+                                            }, null);
+                                }
+
+                                //已拒绝权限，但可以在提示
+                                @Override
+                                public void onRationalShow(String... permissions) {
+                                    SharedUtils.putBoolean(null,context,"readAndwriteSdCard",false);
+                                    //Toast.makeText(SecondActivity.this, permissions[0] + " is rational", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        }
+                    }, null);
+
+        }
+
     }
 
 
@@ -443,6 +496,7 @@ public class CommUtil {
      * @return
      */
     public void showSharePop(final Context context, final DataBean dataBean, final CommInterface.setFinishListener listener) {
+        readAndwriteSdCard(context);
         TextView share_name;
         ImageView share_img;
         Button share_send, share_save, share_update;
@@ -565,6 +619,8 @@ public class CommUtil {
     }
 
 
+
+
     /**
      * 公用的 弹出GIF添加文字的dialog
      *
@@ -671,20 +727,15 @@ public class CommUtil {
 
                                     Bitmap bitmap=frame.image;
                                     if(frame.image.getWidth()*frame.image.getHeight()>250*250){
-
                                         bitmap=scaleWithWH(bitmap,250,250);
                                     }
 
-
                                     Bitmap bitmaps = drawTextToBitmap(bitmap, editText);
-
                                     String filePath= ImageUtils.saveBitmapToFile(bitmaps, fileName);
 
-
                                     paths.add(filePath);
-                                    Log.v("", "已保存至:" + filePath);
-                                    bitmap.recycle();
-                                    bitmaps.recycle();
+                                   // Log.v("", "已保存至:" + filePath);
+
                                 }
 
                                 ImageUtils.createGif(dataBean, paths, 70, new CommInterface.setListener() {
