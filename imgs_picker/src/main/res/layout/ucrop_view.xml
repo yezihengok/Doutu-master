@@ -7,13 +7,13 @@
 
     <com.pizidea.imagepicker.crop.GestureCropImageView
         android:id="@+id/image_view_crop"
-        android:padding="16dp"
+        android:padding="@dimen/cropImageView_padding"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <com.pizidea.imagepicker.crop.OverlayView
         android:id="@+id/view_overlay"
-        android:padding="16dp"
+        android:padding="@dimen/cropImageView_padding"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

@@ -263,8 +263,13 @@ public class MainActivity extends BaseActivity
 
 
         //用 Glide 加载圆形图片
-        presenter.onPresentCircleImage(header_img,
-                SharedUtils.getString("", MainActivity.this, "icon_img", CommUtil.ICON), 0);
+        String url=SharedUtils.getString("", MainActivity.this, "icon_img",null);
+        if(isEmpty(url)){
+            presenter.displayCircleDrawable(R.mipmap.default_head,header_img);
+        }else{
+            presenter.onPresentCircleImage(header_img,url, 0);
+        }
+
     }
 
     private void setweiba() {

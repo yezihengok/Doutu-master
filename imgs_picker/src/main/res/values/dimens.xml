@@ -25,4 +25,6 @@
     <!--Crop View-->
     <dimen name="ucrop_default_crop_grid_stoke_width">1dp</dimen>
     <dimen name="ucrop_default_crop_frame_stoke_width">1dp</dimen>
+
+    <dimen name="cropImageView_padding">10dp</dimen>
 </resources>

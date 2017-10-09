@@ -31,4 +31,6 @@ public interface ImagePresenter {
     void onPresentImage(ImageView imageView, String imageUri);
     void onPresentImage(ImageView imageView, String imageUri, int size);
     void onPresentCircleImage(ImageView imageView, String imageUri, int size);
+
+    void displayCircleDrawable(int resId, ImageView imageView);
 }

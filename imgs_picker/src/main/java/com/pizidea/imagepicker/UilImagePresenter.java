@@ -90,6 +90,7 @@ public class UilImagePresenter implements ImagePresenter {
                 .into(imageView);
     }
 
+
     //多选预览时使用该加载方式
     public void onPresentImage2(ImageView imageView, String imageUri, int size) {
 //        ImageDownloader.Scheme scheme = ImageDownloader.Scheme.FILE;
@@ -158,6 +159,18 @@ public class UilImagePresenter implements ImagePresenter {
         //设置播放次数和播放监听的时候，不应加上.asGif()
     }
 
+
+    @Override
+    public void displayCircleDrawable(int resId, ImageView imageView) {
+        Glide.with(imageView.getContext())
+                .load(resourceIdToUri(imageView.getContext(), resId))
+                .centerCrop()
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .transform(new GlideCircleTransform(imageView.getContext()))
+                .into(imageView);
+    }
+
     /**
      * 加载drawable图片
      *
@@ -169,7 +182,7 @@ public class UilImagePresenter implements ImagePresenter {
                 .load(resourceIdToUri(imageView.getContext(), resId))
                 .centerCrop()
                 .crossFade()
-                .transform(new GlideCircleTransform(imageView.getContext()))
+                //.transform(new GlideCircleTransform(imageView.getContext()))
                 .into(imageView);
     }
 

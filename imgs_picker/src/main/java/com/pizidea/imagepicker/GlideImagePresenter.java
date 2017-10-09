@@ -62,4 +62,9 @@ public class GlideImagePresenter implements ImagePresenter{
 
     }
 
+    @Override
+    public void displayCircleDrawable(int resId, ImageView imageView) {
+
+    }
+
 }

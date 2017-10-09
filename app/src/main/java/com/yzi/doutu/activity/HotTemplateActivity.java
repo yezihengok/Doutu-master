@@ -138,6 +138,7 @@ public class HotTemplateActivity extends BaseActivity implements CommInterface.O
                     dataBean.setPicPath(templatesBean.getFthumb());
                     dataBean.setName(templatesBean.getText());
                     dataBean.setIs_gif(templatesBean.isIs_gif());
+
                     hotList.add(dataBean);
                 }
 

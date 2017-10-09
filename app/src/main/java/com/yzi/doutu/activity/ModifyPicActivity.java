@@ -371,7 +371,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
             //缩放一下bitmap保证bitmap宽高适应view
            // resizeBmp = ImageUtils.scaleWithWH(resizeBmp,mainLayout.getWidth(),mainLayout.getHeight());
             LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(
-                    mainLayout.getWidth()-CommUtil.dip2px(35),mainLayout.getHeight()-CommUtil.dip2px(35));
+                    mainLayout.getWidth()-CommUtil.dip2px(30),mainLayout.getHeight()-CommUtil.dip2px(30));
             lp.gravity= Gravity.CENTER;
             mainLayout.setLayoutParams(lp);
             mainLayout.setBackGroundBitmap(resizeBmp);

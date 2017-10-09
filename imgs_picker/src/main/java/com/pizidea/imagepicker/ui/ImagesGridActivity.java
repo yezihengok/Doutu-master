@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -121,15 +122,24 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
 
     }
 
+
+    public  int getScreenWidth() {
+        DisplayMetrics dm = new DisplayMetrics();
+        dm = context.getResources().getDisplayMetrics();
+        return dm.widthPixels;
+    }
+
     /**
      * 裁剪图片方法实现
      *
      * @param uri
      */
     public void startCropActivity(Uri uri) {
+        int width=getScreenWidth()*4/5;
         UCrop.of(uri, mDestinationUri)
                 .withAspectRatio(1, 1)//剪裁的宽高比为1:1
-                .withMaxResultSize(600, 600)//剪裁最大尺寸为600*600
+//                .withMaxResultSize(600, 600)//剪裁最大尺寸为600*600
+                .withMaxResultSize(width, width)
                 .withTargetActivity(CropActivity.class)
                 .start(this);
     }
