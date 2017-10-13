@@ -251,6 +251,7 @@ public class DBTools {
             info.setPicPath(cursor.getString(cursor.getColumnIndex("url")));
             info.setMadeUrl(cursor.getString(cursor.getColumnIndex("madeUrl")));
             info.setFileName(cursor.getString(cursor.getColumnIndex("fileName")));
+            info.setProportion(cursor.getString(cursor.getColumnIndex("proportion")));
             info.setIs_gif(isGif(info.getMadeUrl()));
             infos.add(info);
             if (cursor.isLast()) {
@@ -278,9 +279,10 @@ public class DBTools {
             System.err.println("Count" + cursor.getCount());
             cursor.moveToFirst();
             int _id = cursor.getInt(cursor.getColumnIndex("_id"));
-            update_made(String.valueOf(_id), fav.getName(), fav.getGifPath(),fav.getMadeUrl(),fav.getFileName());
+            update_made(String.valueOf(_id), fav.getName(), fav.getGifPath(),fav.getMadeUrl()
+                    ,fav.getFileName(),fav.getProportion());
         } else {
-            insert_made(id, fav.getName(), fav.getGifPath(),fav.getMadeUrl(),fav.getFileName());
+            insert_made(id, fav.getName(), fav.getGifPath(),fav.getMadeUrl(),fav.getFileName(),fav.getProportion());
         }
         cursor.close();
     }
@@ -314,16 +316,16 @@ public class DBTools {
     /**
      * 新增
      */
-    public void insert_made(String id,String name,String url,String madeUrl,String fileName){
+    public void insert_made(String id,String name,String url,String madeUrl,String fileName,String proportion){
         SQLiteDatabase db=dbHelpers.getWritableDatabase();
-        db.execSQL("insert into "+dbHelpers.TABLE_MADE+"(id,name,url,madeUrl,fileName) values(?,?,?,?,?)",
-                new String[]{id,name,url,madeUrl,fileName});
+        db.execSQL("insert into "+dbHelpers.TABLE_MADE+"(id,name,url,madeUrl,fileName,proportion) values(?,?,?,?,?,?)",
+                new String[]{id,name,url,madeUrl,fileName,proportion});
     }
 
     /**
      * 修改
      */
-    public void update_made(String _id,String name,String url,String madeUrl,String fileName){
+    public void update_made(String _id,String name,String url,String madeUrl,String fileName,String proportion){
         SQLiteDatabase db=dbHelpers.getWritableDatabase();
 
         ContentValues cv=new ContentValues();
@@ -332,6 +334,7 @@ public class DBTools {
         cv.put("url", url);
         cv.put("madeUrl", madeUrl);
         cv.put("fileName", fileName);
+        cv.put("proportion", proportion);
         db.update(dbHelpers.TABLE_MADE, cv, "_id= ?", new String[]{_id});
     }
 

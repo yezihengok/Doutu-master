@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
 
-        android:background="#fc22292c"
+        android:background="@color/imagesGrid_title_color"
         android:clickable="true">
 
         <ImageView

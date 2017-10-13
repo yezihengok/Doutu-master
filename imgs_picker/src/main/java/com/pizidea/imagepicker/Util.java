@@ -33,6 +33,19 @@ import android.util.TypedValue;
  */
 public class Util {
 
+
+    public static int getStatusBarHeight(Context context) {
+
+        int statusBarHeight = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        Log.d("tag","状态栏高度:" + statusBarHeight);
+        return statusBarHeight;
+    }
+
+
     /**
      * Convert a dp float value to pixels
      * @param context
@@ -71,6 +84,8 @@ public class Util {
         }
         return b;
     }
+
+
 
     private Util() {
         throw new AssertionError("No Instances");

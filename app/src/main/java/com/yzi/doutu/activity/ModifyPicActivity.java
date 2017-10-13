@@ -50,7 +50,7 @@ import static com.yzi.doutu.utils.CommUtil.showWaitDialog;
  * 图片添加文字activity
  * Created by yzh-t105 on 2016/10/25.
  */
-
+@Deprecated //新界面 ModifyImgActivity 代替
 public class ModifyPicActivity extends BaseActivity implements  View.OnClickListener{
 
     private TextView tvRight;
@@ -126,7 +126,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
         application.addActivity(this);
         setContentView(R.layout.activity_modify_pic);
         bundle=getIntent().getExtras();
-        formWhere=bundle.getString("formWhere");
+        formWhere=bundle.getString("tag");
 
         initView();
         initData();
@@ -213,6 +213,7 @@ public class ModifyPicActivity extends BaseActivity implements  View.OnClickList
             public void onTextViewClick(TextView textView) {
                 updateTextObj(true);
             }
+
         });
 
         stateHelper=new SoftKeyboardStateHelper(mainLayout);

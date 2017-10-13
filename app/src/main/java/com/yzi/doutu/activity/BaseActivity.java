@@ -1,11 +1,9 @@
 package com.yzi.doutu.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yzi.doutu.service.DouApplication;
-import com.yzi.doutu.share.WechatShareManager;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -54,11 +51,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-    public static int getScreenWidth(Context context) {
-        DisplayMetrics dm = new DisplayMetrics();
-        dm = context.getResources().getDisplayMetrics();
-        return dm.widthPixels;
-    }
+
 
    // public void initView(){};
     //public  abstract void setData();
@@ -72,6 +65,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         Intent intent = new Intent(BaseActivity.this, activity);
         startActivity(intent);
     }
+
+    public void toActivity(Class c, Bundle b) {
+        try {
+            Intent intent = new Intent(this, c);
+            intent.putExtras(b);
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.e("error",e.toString());
+        }
+
+    }
+
+
 
 
     /**

@@ -7,15 +7,15 @@
     <RelativeLayout
         android:id="@+id/titlet"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:background="@color/main_blue_light">
         <ImageView
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingTop="8dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="12dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:src="@mipmap/grey_back" />
         <TextView
             android:paddingTop="8dp"
@@ -68,6 +68,7 @@
                     android:id="@+id/mainLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@mipmap/icons"
                     android:orientation="vertical"/>
             </LinearLayout>
 <!--            <com.yzi.doutu.view.MyRelativeLayout

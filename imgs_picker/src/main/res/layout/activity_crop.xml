@@ -1,5 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="true"
@@ -8,8 +8,7 @@
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-
-        android:background="#fc22292c"
+        android:background="@color/imagesGrid_title_color"
         android:clickable="true">
 
         <ImageView
@@ -85,7 +84,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:src="@drawable/ic_done_white"
-        fab:fabSize="normal" />
+        app:fabSize="normal" />
 
 
 </RelativeLayout>

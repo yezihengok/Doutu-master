@@ -150,7 +150,7 @@ public class SearchDialogActivity extends FragmentActivity implements ViewPager.
     public void finish(){
         //结束前占位部分设置透明
         noneLayout.setAlpha(0f);
-       // SharedUtils.putBoolean("", this, "warn", true);//标记开启
+       // SharedUtils.putBoolean("", "warn", true);//标记开启
         super.finish();
     }
 

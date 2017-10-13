@@ -50,7 +50,7 @@ import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.yzi.doutu.R;
-import com.yzi.doutu.activity.ModifyPicActivity;
+import com.yzi.doutu.activity.ModifyImgActivity;
 import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBHelpers;
 import com.yzi.doutu.db.DBTools;
@@ -99,12 +99,12 @@ public class CommUtil {
     public static final String WEIBA = "Qweiba";
     public static String FLAG;
     public static final long DETAIL=400L;
-
+    public static final String TAG="TAG";
     /**
      * 是否开启了QQ尾巴分享 ,如果开启了调用系统分享改为调用QQSDK分享
      **/
     public static boolean isWeiBaopen() {
-        return SharedUtils.getBoolean(WEIBA, DouApplication.getInstance(), WEIBA, true);
+        return SharedUtils.getBoolean(WEIBA, WEIBA, true);
     }
 
     /**
@@ -454,13 +454,13 @@ public class CommUtil {
                                 @Override
                                 public void onPermissionGranted(String... permissions) {
                                     Log.v("TAG","已经授予了SD卡读写权限");
-                                    SharedUtils.putBoolean(null,context,"readAndwriteSdCard",true);
+                                    SharedUtils.putBoolean(null,"readAndwriteSdCard",true);
                                 }
 
                                 //已禁止权限
                                 @Override
                                 public void onPermissionDenied(String... permissions) {
-                                    SharedUtils.putBoolean(null,context,"readAndwriteSdCard",false);
+                                    SharedUtils.putBoolean(null,"readAndwriteSdCard",false);
                                     CommUtil.showDialog(context, "您禁止了图片缓存功能，为了您正常使用分享表情图。请去权限管理勾选【读写手机存储】权限", "好的",
                                             null, new CommInterface.setClickListener() {
                                                 @Override
@@ -474,7 +474,7 @@ public class CommUtil {
                                 //已拒绝权限，但可以在提示
                                 @Override
                                 public void onRationalShow(String... permissions) {
-                                    SharedUtils.putBoolean(null,context,"readAndwriteSdCard",false);
+                                    SharedUtils.putBoolean(null,"readAndwriteSdCard",false);
                                     //Toast.makeText(SecondActivity.this, permissions[0] + " is rational", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -611,7 +611,7 @@ public class CommUtil {
             share_save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CommUtil.showToast("分享后请到【我的制作】查看");
+                    CommUtil.showToast("请到【我的制作】查看");
                     pop.dismiss();
                 }
             });
@@ -1042,8 +1042,9 @@ public class CommUtil {
         if (isGif(URL)&&dataBean.is_gif()) {
             showgifMaker(context, dataBean, finishListener);
         } else {
-            Intent intent = new Intent(context, ModifyPicActivity.class);
+            Intent intent = new Intent(context, ModifyImgActivity.class);
             intent.putExtra("dataBean", dataBean);
+            intent.putExtra("proportio", dataBean.getProportion());
             ((Activity) context).startActivityForResult(intent, 0x123);
         }
     }
@@ -1101,7 +1102,7 @@ public class CommUtil {
 
 
     /**
-     * 屏幕框
+     * 屏幕宽度
      * @return
      */
     public static int getScreenWidth() {
@@ -1256,6 +1257,18 @@ public class CommUtil {
         return topPackageName;
     }
 
+
+    //获取状态栏高度
+    public static int getStatusBarHeight(Context context) {
+
+        int statusBarHeight = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        Log.d("tag","状态栏高度:" + statusBarHeight);
+        return statusBarHeight;
+    }
 
     /**
      * 判断当前程序是否在前台运行 解决 getRunningTasks 在5.0以后被弃用无效问题

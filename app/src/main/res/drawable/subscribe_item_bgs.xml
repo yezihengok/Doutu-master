@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:state_focused="true">
+        <shape>
+            <stroke android:width="0.5dip" android:color="@color/subscribe_item_disabled_stroke" />
+            <solid android:color="@color/subscribe_line" />
+        </shape>
+    </item>
+
+    <item android:state_pressed="true">
+        <shape>
+            <stroke android:width="0.5dip" android:color="@color/subscribe_item_pressed_stroke" />
+            <solid android:color="@color/subscribe_line" />
+        </shape>
+    </item>
+
+    <item>
+        <shape>
+            <stroke android:width="0.5dip" android:color="@color/subscribe_item_normal_stroke" />
+            <solid android:color="@color/transparent" />
+        </shape>
+    </item>
+</selector>

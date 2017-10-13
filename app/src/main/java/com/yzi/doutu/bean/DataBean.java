@@ -27,7 +27,15 @@ public  class DataBean implements Serializable {
     //sqlite 所需字段
     private String madeUrl; // 制作的图片地址
     private String fileName;//文件名
+    private String proportion;//从相册选图裁剪的比例 1:1  16:9
 
+    public String getProportion() {
+        return proportion;
+    }
+
+    public void setProportion(String proportion) {
+        this.proportion = proportion;
+    }
 
     public boolean is_gif() {
         return is_gif;

@@ -15,6 +15,20 @@
     <!--正常状态下字体颜色和icon颜色-->
     <item name="android:textColorPrimary">@color/main_white</item>
   </style>
+
+
+  <style name="MyThemeBlack" parent="Theme.AppCompat.Light.NoActionBar">
+
+    <!--5.0+主题上才有效-->
+    <item name="colorPrimary">@color/black</item> <!-- 导航栏颜色-->
+    <item name="colorPrimaryDark">@color/black</item><!-- 状态栏颜色-->
+    <item name="colorAccent">@color/main_blue_light</item><!-- 系统控件选中的颜色-->
+    <item name="android:textColorLinkInverse">@color/black</item><!-- 主题文字颜色 如textview默认颜色-->
+    <!--正常状态下字体颜色和icon颜色-->
+    <item name="android:textColorPrimary">@color/main_white</item>
+  </style>
+
+
 <!--
   <style name="DialogStyleBottom" parent="MyThemeBlue">
     <item name="android:windowNoTitle">false</item>
@@ -120,5 +134,15 @@
   <style name="txt_15sp">
     <item name="android:textSize">15sp</item>
     <item name="android:textColor">@color/main_black_grey</item>
+  </style>
+
+  <style name="txt_white_14sp">
+  <item name="android:textSize">14sp</item>
+  <item name="android:textColor">@color/white</item>
+  </style>
+
+  <style name="txt_white_13sp">
+  <item name="android:textSize">13sp</item>
+  <item name="android:textColor">@color/white</item>
   </style>
 </resources>

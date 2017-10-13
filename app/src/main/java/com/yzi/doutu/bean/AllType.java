@@ -58,7 +58,7 @@ public class AllType implements Serializable{
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Serializable {
         /**
          * bisDelete : 0
          * bisShowImg : 1
@@ -102,7 +102,7 @@ public class AllType implements Serializable{
             this.tagList = tagList;
         }
 
-        public static class DtTypeModelBean {
+        public static class DtTypeModelBean implements Serializable{
             private int bisDelete;
             private int bisShowImg;
             private long createTime;
@@ -168,7 +168,7 @@ public class AllType implements Serializable{
             }
         }
 
-        public static class TagListBean {
+        public static class TagListBean implements Serializable{
             private int bisDelete;
             private int bisRecommend;
             private long createTime;

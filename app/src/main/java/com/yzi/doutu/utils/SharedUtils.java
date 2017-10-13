@@ -91,9 +91,9 @@ public class SharedUtils
 		return editor.commit();
 	}
 
-	public static boolean putBoolean(String shareName, Context context, String key, boolean value)
+	public static boolean putBoolean(String shareName, String key, boolean value)
 	{
-		Editor editor = getShareEditor(context, shareName);
+		Editor editor = getShareEditor(DouApplication.getInstance(), shareName);
 		editor.putBoolean(key, value);
 		return editor.commit();
 	}
@@ -158,9 +158,9 @@ public class SharedUtils
 		return sharedPreferences.getBoolean(key, false);
 	}
 
-	public static boolean getBoolean(String shareName, Context context, String key, boolean defValue)
+	public static boolean getBoolean(String shareName, String key, boolean defValue)
 	{
-		SharedPreferences sharedPreferences = getInstance(context, android.content.Context.MODE_PRIVATE, shareName);
+		SharedPreferences sharedPreferences = getInstance(DouApplication.getInstance(), android.content.Context.MODE_PRIVATE, shareName);
 		return sharedPreferences.getBoolean(key, defValue);
 	}
 

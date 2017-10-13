@@ -38,7 +38,7 @@ public class MyDIYPicActivity extends BaseActivity implements CommInterface.OnIt
     private TextView tvRight;
 
     int ITEM=3;//item个数
-    int COUNT=20;//分页加载条数
+    int COUNT=15;//分页加载条数
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

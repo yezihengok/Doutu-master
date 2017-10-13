@@ -38,9 +38,9 @@
       android:id="@+id/id_header_url"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="MissHeng.com"
+      android:text="https://github.com/yezihengok"
       android:textColor="@android:color/black"
-      android:textSize="18sp"
+      android:textSize="16sp"
       />
 
 

@@ -6,7 +6,7 @@
     tools:context=".main.MainActivity">
   <item
       android:id="@+id/action_picTake"
-      android:title="从相册选取"
+      android:title="相册选图(竖屏裁剪)"
       android:orderInCategory="100"
       app:showAsAction="never"/>
   <item

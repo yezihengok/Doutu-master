@@ -21,7 +21,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -41,6 +40,7 @@ import com.yzi.doutu.R;
 import com.yzi.doutu.activity.AboutActivity;
 import com.yzi.doutu.activity.BaseActivity;
 import com.yzi.doutu.activity.HotTemplateActivity;
+import com.yzi.doutu.activity.ModifyImgActivity;
 import com.yzi.doutu.activity.ModifyPicActivity;
 import com.yzi.doutu.activity.MyDIYPicActivity;
 import com.yzi.doutu.activity.MyFavoritesActivity;
@@ -55,6 +55,7 @@ import com.yzi.doutu.utils.ContextUtil;
 import com.yzi.doutu.utils.HandlerUtil;
 import com.yzi.doutu.utils.SharedUtils;
 import com.yzi.doutu.utils.SimpleFileUtils;
+import com.yzi.doutu.utils.StringUtils;
 import com.yzi.doutu.utils.TopTips;
 
 import java.util.ArrayList;
@@ -100,7 +101,7 @@ public class MainActivity extends BaseActivity
     MenuItem qx_item, weiba_item, cache_item;
 
     boolean isopen = false;
-    private int CROP = 0x111;
+
     private Context context;
 
     @Override
@@ -325,7 +326,7 @@ public class MainActivity extends BaseActivity
                         // mDrawerLayout.closeDrawers();
                         break;
                     case R.id.nav_select_pic:
-                        selectPic();
+                        selectPic("1:1");
                         break;
                     case R.id.nav_menu_feedback:
 
@@ -334,9 +335,9 @@ public class MainActivity extends BaseActivity
                                     @Override
                                     public void onResult() {
                                         if (isWeiBaopen()) {
-                                            SharedUtils.putBoolean(WEIBA, context, WEIBA, false);
+                                            SharedUtils.putBoolean(WEIBA, WEIBA, false);
                                         } else {
-                                            SharedUtils.putBoolean(WEIBA, context, WEIBA, true);
+                                            SharedUtils.putBoolean(WEIBA, WEIBA, true);
                                         }
                                         setweiba();
                                     }
@@ -436,7 +437,24 @@ public class MainActivity extends BaseActivity
             return true;
         } else if (id == R.id.action_picTake) {
 
-            selectPic();
+            if(SharedUtils.getBoolean(null,"notice",true)){
+                CommUtil.showDialog(context, "请注意选择相册里竖屏拍摄的图片", "不在提示"
+                        , "好的", new CommInterface.setClickListener() {
+                            @Override
+                            public void onResult() {
+                                SharedUtils.putBoolean(null, "notice", false);
+                                selectPic("16:9");
+                            }
+                        }, new CommInterface.setClickListener() {
+                            @Override
+                            public void onResult() {
+                                selectPic("16:9");
+                            }
+                        });
+            }else{
+                selectPic("16:9");
+            }
+
 
             return true;
         }
@@ -445,13 +463,15 @@ public class MainActivity extends BaseActivity
     }
 
 
-
-    private void selectPic() {
+    /**从相册选图
+     *  @param tag 1:1为正方形剪裁  16:9比例(竖屏)剪裁
+     */
+    private void selectPic(final String tag) {
         PermissionUtil.getInstance().request(new String[]{Manifest.permission.CAMERA}, new PermissionResultAdapter() {
             //已授予
             @Override
             public void onPermissionGranted(String... permissions) {
-                pickPicture();
+                pickPicture(tag);
             }
 
             //已禁止权限
@@ -462,7 +482,7 @@ public class MainActivity extends BaseActivity
                             @Override
                             public void onResult() {
                                 CommUtil.getAppDetailSettingIntent(MainActivity.this);
-                                CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
+                                CommUtil.showToast("部分手机需要到 权限管理 勾选【相机权限】");
                             }
                         }, null);
             }
@@ -477,27 +497,36 @@ public class MainActivity extends BaseActivity
 
     /**
      * 从相册选图
+     * @param tag 1:1为正方形剪裁  16:9比例剪裁
      */
-    private void pickPicture() {
+    private void pickPicture(final String  tag) {
         AndroidImagePicker.getInstance().setSelectMode(AndroidImagePicker.Select_Mode.MODE_SINGLE);
         AndroidImagePicker.getInstance().setShouldShowCamera(true);
         final Intent intent = new Intent(this, ImagesGridActivity.class);
-        intent.putExtra("isCrop", true);
-        startActivity(intent);
-        //裁剪监听
-        AndroidImagePicker.getInstance().setCropCompleteListener(new AndroidImagePicker.OnCropCompleteListener() {
-            @Override
-            public void cropComplete(Uri fileUri, Bitmap bitmap) {
 
-                Bundle bundle = new Bundle();
-                bundle.putString("formWhere", "takePic");
-                bundle.putParcelable("fileUri", fileUri);
-                Intent intent1 = new Intent(MainActivity.this, ModifyPicActivity.class);
-                intent1.putExtras(bundle);
-                // startActivity(intent);
-                MainActivity.this.onActivityResult(CROP, RESULT_OK, intent1);
-            }
-        });
+            intent.putExtra("isCrop", true);
+            intent.putExtra("tag", tag);
+            startActivity(intent);
+            //裁剪监听
+            AndroidImagePicker.getInstance().setCropCompleteListener(new AndroidImagePicker.OnCropCompleteListener() {
+                @Override
+                public void cropComplete(Uri fileUri, Bitmap bitmap) {
+
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("tag", tag);
+                    bundle.putParcelable("fileUri", fileUri);
+                    if(StringUtils.isNoEmpty(tag)){
+                        toActivity(ModifyImgActivity.class,bundle);
+                    }else{
+                        toActivity(ModifyPicActivity.class,bundle);
+                    }
+                    //toActivity(ModifyImgActivity.class,bundle);
+                   // MainActivity.this.onActivityResult(CROP, RESULT_OK, intent1);
+                }
+            });
+
+
     }
 
     @Override
@@ -555,7 +584,7 @@ public class MainActivity extends BaseActivity
                                     @Override
                                     public void onResult() {
                                         CommUtil.getAppDetailSettingIntent(MainActivity.this);
-                                        CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
+                                        CommUtil.showToast("部分手机需要到 权限管理 勾选【相机权限】");
                                     }
                                 }, null);
                     }
@@ -587,41 +616,36 @@ public class MainActivity extends BaseActivity
         return super.onKeyDown(keyCode, event);
     }
 
-    //从相册选择图片相关
-    ////////////选择图片相关
-
     @Override
-    public void onPictureTakeComplete(String picturePath) {
-        Log.v(TAG, "=======调用相机拍照回调======");
-        CommUtil.showToast("调用相机拍照回调");
-        ImageItem item = new ImageItem(picturePath, "", 0);
-        presenter.onPresentCircleImage(header_img, item.path, 0);
-        SharedUtils.putString("", MainActivity.this, "icon_img", picturePath);
+    public void onPictureTakeComplete(final String imagePath) {
+        Log.v(TAG, "==调用相机拍照回调=="+imagePath);
+        presenter.onPresentCircleImage(header_img,imagePath, 0);
+        SharedUtils.putString("", MainActivity.this, "icon_img", imagePath);
+
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //单选择的图片
+        //目前都是单选择的图片
         if (requestCode == 0x123) {
             List<ImageItem> imageList = AndroidImagePicker.getInstance().getSelectedImages();
             if (imageList.size() > 0) {
                 presenter.onPresentCircleImage(header_img, imageList.get(0).getPath(), 0);
                 SharedUtils.putString("", MainActivity.this, "icon_img", imageList.get(0).getPath());
             }
-        } else
-            //拍照图片
-            if (requestCode == AndroidImagePicker.REQ_CAMERA) {
-                if (!TextUtils.isEmpty(AndroidImagePicker.getInstance().getCurrentPhotoPath())) {
-                    AndroidImagePicker.galleryAddPic(this, AndroidImagePicker.getInstance().getCurrentPhotoPath());
-                    AndroidImagePicker.getInstance().notifyPictureTaken();//通知执行 onPictureTakeComplete
-                    Log.i(TAG, "通知执行 onPictureTakeComplete");
-                } else {
-                    Log.i(TAG, "didn't save to your path");
-                }
-            } else if (requestCode == CROP) {
-                startActivity(data);
-            }
+
+        }
+
+//        else if (requestCode == AndroidImagePicker.REQ_CAMERA) {            //拍照图片
+//                if (!TextUtils.isEmpty(AndroidImagePicker.getInstance().getCurrentPhotoPath())) {
+//                    AndroidImagePicker.galleryAddPic(this, AndroidImagePicker.getInstance().getCurrentPhotoPath());
+//                    AndroidImagePicker.getInstance().notifyPictureTaken();//通知执行 onPictureTakeComplete
+//                    Log.i(TAG, "通知执行 onPictureTakeComplete");
+//                } else {
+//                    Log.i(TAG, "didn't save to your path");
+//                }
+//            }
     }
 }

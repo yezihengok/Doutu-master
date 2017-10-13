@@ -138,7 +138,7 @@ public class WindowService extends Service {
         // TODO Auto-generated method stub
         super.onCreate();
         Log.e(TAG, "WindowService-Create()");
-        //SharedUtils.putBoolean("", this, "warn", true);//开启创建悬浮窗标记
+        //SharedUtils.putBoolean("", "warn", true);//开启创建悬浮窗标记
         register();
     }
 
@@ -310,7 +310,7 @@ public class WindowService extends Service {
 
 
     public void remove() {
-       // SharedUtils.putBoolean("", this, "warn", true);//每次移除时，标记下一次检查开启创建悬浮窗
+       // SharedUtils.putBoolean("", "warn", true);//每次移除时，标记下一次检查开启创建悬浮窗
         if (mFloatLayout != null) {
             //移除悬浮窗口
             mWindowManager.removeView(mFloatLayout);

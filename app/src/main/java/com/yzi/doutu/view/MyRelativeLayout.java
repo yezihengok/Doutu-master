@@ -37,6 +37,7 @@ public class MyRelativeLayout extends RelativeLayout {
         return textView;
     }
 
+
     private boolean mflag = false;
     private boolean onefinger;
     private boolean tvOneFinger;
@@ -111,6 +112,7 @@ public class MyRelativeLayout extends RelativeLayout {
         this.touchCallBack = touchCallBack;
     }
 
+
     //接口
     private MyRelativeTouchCallBack  touchCallBack;
 
@@ -180,6 +182,7 @@ public class MyRelativeLayout extends RelativeLayout {
                         tv_height = event.getY() - startY;
                     }
                 }
+
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 //第二个手指头落点 早已经不是点击事件
@@ -203,7 +206,7 @@ public class MyRelativeLayout extends RelativeLayout {
                     for ( int i = 0; i < listTvParams.size(); i++ ) {
                         listDistance.add(spacing(getMidPiont(( int ) fX, ( int ) fY, ( int ) sX, ( int ) sY), listTvParams.get(i).getMidPoint()));
                     }
-//寻找最近的点
+                    //寻找最近的点
                     if ( list != null && !list.isEmpty() ) {
                         double min = listDistance.get(0);
                         num = 0;
@@ -343,11 +346,27 @@ public class MyRelativeLayout extends RelativeLayout {
         }
     }
 
+    /**
+     * 清空文字
+     */
     public void removeAllThings() {
         this.removeAllViews();
+//        for (int i = 0; i <list.size() ; i++) {
+//            removeView(list.get(i));
+//        }
         listDistance.clear();
         list.clear();
         listTvParams.clear();
+    }
+
+    /**
+     * 删除最近添加的一条文字
+     */
+    public void removeTextView() {
+        if(list!=null&&!list.isEmpty()){
+            removeView(list.get(list.size()-1));
+        }
+
     }
 
     /**
@@ -362,6 +381,7 @@ public class MyRelativeLayout extends RelativeLayout {
 
 
     LayoutInflater inflater;
+
     /**
      * 添加一个TextView到界面上
      */
@@ -405,6 +425,7 @@ public class MyRelativeLayout extends RelativeLayout {
                     textView = ( StrokeTextView ) v;
                     switch ( event.getAction() & MotionEvent.ACTION_MASK ) {
                         case MotionEvent.ACTION_DOWN:
+
                             tvOneFinger = true;
                             isClick = true;
 
@@ -420,6 +441,9 @@ public class MyRelativeLayout extends RelativeLayout {
                                 mTv_height = mEvent.getY() - textView.getY();
                             }
                             mflag = true;
+
+
+
                             break;
                         case MotionEvent.ACTION_POINTER_DOWN:
                             tvOneFinger = false;
@@ -549,57 +573,10 @@ public class MyRelativeLayout extends RelativeLayout {
         list = new ArrayList<>();
         listTvParams = new ArrayList<>();
         listDistance = new ArrayList<>();
+
+
     }
 
-
-    /**
-     * 显示自定义对话框
-     */
-//    private void showDialog(String message, final boolean isNew) {
-//        final int[] colors = new int[1];
-//        colors[0] = Color.BLACK;
-//        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//        View view = View.inflate(context, R.layout.layout_dialog, null);
-//        final EditText editText = ( EditText ) view.findViewById(R.id.dialog_edittext);
-//        TextView cancel = ( TextView ) view.findViewById(R.id.tv_cancel);
-//        TextView ok = ( TextView ) view.findViewById(R.id.tv_ok);
-//        ColorTagImageView colorTagImageView = ( ColorTagImageView ) view.findViewById(R.id.color_tag);
-//        colorTagImageView.setListener(new ColorTagImageView.OnColorTagChanges() {
-//            @Override
-//            public void onColorChange(int color) {
-//                editText.setTextColor(color);
-//                colors[0] = color;
-//            }
-//        });
-//        builder.setView(view);
-//        builder.setCancelable(false);
-//
-//        editText.setText(message);
-//        final AlertDialog dialog = builder.show();
-//        ok.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String content = editText.getText().toString();
-//                if ( TextUtils.isEmpty(content) ) {
-//                    Toast.makeText(context, "您没有任何输入!", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    if ( isNew ) {
-//                        addTextView(null, currentX, currentY, content, colors[0], 0, 0);
-//                    } else {
-//                        addTextView(textView, textView.getX(), textView.getY(), content, colors[0], textView.getTextSize(), textView.getRotation());
-//                    }
-//                }
-//                dialog.dismiss();
-//            }
-//        });
-//
-//        cancel.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//            }
-//        });
-//    }
 
     /**
      * 对控件进行参数的更新操作
@@ -806,6 +783,7 @@ public class MyRelativeLayout extends RelativeLayout {
         if(textSize>=maxSize){
             textView.setTextSize(maxSize);
             if(textSize>maxSize){
+                textView.setTextSize(maxSize-1);
                 return;
             }
         }
@@ -1007,6 +985,7 @@ public class MyRelativeLayout extends RelativeLayout {
         void onTextViewMovingDone();
 
         void onTextViewClick(TextView textView);
+
     }
 
 }

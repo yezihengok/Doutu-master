@@ -41,13 +41,17 @@
         android:screenOrientation="portrait"
         android:theme="@style/DialogStyleBottom"/>
 
-    <activity android:name=".activity.ModifyPicActivity"/>
+    <activity android:name=".activity.ModifyPicActivity" android:screenOrientation="portrait"/>
     <activity android:name=".activity.MyFavoritesActivity"/>
     <activity android:name=".activity.MyDIYPicActivity"/>
     <activity android:name=".activity.AboutActivity"/>
     <activity android:name=".activity.HotTemplateActivity"/>
     <activity android:name=".activity.AllpicInfoActivity"/>
     <activity android:name=".activity.MyThemeFavoritesActivity"/>
+    <activity
+        android:name=".activity.ModifyImgActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/MyThemeBlack" />
 
 
     <activity
@@ -58,11 +62,11 @@
     <activity
         android:name="com.pizidea.imagepicker.ui.ImagesGridActivity"
         android:label="@string/app_name"
-        android:theme="@style/AppBaseTheme" />
+        android:theme="@style/AppBaseThemes" />
     <activity
         android:name="com.pizidea.imagepicker.crop.CropActivity"
         android:label="@string/app_name"
-        android:theme="@style/AppBaseTheme" />
+        android:theme="@style/AppBaseThemes" />
 
     <activity
         android:name="com.tencent.connect.common.AssistActivity"

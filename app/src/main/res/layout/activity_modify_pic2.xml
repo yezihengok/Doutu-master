@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical">
+
+
+    <ScrollView
+        android:id="@+id/mScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titlet"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                <com.yzi.doutu.view.MyRelativeLayout
+                    android:id="@+id/mainLayout"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical"/>
+                    </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/titlet"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_gravity="top"
+                    android:background="@color/aplsh_back">
+                    <ImageView
+                        android:id="@+id/back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingTop="8dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:src="@mipmap/grey_back" />
+
+                    <TextView
+                        android:paddingTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:id="@+id/tvRight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="12dp"
+                        android:background="@drawable/background_tabs"
+                        android:text="保存/分享"/>
+                </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/tools_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="bottom"
+                android:background="@color/aplsh_back"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:gravity="bottom"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/tvMul"
+                        style="@style/txt_white_13sp"
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="1dp"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tv_Mul" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/tvcc"
+                            style="@style/txt_white_14sp"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="文字颜色" />
+                        <com.yzi.doutu.view.ColorTagImageView
+                            android:id="@+id/color_tag"
+                            android:layout_width="match_parent"
+                            android:layout_height="18dp"
+                            android:layout_centerVertical="true"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="30dp"
+                            android:background="@mipmap/colortag" />
+                        <ImageView
+                            android:id="@+id/help_img"
+                            android:layout_width="33dp"
+                            android:layout_height="33dp"
+                            android:padding="5dp"
+                            android:layout_marginRight="15dp"
+                            android:src="@mipmap/help_icon"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/tv_typeface"
+                            style="@style/txt_white_14sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="字体样式" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="10dp"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/typeface_a"
+                                style="@style/txt_white_13sp"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="30dp"
+                                android:gravity="center"
+                                android:textColor="@color/main_blue_light"
+                                android:background="@drawable/subscribe_item_bgs"
+                                android:text="默认" />
+                            <TextView
+                                android:id="@+id/typeface_c"
+                                style="@style/txt_white_13sp"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="30dp"
+                                android:layout_marginLeft="5dp"
+                                android:gravity="center"
+                                android:background="@drawable/subscribe_item_bgs"
+                                android:text="华康少女" />
+                            <TextView
+                                android:id="@+id/typeface_b"
+                                style="@style/txt_white_13sp"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="30dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:gravity="center"
+                                android:background="@drawable/subscribe_item_bgs"
+                                android:text="小丸子" />
+
+
+                            </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/bottomla"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/edWords"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/main_black_grey"
+                        android:hint="请输入文字"
+                        android:background="@null"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/addTextImg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:src="@mipmap/trash" />
+                </LinearLayout>
+            </LinearLayout>
+            </FrameLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>
