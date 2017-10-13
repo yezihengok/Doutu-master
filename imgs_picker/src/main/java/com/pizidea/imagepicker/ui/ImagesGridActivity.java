@@ -56,6 +56,7 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
     // 剪切后图像文件
     private Uri mDestinationUri;
     private Context context;
+    String tag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +81,7 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
                 finish();
             }
         });
-
+         tag=getIntent().getStringExtra("tag");
         isCrop = getIntent().getBooleanExtra("isCrop",false);
         imagePath = getIntent().getStringExtra(AndroidImagePicker.KEY_PIC_PATH);
         mFragment =  ImagesGridFragment.newInstance(isCrop);
@@ -100,7 +101,8 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
                     if(isCrop){
 
                         File file=new File(androidImagePicker.getImageItemsOfCurrentImageSet().get(position).path);
-                        startCropActivity(Uri.fromFile(file));
+                        toCrop(file);
+
                     }else{
                         androidImagePicker.clearSelectedImages();
                         androidImagePicker.addSelectedImageItem(position, androidImagePicker.getImageItemsOfCurrentImageSet().get(position));
@@ -123,6 +125,20 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
     }
 
 
+    public void toCrop(File file){
+        if("16:9".equals(tag)){
+            startCropActivity2(Uri.fromFile(file));
+        }else if("1:1".equals(tag)){
+            startCropActivity(Uri.fromFile(file));
+        }
+    }
+
+    public  int getScreenHeight() {
+        DisplayMetrics dm = new DisplayMetrics();
+        dm = context.getResources().getDisplayMetrics();
+        return dm.heightPixels;
+    }
+
     public  int getScreenWidth() {
         DisplayMetrics dm = new DisplayMetrics();
         dm = context.getResources().getDisplayMetrics();
@@ -144,6 +160,22 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
                 .start(this);
     }
 
+    /**
+     * 裁剪图片方法实现
+     *
+     * @param uri
+     */
+    public void startCropActivity2(Uri uri) {
+        int width=getScreenWidth();
+        int height=getScreenHeight();
+        UCrop.of(uri, mDestinationUri)
+                .withAspectRatio(9, 16)//剪裁的宽高比为1:1
+//                .withMaxResultSize(600, 600)//剪裁最大尺寸为600*600
+                .withMaxResultSize(width*3/4, height*3/4)
+                .withTargetActivity(CropActivity.class)
+                .setTag(tag)
+                .start(this);
+    }
     /**
      * 预览页面
      * @param position

@@ -54,4 +54,8 @@
     <color name="ucrop_color_default_crop_frame">#ffffff</color>
     <color name="ucrop_color_default_dimmed">#8c000000</color>
     <color name="ucrop_color_default_logo">#4f212121</color>
+
+    <color name="aplsh_back">#40000000</color>
+
+    <color name="imagesGrid_title_color">#fc22292c</color>
 </resources>

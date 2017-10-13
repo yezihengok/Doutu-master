@@ -33,7 +33,7 @@ public class CropActivity extends AppCompatActivity {
     FloatingActionButton mSaveFab;
 
     private Uri mOutputUri;
-
+    private String tag;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +58,7 @@ public class CropActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 cropAndSaveImage();
+
             }
         });
         btn_backpress.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +87,7 @@ public class CropActivity extends AppCompatActivity {
         // 设置允许缩放
         mGestureCropImageView.setScaleEnabled(true);
         // 设置禁止旋转
-        mGestureCropImageView.setRotateEnabled(true);
+        mGestureCropImageView.setRotateEnabled(false);
 
         // 设置外部阴影颜色
         mOverlayView.setDimmedColor(Color.parseColor("#AA000000"));
@@ -141,6 +142,8 @@ public class CropActivity extends AppCompatActivity {
                 Log.w(TAG, "EXTRA_MAX_SIZE_X and EXTRA_MAX_SIZE_Y must be greater than 0");
             }
         }
+
+        tag=intent.getStringExtra("tag");
     }
 
 
@@ -151,7 +154,12 @@ public class CropActivity extends AppCompatActivity {
             final Bitmap croppedBitmap = mGestureCropImageView.cropImage();
             if (croppedBitmap != null) {
                 outputStream = getContentResolver().openOutputStream(mOutputUri);
-                croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                if("16:9".equals(tag)){
+                    croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+                }else{
+                    croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                }
+
                 croppedBitmap.recycle();
 
                 setResultUri(mOutputUri, mGestureCropImageView.getTargetAspectRatio());
@@ -164,6 +172,7 @@ public class CropActivity extends AppCompatActivity {
             finish();
         } finally {
             BitmapLoadUtils.close(outputStream);
+
         }
     }
 

@@ -23,16 +23,14 @@
       Base application theme, dependent on API level. This theme is replaced
       by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--
-          Theme customizations available in newer API levels can go in
-          res/values-vXX/styles.xml, while customizations related to
-          backward-compatibility can go here.
-        -->
+    <style name="AppBaseThemes" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--5.0+主题上才有效-->
+        <item name="colorPrimary">@color/imagesGrid_title_color</item> <!-- 导航栏颜色-->
+        <item name="colorPrimaryDark">@color/imagesGrid_title_color</item><!-- 状态栏颜色-->
     </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
@@ -54,4 +52,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+
+
 </resources>

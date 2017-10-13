@@ -78,6 +78,12 @@ public class UCrop {
         mCropOptionsBundle.putParcelable(EXTRA_OUTPUT_URI, destination);
     }
 
+
+    public UCrop setTag(String tag) {
+        mCropOptionsBundle.putString("tag",tag);
+        return this;
+    }
+
     /**
      * Set an aspect ratio for crop bounds.
      * User won't see the menu with other ratios options.

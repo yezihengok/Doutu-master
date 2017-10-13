@@ -21,10 +21,8 @@ package com.pizidea.imagepicker.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -51,8 +49,6 @@ import com.example.yzh.mylibrary.R;
 import com.pizidea.imagepicker.AndroidImagePicker;
 import com.pizidea.imagepicker.GlideImagePresenter;
 import com.pizidea.imagepicker.ImagePresenter;
-import com.pizidea.imagepicker.PicassoImagePresenter;
-
 import com.pizidea.imagepicker.Util;
 import com.pizidea.imagepicker.bean.ImageItem;
 import com.pizidea.imagepicker.bean.ImageSet;
@@ -588,7 +584,8 @@ public class ImagesGridFragment extends Fragment implements OnImagesLoadedListen
                 //如果是剪裁
                 if(getArguments().getBoolean("isCrop")){
                     File file=new File(path);
-                    ((ImagesGridActivity)getActivity()).startCropActivity(Uri.fromFile(file));
+                    //((ImagesGridActivity)getActivity()).startCropActivity(Uri.fromFile(file));
+                    ((ImagesGridActivity)getActivity()).toCrop(file);
                 }else{
                     //返回拍照结果
                     AndroidImagePicker.galleryAddPic(mContext,path);

@@ -27,4 +27,5 @@
     <dimen name="ucrop_default_crop_frame_stoke_width">1dp</dimen>
 
     <dimen name="cropImageView_padding">10dp</dimen>
+    <dimen name="dp45">45dp</dimen>
 </resources>
