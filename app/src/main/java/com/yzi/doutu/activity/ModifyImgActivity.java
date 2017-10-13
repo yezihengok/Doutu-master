@@ -491,7 +491,6 @@ public class ModifyImgActivity extends BaseActivity implements  View.OnClickList
                 }else if(tag==null) {
                     bitmap = ImageUtils.scaleWithWH(bitmap, WIDTH, HEIGHT);//最终保存的图片尺寸
                 }
-
                 //   bitmap = ImageUtils.createViewBitmap(operateView,HEIGHT,WIDTH);
 
                 String filePath = ImageUtils.saveBitmapToFiles(bitmap, dataBean);
