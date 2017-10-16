@@ -248,7 +248,6 @@ public class ModifyImgActivity extends BaseActivity implements  View.OnClickList
             public void onSoftKeyboardOpened(int keyboardHeightInPx) {
                 //输入法弹出时会挤压，设置使其保证原有高度。
                 mainLayout.getLayoutParams().height=height;
-                showToast("height="+height);
                 //mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
             @Override
