@@ -181,9 +181,8 @@
                     android:id="@+id/bottomla"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-
                     android:layout_alignParentBottom="true"
-                    android:background="@color/white"
+                    android:background="#33ffffff"
                     android:orientation="horizontal">
                     <EditText
                         android:id="@+id/edWords"
@@ -192,8 +191,9 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:paddingLeft="10dp"
-                        android:textColor="@color/main_black_grey"
+                        android:textColor="@color/white"
                         android:hint="请输入文字"
+                        android:textColorHint="@color/white"
                         android:background="@null"
                         android:textSize="14sp" />
 
