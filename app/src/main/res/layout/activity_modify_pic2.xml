@@ -182,7 +182,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_alignParentBottom="true"
-                    android:background="#33ffffff"
+                    android:background="#26ffffff"
                     android:orientation="horizontal">
                     <EditText
                         android:id="@+id/edWords"

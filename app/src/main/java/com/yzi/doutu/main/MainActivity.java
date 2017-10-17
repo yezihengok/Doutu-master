@@ -2,7 +2,6 @@
 
 package com.yzi.doutu.main;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -48,8 +47,7 @@ import com.yzi.doutu.activity.MyThemeFavoritesActivity;
 import com.yzi.doutu.activity.TypeTemplateActivity;
 import com.yzi.doutu.adapter.FragmentPagerAdapter;
 import com.yzi.doutu.interfaces.CommInterface;
-import com.yzi.doutu.permission.PermissionResultAdapter;
-import com.yzi.doutu.permission.PermissionUtil;
+import com.yzi.doutu.interfaces.PermissionsInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.ContextUtil;
 import com.yzi.doutu.utils.HandlerUtil;
@@ -64,6 +62,7 @@ import java.util.List;
 import static android.view.View.OnClickListener;
 import static com.yzi.doutu.utils.CommUtil.WEIBA;
 import static com.yzi.doutu.utils.CommUtil.isWeiBaopen;
+import static com.yzi.doutu.utils.CommUtil.readAndwriteSdCard;
 import static com.yzi.doutu.utils.ImageUtils.DOWN_PATH;
 
 /**
@@ -126,7 +125,7 @@ public class MainActivity extends BaseActivity
     private void checkBall() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
             if (CommUtil.hasModule() && !CommUtil.hasEnable()) {
-                CommUtil.showDialog(this, "墙裂建议您去勾选斗图开关，以便于QQ微信运行时显示斗图悬浮球~", "下次吧", "我要开启球球",
+                CommUtil.showDialog(this, "墙裂建议您去勾选斗图开关，以便于QQ微信运行时显示斗图悬浮球~", "下次吧", "我要开启",
                         null, new CommInterface.setClickListener() {
                             @Override
                             public void onResult() {
@@ -326,7 +325,9 @@ public class MainActivity extends BaseActivity
                         // mDrawerLayout.closeDrawers();
                         break;
                     case R.id.nav_select_pic:
-                        selectPic("1:1");
+                        pickPicture("1:1");
+
+
                         break;
                     case R.id.nav_menu_feedback:
 
@@ -443,16 +444,16 @@ public class MainActivity extends BaseActivity
                             @Override
                             public void onResult() {
                                 SharedUtils.putBoolean(null, "notice", false);
-                                selectPic("16:9");
+                                pickPicture("16:9");
                             }
                         }, new CommInterface.setClickListener() {
                             @Override
                             public void onResult() {
-                                selectPic("16:9");
+                                pickPicture("16:9");
                             }
                         });
             }else{
-                selectPic("16:9");
+                pickPicture("16:9");
             }
 
 
@@ -463,69 +464,46 @@ public class MainActivity extends BaseActivity
     }
 
 
-    /**从相册选图
-     *  @param tag 1:1为正方形剪裁  16:9比例(竖屏)剪裁
-     */
-    private void selectPic(final String tag) {
-        PermissionUtil.getInstance().request(new String[]{Manifest.permission.CAMERA}, new PermissionResultAdapter() {
-            //已授予
-            @Override
-            public void onPermissionGranted(String... permissions) {
-                pickPicture(tag);
-            }
-
-            //已禁止权限
-            @Override
-            public void onPermissionDenied(String... permissions) {
-                CommUtil.showDialog(context, "亲您已经禁止过拍照权限。请去权限管理勾选吧", "好的",
-                        null, new CommInterface.setClickListener() {
-                            @Override
-                            public void onResult() {
-                                CommUtil.getAppDetailSettingIntent(MainActivity.this);
-                                CommUtil.showToast("部分手机需要到 权限管理 勾选【相机权限】");
-                            }
-                        }, null);
-            }
-
-            //已拒绝权限，但可以在提示
-            @Override
-            public void onRationalShow(String... permissions) {
-                //Toast.makeText(SecondActivity.this, permissions[0] + " is rational", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     /**
      * 从相册选图
      * @param tag 1:1为正方形剪裁  16:9比例剪裁
      */
     private void pickPicture(final String  tag) {
-        AndroidImagePicker.getInstance().setSelectMode(AndroidImagePicker.Select_Mode.MODE_SINGLE);
-        AndroidImagePicker.getInstance().setShouldShowCamera(true);
-        final Intent intent = new Intent(this, ImagesGridActivity.class);
 
-            intent.putExtra("isCrop", true);
-            intent.putExtra("tag", tag);
-            startActivity(intent);
-            //裁剪监听
-            AndroidImagePicker.getInstance().setCropCompleteListener(new AndroidImagePicker.OnCropCompleteListener() {
-                @Override
-                public void cropComplete(Uri fileUri, Bitmap bitmap) {
+        readAndwriteSdCard(context, new PermissionsInterface() {
+            public void onPermissionGranted(String... permissions) {
+                if(permissions.length>=3) {
+
+                    AndroidImagePicker.getInstance().setSelectMode(AndroidImagePicker.Select_Mode.MODE_SINGLE);
+                    AndroidImagePicker.getInstance().setShouldShowCamera(true);
+                    final Intent intent = new Intent(context, ImagesGridActivity.class);
+
+                    intent.putExtra("isCrop", true);
+                    intent.putExtra("tag", tag);
+                    startActivity(intent);
+                    //裁剪监听
+                    AndroidImagePicker.getInstance().setCropCompleteListener(new AndroidImagePicker.OnCropCompleteListener() {
+                        @Override
+                        public void cropComplete(Uri fileUri, Bitmap bitmap) {
 
 
-                    Bundle bundle = new Bundle();
-                    bundle.putString("tag", tag);
-                    bundle.putParcelable("fileUri", fileUri);
-                    if(StringUtils.isNoEmpty(tag)){
-                        toActivity(ModifyImgActivity.class,bundle);
-                    }else{
-                        toActivity(ModifyPicActivity.class,bundle);
-                    }
-                    //toActivity(ModifyImgActivity.class,bundle);
-                   // MainActivity.this.onActivityResult(CROP, RESULT_OK, intent1);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("tag", tag);
+                            bundle.putParcelable("fileUri", fileUri);
+                            if(StringUtils.isNoEmpty(tag)){
+                                toActivity(ModifyImgActivity.class,bundle);
+                            }else{
+                                toActivity(ModifyPicActivity.class,bundle);
+                            }
+                            //toActivity(ModifyImgActivity.class,bundle);
+                            // MainActivity.this.onActivityResult(CROP, RESULT_OK, intent1);
+                        }
+                    });
+
                 }
-            });
-
+            }
+        });
 
     }
 
@@ -543,6 +521,21 @@ public class MainActivity extends BaseActivity
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    boolean ok=false;//是否授予了权限
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus&&!ok){
+            readAndwriteSdCard(context, new PermissionsInterface() {
+                public void onPermissionGranted(String... permissions) {
+                    if(permissions!=null) {
+                        ok = true;
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -566,35 +559,21 @@ public class MainActivity extends BaseActivity
                 break;
 
             case R.id.header_img:
-                PermissionUtil.getInstance().request(new String[]{Manifest.permission.CAMERA}, new PermissionResultAdapter() {
-                    //已授予
+
+                readAndwriteSdCard(context, new PermissionsInterface() {
                     @Override
                     public void onPermissionGranted(String... permissions) {
+                        if(permissions.length>=3){
+                            AndroidImagePicker.getInstance().setSelectMode(AndroidImagePicker.Select_Mode.MODE_SINGLE);
+                            AndroidImagePicker.getInstance().setShouldShowCamera(true);
+                            startActivityForResult(new Intent(MainActivity.this, ImagesGridActivity.class), 0x123);
+                        }
 
-                        AndroidImagePicker.getInstance().setSelectMode(AndroidImagePicker.Select_Mode.MODE_SINGLE);
-                        AndroidImagePicker.getInstance().setShouldShowCamera(true);
-                        startActivityForResult(new Intent(MainActivity.this, ImagesGridActivity.class), 0x123);
                     }
 
-                    //已禁止权限
-                    @Override
-                    public void onPermissionDenied(String... permissions) {
-                        CommUtil.showDialog(context, "亲您已经禁止过拍照权限。请去权限管理勾选吧", "好的",
-                                null, new CommInterface.setClickListener() {
-                                    @Override
-                                    public void onResult() {
-                                        CommUtil.getAppDetailSettingIntent(MainActivity.this);
-                                        CommUtil.showToast("部分手机需要到 权限管理 勾选【相机权限】");
-                                    }
-                                }, null);
-                    }
 
-                    //已拒绝权限，但可以在提示
-                    @Override
-                    public void onRationalShow(String... permissions) {
-                        //Toast.makeText(SecondActivity.this, permissions[0] + " is rational", Toast.LENGTH_SHORT).show();
-                    }
                 });
+
 
                 break;
 

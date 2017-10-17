@@ -55,6 +55,7 @@ import com.yzi.doutu.bean.DataBean;
 import com.yzi.doutu.db.DBHelpers;
 import com.yzi.doutu.db.DBTools;
 import com.yzi.doutu.interfaces.CommInterface;
+import com.yzi.doutu.interfaces.PermissionsInterface;
 import com.yzi.doutu.permission.PermissionResultAdapter;
 import com.yzi.doutu.permission.PermissionUtil;
 import com.yzi.doutu.service.DouApplication;
@@ -438,35 +439,54 @@ public class CommUtil {
 
 
     /**
-     * 请求读写SD卡权限
+     * 请求读写SD卡\相机 权限
      */
-    private void readAndwriteSdCard(final Context context) {
 
-        if(!SharedUtils.getBoolean(null,context,"readAndwriteSdCard")){
-            CommUtil.showDialog(context, "为了您能正常使用并分享表情图。请去允许授予必要的权限", "好的",
+    public static void  readAndwriteSdCard(final Context context, final PermissionsInterface statusInterface){
+
+        //是否初次请求权限 给予dialog提示
+        if(!SharedUtils.getBoolean(null,"readAndwriteSdCard",false)){
+            CommUtil.showDialog(context, "为了您能正常使用并保存、分享表情图片。请允许授予相关的权限", "好的",
                     null, new CommInterface.setClickListener() {
                         @Override
                         public void onResult() {
-
+//                            SharedUtils.getBoolean(null,"readAndwriteSdCard",true);
+//                            readAndwriteSdCard(context,statusInterface);
                             PermissionUtil.getInstance().request(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE
-                                    ,Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionResultAdapter() {
+                                    ,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA}, new PermissionResultAdapter() {
                                 //已授予
                                 @Override
                                 public void onPermissionGranted(String... permissions) {
-                                    Log.v("TAG","已经授予了SD卡读写权限");
-                                    SharedUtils.putBoolean(null,"readAndwriteSdCard",true);
+
+                                    if(permissions!=null&&permissions.length==3){
+                                        Log.v("TAG","已经授予了3种权限");
+                                        SharedUtils.putBoolean(null,"readAndwriteSdCard",true);
+
+                                    }else{
+                                        Log.v("TAG","已经授予了部分权限");
+                                    }
+                                    if(statusInterface!=null){
+                                        statusInterface.onPermissionGranted(permissions);
+                                    }
+
+                                    if(permissions!=null){
+                                        for (int i = 0; i <permissions.length ; i++) {
+                                            Log.v(TAG,"已授予的权限:"+permissions[i]);
+                                        }
+                                    }
                                 }
 
                                 //已禁止权限
                                 @Override
                                 public void onPermissionDenied(String... permissions) {
                                     SharedUtils.putBoolean(null,"readAndwriteSdCard",false);
-                                    CommUtil.showDialog(context, "您禁止了图片缓存功能，为了您正常使用分享表情图。请去权限管理勾选【读写手机存储】权限", "好的",
+
+                                    CommUtil.showDialog(context, "检测到您已禁止了app部分权限，为了您正常使用分享表情图。请确保权限管理里勾选【读写手机存储】【相机】权限", "好的",
                                             null, new CommInterface.setClickListener() {
                                                 @Override
                                                 public void onResult() {
                                                     CommUtil.getAppDetailSettingIntent(context);
-                                                    CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
+                                                    CommUtil.showToast("部分手机需要到 权限管理 勾选【权限】");
                                                 }
                                             }, null);
                                 }
@@ -476,16 +496,67 @@ public class CommUtil {
                                 public void onRationalShow(String... permissions) {
                                     SharedUtils.putBoolean(null,"readAndwriteSdCard",false);
                                     //Toast.makeText(SecondActivity.this, permissions[0] + " is rational", Toast.LENGTH_SHORT).show();
+
                                 }
                             });
 
                         }
                     }, null);
+        }else {
+
+            PermissionUtil.getInstance().request(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE
+                    ,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA}, new PermissionResultAdapter() {
+                //已授予
+                @Override
+                public void onPermissionGranted(String... permissions) {
+                    if(permissions!=null&&permissions.length==3){
+                        Log.v("TAG","已经授予了3种权限");
+                        //SharedUtils.putBoolean(null,"readAndwriteSdCard",true);
+
+                    }else{
+                        Log.v("TAG","已经授予了部分权限");
+                    }
+                    if(statusInterface!=null){
+                        statusInterface.onPermissionGranted(permissions);
+                    }
+
+                    if(permissions!=null){
+                        for (int i = 0; i <permissions.length ; i++) {
+                            Log.v(TAG,"已授予的权限:"+permissions[i]);
+                        }
+                    }
+
+                }
+
+                //已禁止权限
+                @Override
+                public void onPermissionDenied(String... permissions) {
+                      //SharedUtils.putBoolean(null,"readAndwriteSdCard",false);
+
+                    CommUtil.showDialog(context, "检测到您已禁止了app部分权限，为了您正常使用分享表情图。请确保权限管理里勾选【读写手机存储】【相机】权限", "好的",
+                            null, new CommInterface.setClickListener() {
+                                @Override
+                                public void onResult() {
+                                    CommUtil.getAppDetailSettingIntent(context);
+                                    CommUtil.showToast("部分手机需要到 权限管理 勾选【悬浮窗权限】");
+                                }
+                            }, null);
+                }
+
+                //已拒绝权限，但可以在提示
+                @Override
+                public void onRationalShow(String... permissions) {
+                    //SharedUtils.putBoolean(null,"readAndwriteSdCard",false);
+                    //Toast.makeText(SecondActivity.this, permissions[0] + " is rational", Toast.LENGTH_SHORT).show();
+
+                }
+            });
 
         }
 
-    }
 
+
+    }
 
     private View sharePopView;
 
@@ -496,7 +567,7 @@ public class CommUtil {
      * @return
      */
     public void showSharePop(final Context context, final DataBean dataBean, final CommInterface.setFinishListener listener) {
-        readAndwriteSdCard(context);
+        readAndwriteSdCard(context,null);
         TextView share_name;
         ImageView share_img;
         Button share_send, share_save, share_update;
