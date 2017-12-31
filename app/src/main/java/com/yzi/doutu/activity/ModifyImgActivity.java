@@ -84,8 +84,8 @@ public class ModifyImgActivity extends BaseActivity implements  View.OnClickList
     /**mainLayout里当前显示图片的地址**/
     String showPath;
     //保存图片的宽高
-    private int HEIGHT=290;
-    private int WIDTH=290;
+    private int HEIGHT=300;
+    private int WIDTH=300;
 
     String words="请输入文字";
     int wordsColor=Color.WHITE;//文字颜色
