@@ -131,6 +131,7 @@ public class WindowService extends Service {
         } else {
             remove();
         }
+
     }
 
     @Override
@@ -163,14 +164,23 @@ public class WindowService extends Service {
 
         if(wmParams==null){
             wmParams = new LayoutParams();
+            /*if (Build.VERSION.SDK_INT >= 26) {
+                wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            }else{
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                    wmParams.type = LayoutParams.TYPE_PHONE;
+                } else {
+                    //貌似4.4以下设置TYPE_TOAST 不需要手动打开就可以显示悬浮窗
+                    wmParams.type = LayoutParams.TYPE_TOAST;
+                }
+            }*/
+
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
                 wmParams.type = LayoutParams.TYPE_PHONE;
             } else {
                 //貌似4.4以下设置TYPE_TOAST 不需要手动打开就可以显示悬浮窗
                 wmParams.type = LayoutParams.TYPE_TOAST;
             }
-
-
             //设置图片格式，效果为背景透明
             wmParams.format = PixelFormat.RGBA_8888;
             //设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
@@ -332,12 +342,20 @@ public class WindowService extends Service {
 
 
 
+    String name;
     /**
      * QQ或微信是否运行在前台
      * @return
      */
     private boolean isQQWecat() {
-        String name=CommUtil.getTopActivty(this);
+
+        //华为手机（mate10） QQ微信 运行在栈顶时 返回的包名是第一次返回时正确的 后面一直返回“android”
+        // （应该是华为系统QQ微信做了特殊处理，不让其返回正确的包名）
+        //这里特殊处理下 “包名返回 android 不覆盖当前运行在栈顶的包名标记”
+         String names=CommUtil.getTopActivty(this);
+         if(!"android".equals(names)){
+             name=names;
+         }
         if(name.equals(CommUtil.QQ)){
             CommUtil.FLAG=CommUtil.QQ;
         }else if(name.equals(CommUtil.WeChat)){
