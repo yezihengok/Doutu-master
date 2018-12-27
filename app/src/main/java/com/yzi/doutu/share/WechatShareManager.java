@@ -390,9 +390,9 @@ public class WechatShareManager {
 //        msg.thumbData = WXUtil.readFromFile(pa, 0, (int) new File(pa).length());
         Bitmap bmp = BitmapFactory.decodeFile(path);
         Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
-        bmp.recycle();
-        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
 
+        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
+        bmp.recycle();
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = buildTransaction("emoji");
         req.message = msg;
@@ -418,9 +418,8 @@ public class WechatShareManager {
 
         Bitmap bmp = BitmapFactory.decodeFile(path);
         Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
-        bmp.recycle();
         msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
-
+        bmp.recycle();
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = buildTransaction("img");
         req.message = msg;
@@ -508,9 +507,9 @@ public class WechatShareManager {
          * 一般情况下缩略图超出比较常见。Title、description都是文本，一般不会超过。
          */
         Bitmap thumbBitmap =  Bitmap.createScaledBitmap(thumb, THUMB_SIZE, THUMB_SIZE, true);
-        thumb.recycle();
-        msg.thumbData = Util.bmpToByteArray(thumbBitmap, true);
 
+        msg.thumbData = Util.bmpToByteArray(thumbBitmap, true);
+        thumb.recycle();
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = buildTransaction("video");
         req.message = msg;
