@@ -11,6 +11,7 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.CAMERA" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 <!--  <uses-feature android:name="android.hardware.camera" />
   <uses-feature android:name="android.hardware.camera.autofocus" />-->
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -23,7 +24,13 @@
       android:label="@string/app_name"
       android:largeHeap="true"
       android:name=".service.DouApplication"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      android:networkSecurityConfig="@xml/network_security_config">
+
+    <!--在Android P系统的设备上，如果应用使用的是非加密的明文流量的http网络请求，则会导致该应用无法进行网络请求，
+    https则不会受影响，同样地，如果应用嵌套了webview，webview也只能使用https请求。-->
+
+<!-- 如果一定要使用明文通信的话 application标签增加以下属性：android:networkSecurityConfig-->
     <activity
         android:name=".main.MainActivity"
         android:launchMode="singleTask"
@@ -87,6 +94,21 @@
 
 
     <service android:name="com.yzi.doutu.service.WindowService"/>
+
+    <!-- 解决 Android N 7.0 上 报错：android.os.FileUriExposedException -->
+
+    <!-- 引用的图库选择器libary 里也有这个 会重复 -->
+<!--    <provider
+        tools:replace="android:authorities"
+        android:name="android.support.v4.content.FileProvider"
+        android:authorities="com.yzi.doutu.fileProvider"
+        android:grantUriPermissions="true"
+        android:exported="false">
+      <meta-data
+          android:name="android.support.FILE_PROVIDER_PATHS"
+          android:resource="@xml/file_paths" />
+    </provider>-->
+
   </application>
 
 </manifest>

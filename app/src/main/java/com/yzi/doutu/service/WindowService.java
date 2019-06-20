@@ -2,6 +2,9 @@ package com.yzi.doutu.service;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -49,7 +52,7 @@ public class WindowService extends Service {
     ImageView mFloatView;
 
     private static final String TAG = "WindowService";
-
+    public static final String CHANNEL_ID_STRING = "yzh001";
 
 
     float DownX=0;//上次x坐标
@@ -136,8 +139,19 @@ public class WindowService extends Service {
 
     @Override
     public void onCreate() {
-        // TODO Auto-generated method stub
         super.onCreate();
+
+        //适配8.0service
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) DouApplication.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel mChannel = null;
+            mChannel = new NotificationChannel(CHANNEL_ID_STRING, "斗图", NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(mChannel);
+            Notification notification = new Notification.Builder(getApplicationContext(), CHANNEL_ID_STRING).build();
+            startForeground(1, notification);
+        }
+
+
         Log.e(TAG, "WindowService-Create()");
         //SharedUtils.putBoolean("", "warn", true);//开启创建悬浮窗标记
         register();
@@ -164,7 +178,9 @@ public class WindowService extends Service {
 
         if(wmParams==null){
             wmParams = new LayoutParams();
-            /*if (Build.VERSION.SDK_INT >= 26) {
+
+            //兼容8.0以上悬浮窗类型
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 wmParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
             }else{
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
@@ -173,14 +189,14 @@ public class WindowService extends Service {
                     //貌似4.4以下设置TYPE_TOAST 不需要手动打开就可以显示悬浮窗
                     wmParams.type = LayoutParams.TYPE_TOAST;
                 }
-            }*/
+            }
 
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+       /*     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
                 wmParams.type = LayoutParams.TYPE_PHONE;
             } else {
                 //貌似4.4以下设置TYPE_TOAST 不需要手动打开就可以显示悬浮窗
                 wmParams.type = LayoutParams.TYPE_TOAST;
-            }
+            }*/
             //设置图片格式，效果为背景透明
             wmParams.format = PixelFormat.RGBA_8888;
             //设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）

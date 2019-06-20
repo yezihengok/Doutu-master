@@ -88,7 +88,7 @@ public class ModifyImgActivity extends BaseActivity implements  View.OnClickList
     private int WIDTH=300;
 
     String words="请输入文字";
-    int wordsColor=Color.WHITE;//文字颜色
+    int wordsColor=Color.BLACK;//文字颜色
     Typeface typeface;
     SoftKeyboardStateHelper stateHelper;
 

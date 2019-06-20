@@ -388,7 +388,7 @@ public class AndroidImagePicker {
             File photoFile = createImageSaveFile(ctx);
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(photoFile));
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,Util.getUrl(photoFile,ctx));
             }
         }
         if(ctx instanceof Activity){
@@ -412,7 +412,7 @@ public class AndroidImagePicker {
             File photoFile = createImageSaveFile(fragment.getContext());
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Util.getUrl(photoFile,fragment.getContext()));
                 Log.i(TAG,"=====file ready to take photo:"+photoFile.getAbsolutePath() );
             }
         }
@@ -428,7 +428,7 @@ public class AndroidImagePicker {
     public static void galleryAddPic(Context ctx,String path) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(path);
-        Uri contentUri = Uri.fromFile(f);
+        Uri contentUri = Util.getUrl(f,ctx);
         mediaScanIntent.setData(contentUri);
         ctx.sendBroadcast(mediaScanIntent);
         Log.i(TAG, "=====MediaScan:" + path);

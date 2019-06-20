@@ -125,7 +125,7 @@ public class NewListFragment extends Fragment
         mRecyclerView.setRefreshProgressStyle(new Random().nextInt(28));
         mRecyclerView.setLoadingMoreProgressStyle(new Random().nextInt(28));
 
-        Log.v("", "请求getNewList");
+        Log.v("-", "请求getNewList");
         if (showDialog) {
             CommUtil.showWaitDialog(getActivity(), "加载中...", false);
         }
@@ -138,7 +138,7 @@ public class NewListFragment extends Fragment
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Log.e("", e.toString());
+                        Log.e("-", e.toString());
                         CommUtil.closeWaitDialog();
                         refreshComplete(listPage);
 
@@ -150,7 +150,7 @@ public class NewListFragment extends Fragment
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.d("", response);
+                       // Log.d("--", response);
                         CommUtil.closeWaitDialog();
                         refreshComplete(listPage);
 

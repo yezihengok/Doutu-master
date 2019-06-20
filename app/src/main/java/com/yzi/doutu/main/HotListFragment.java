@@ -76,7 +76,7 @@ public class HotListFragment extends Fragment
     private void initview() {
         mRecyclerView = (XRecyclerView) mView.findViewById(R.id.hotrecyclerview);
         // mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        mLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+        mLayoutManager = new GridLayoutManager(getActivity(), 3, GridLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         hotList=new ArrayList<>();

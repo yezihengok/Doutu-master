@@ -123,7 +123,7 @@ public class HotTemplateActivity extends BaseActivity implements CommInterface.O
     }
 
     private void setData(HotTemplate template) {
-        if (template.getTemplates() != null) {
+        if (template!=null&&template.getTemplates() != null) {
             if (hotPage==0){
                 hotList.clear();
             }

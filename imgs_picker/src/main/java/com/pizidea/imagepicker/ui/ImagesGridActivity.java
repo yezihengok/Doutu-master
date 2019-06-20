@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.example.yzh.mylibrary.R;
 import com.pizidea.imagepicker.AndroidImagePicker;
+import com.pizidea.imagepicker.Util;
 import com.pizidea.imagepicker.bean.ImageItem;
 import com.pizidea.imagepicker.crop.CropActivity;
 import com.pizidea.imagepicker.crop.UCrop;
@@ -62,7 +63,11 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_images_grid);
         context=this;
-        mDestinationUri = Uri.fromFile(new File(this.getCacheDir(), "cropImage.jpeg"));
+        try {
+            mDestinationUri = Util.getUrl(new File(this.getCacheDir(), "cropImage.jpeg"),context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         androidImagePicker = AndroidImagePicker.getInstance();
         androidImagePicker.clearSelectedImages();//most of the time you need to clear the last selected images or you can comment out this line
 
@@ -127,9 +132,9 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
 
     public void toCrop(File file){
         if("16:9".equals(tag)){
-            startCropActivity2(Uri.fromFile(file));
+            startCropActivity2(Util.getUrl(file,this));
         }else if("1:1".equals(tag)){
-            startCropActivity(Uri.fromFile(file));
+            startCropActivity(Util.getUrl(file,this));
         }
     }
 

@@ -10,7 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import junit.framework.Assert;
+//import junit.framework.Assert;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -123,7 +123,7 @@ public class WXUtil {
 	
 	private static final int MAX_DECODE_PICTURE_SIZE = 1920 * 1440;
 	public static Bitmap extractThumbNail(final String path, final int height, final int width, final boolean crop) {
-		Assert.assertTrue(path != null && !path.equals("") && height > 0 && width > 0);
+		//Assert.assertTrue(path != null && !path.equals("") && height > 0 && width > 0);
 
 		BitmapFactory.Options options = new BitmapFactory.Options();
 

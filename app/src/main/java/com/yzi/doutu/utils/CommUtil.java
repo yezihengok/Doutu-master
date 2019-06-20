@@ -27,6 +27,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -49,6 +50,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.pizidea.imagepicker.Util;
 import com.yzi.doutu.R;
 import com.yzi.doutu.activity.ModifyImgActivity;
 import com.yzi.doutu.bean.DataBean;
@@ -338,6 +340,25 @@ public class CommUtil {
         }
     }
 
+
+
+    /**兼容7.0以上 使用 Uri.fromFile报错问题 **/
+/*    public static Uri getUrl (File file){
+        Uri uri;
+        // 判断版本大于等于7.0
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // "com.dinpay.wallet.fileProvider"即是在清单文件中配置的authorities
+            uri = FileProvider.getUriForFile(DouApplication.getInstance()
+                    , "com.yzi.doutu.fileProvider", file);
+            // 给目标应用一个临时授权
+            //intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } else {
+            uri = Uri.fromFile(file);
+        }
+
+        return uri;
+    }*/
+
     /**
      * 调用系统分享
      *
@@ -348,7 +369,8 @@ public class CommUtil {
         if (file != null && file.exists()) {
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Util.getUrl(file,context));
+            //shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
             shareIntent.setType("image/*");
             context.startActivity(Intent.createChooser(shareIntent
                     , context.getResources().getText(R.string.app_name)));
@@ -368,7 +390,8 @@ public class CommUtil {
         sendIntent.setAction(Intent.ACTION_SEND);
 //        sendIntent.putExtra(Intent.EXTRA_TEXT,"发送纯文本");
 //        sendIntent.setType("text/plain");
-        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        sendIntent.putExtra(Intent.EXTRA_STREAM,Util.getUrl(file,context));
+        //shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         sendIntent.setType("image/*");
         try {
             sendIntent.setClassName("com.tencent.mobileqq", "com.tencent.mobileqq.activity.JumpActivity");
@@ -393,7 +416,8 @@ public class CommUtil {
         sendIntent.setAction(Intent.ACTION_SEND);
 //        sendIntent.putExtra(Intent.EXTRA_TEXT,"发送纯文本");
 //        sendIntent.setType("text/plain");
-        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        sendIntent.putExtra(Intent.EXTRA_STREAM,Util.getUrl(file,context));
+        //shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         sendIntent.setType("image/*");
         try {
             //sendIntent.setClassName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");//微信朋友圈
@@ -1159,7 +1183,15 @@ public class CommUtil {
 
     public void startService() {
         intent = new Intent(DouApplication.getInstance(), WindowService.class);
-        DouApplication.getInstance().startService(intent);
+
+        //Android 8.0 不允许其创建后台服务的情况下使用 startService() 函数，需要startForegroundService
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            DouApplication.getInstance().startForegroundService(intent);
+        } else {
+            DouApplication.getInstance().startService(intent);
+        }
+
+
         Log.d("", "startService");
     }
 

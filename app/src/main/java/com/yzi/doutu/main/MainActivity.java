@@ -157,11 +157,12 @@ public class MainActivity extends BaseActivity
         listFragment = new NewListFragment(mTabLayout);
         listFragment.setArguments(mBundle);
         mFragments.add(listFragment);
-        //hotListFragment=new HotListFragment(mTabLayout);
+        hotListFragment=new HotListFragment(mTabLayout);
         realManFragment = new RealManFragment();
         allListFragment = new AllListFragment();
+
+        mFragments.add(hotListFragment);
         mFragments.add(allListFragment);
-        //mFragments.add(hotListFragment);
         mFragments.add(realManFragment);
         presenter = new UilImagePresenter();
         AndroidImagePicker.getInstance().setOnPictureTakeCompleteListener(this);//watching Picture taking

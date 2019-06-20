@@ -21,9 +21,14 @@ package com.pizidea.imagepicker;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.util.TypedValue;
+
+import java.io.File;
 
 
 /**
@@ -89,6 +94,24 @@ public class Util {
 
     private Util() {
         throw new AssertionError("No Instances");
+    }
+
+
+    /**兼容7.0以上 使用 Uri.fromFile报错问题 **/
+    public static Uri getUrl (File file,Context context){
+        Uri uri;
+        // 判断版本大于等于7.0
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // "com.example.yzh.mylibrary.fileProvider"即是在清单文件中配置的authorities
+            uri = FileProvider.getUriForFile(context
+                    , "com.example.yzh.mylibrary.fileProvider", file);
+            // 给目标应用一个临时授权
+            //intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } else {
+            uri = Uri.fromFile(file);
+        }
+
+        return uri;
     }
 
 }
