@@ -19,7 +19,7 @@
                 android:scaleType="fitXY"
                 android:src="@mipmap/ic_user_background"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="210dp"
                 android:transitionName="shareNames"/>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/listview"
@@ -32,7 +32,7 @@
     <RelativeLayout
         android:id="@+id/titlet"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="70dp"
         android:background="@color/transparent">
 
         <ImageView

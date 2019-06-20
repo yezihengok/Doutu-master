@@ -23,6 +23,7 @@ import com.yzi.doutu.interfaces.CommInterface;
 import com.yzi.doutu.utils.CommUtil;
 import com.yzi.doutu.utils.PraseUtils;
 import com.yzi.doutu.utils.RecycleViews.FullyGridLayoutManager;
+import com.yzi.doutu.utils.StatusBarUtil;
 import com.yzi.doutu.view.HeadZoomScrollView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -61,9 +62,10 @@ public class RealManInfoListActivity extends BaseActivity implements HeadZoomScr
         super.onCreate(savedInstanceState);
      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+           // getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             //透明导航栏
             //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+         StatusBarUtil.setTransparentForImageView(RealManInfoListActivity.this,null);
         }
         setContentView(R.layout.activity_realman_infolist);
         application.addActivity(this);
