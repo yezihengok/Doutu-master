@@ -7,7 +7,7 @@
  * 新增GIF动图添加文字功能（暂不支持背景透明的GIF，会黑边- -!）
    
  
- 
+
  >项目是16年花2个多月 业余时间做出来的。构架上还没用现在主流的：MVP+Rxjava2+Retrofit2+Dagger2 . [(有兴趣可看看这个我写的例子)](https://github.com/yezihengok/MVP-Rxjava2-Retrofit2-Dagger2)
 
   
