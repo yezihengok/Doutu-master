@@ -6,15 +6,19 @@
  * 新增图片收藏，保存至本地sqlite
  * 新增GIF动图添加文字功能（暂不支持背景透明的GIF，会黑边- -!）
    
-   
+ 
+ 
+ >项目是16年花2个多月 业余时间做出来的。构架上还没用现在主流的：MVP+Rxjava2+Retrofit2+Dagger2 . [(有兴趣可看看这个我写的例子)](https://github.com/yezihengok/MVP-Rxjava2-Retrofit2-Dagger2)
+
+  
 ### V1.4.8：
      
    **--2019年3月更新说明--**
-      项目是16年花2个多月 业务时间做出来的。构架上也没用现在主流的 MVP+Rxjava2+Retrofit2+Dagger2 . [(有兴趣可看看这个我写的例子)](https://github.com/yezihengok/MVP-Rxjava2-Retrofit2-Dagger2)
-      快2年更改过这个项目了，最近闲来无事，打算找几个表情包，发现图片接口几乎全挂...查询了原因；用的接口https证书错误导致glide无法加载图片，
-      遗憾的是 拥有表情包资源最丰富的模块 “主题表情包” 接口彻底挂了,服务器也打不开. 好在其他模块经过半天整顿一切都正常显示了。
+      > 快2年更改过这个项目了，最近闲来无事，打算找几个表情包，发现图片接口几乎全挂...查询了原因；用的接口https证书错误导致glide无法加载图片，
+      遗憾的是 拥有表情包资源最丰富的模块 “主题表情包” 接口彻底挂了,服务器也打不开. 好在其他模块经过小小整顿一切都正常显示了。
     
-* 本次更新 ：1、让Glide 加载HTTPS图片过滤证书问题2、app兼容至Android 9.0
+* **本次更新 ：1、让Glide 加载HTTPS图片过滤证书问题 2、app兼容至Android 9.0**
+
 * 兼容7.0以上 使用 Uri.fromFile报错问题 
 * 兼容8.0以上 使用悬浮窗类型变更 、启动service 方式变更(Android 8.0 不允许其创建后台服务的情况下使用 startService() 函数，需要startForegroundService)
 * 兼容9.0以上 http报错问题（在Android P系统的设备上，使用的是非加密的明文流量的http网络请求，则会导致该应用无法进行网络请求，application标签增加以下属性：android:networkSecurityConfig）     
