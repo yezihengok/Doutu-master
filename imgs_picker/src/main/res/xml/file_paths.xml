@@ -10,5 +10,21 @@
 
 <paths>
    <!-- <external-path path="Android/data/com.dinpay.wallet/" name="Android/data/com.dinpay.wallet" />-->
-    <external-path path="." name="external_storage_root" /> <!--.表示根目录-->
+<!--    <external-path path="." name="external_storage_root" /> &lt;!&ndash;.表示根目录&ndash;&gt;-->
+
+    <!--代表设备的根目录 new File("/")-->
+    <root-path name="root" path="" />
+    <!--代表 context.getFileDir()-->
+    <files-path name="files" path="." />
+    <!--代表 context.getCacheDir()-->
+    <cache-path name="cache" path="." />
+    <!--代表 Environment.getExternalStorageDirectory()-->
+    <external-path name="external" path="." />
+
+ <external-path name="external_storage_root" path="."/>
+    <!--代表 context.getExternalFilesDirs()-->
+    <external-files-path name="external-files" path="." />
+    <!--代表 getExternalCacheDirs()-->
+    <external-cache-path name="external-cache" path="." />
+
 </paths>

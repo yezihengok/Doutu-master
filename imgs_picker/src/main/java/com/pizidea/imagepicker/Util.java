@@ -98,20 +98,38 @@ public class Util {
 
 
     /**兼容7.0以上 使用 Uri.fromFile报错问题 **/
-    public static Uri getUrl (File file,Context context){
-        Uri uri;
-        // 判断版本大于等于7.0
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // "com.example.yzh.mylibrary.fileProvider"即是在清单文件中配置的authorities
-            uri = FileProvider.getUriForFile(context
-                    , "com.example.yzh.mylibrary.fileProvider", file);
-            // 给目标应用一个临时授权
-            //intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        } else {
-            uri = Uri.fromFile(file);
-        }
+//    public static Uri getUrl (File file,Context context){
+//        Uri uri;
+//        // 判断版本大于等于7.0
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            // "com.example.yzh.mylibrary.fileProvider"即是在清单文件中配置的authorities
+//            uri = FileProvider.getUriForFile(context
+//                    , "com.example.yzh.mylibrary.fileProvider", file);
+//            // 给目标应用一个临时授权
+//            //intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        } else {
+//            uri = Uri.fromFile(file);
+//        }
+//
+//        return uri;
+//    }
 
-        return uri;
+    /**
+     * 将文件转换成uri
+     *
+     * @return
+     */
+    public static Uri getUrl(File file,Context context) {
+        Log.v("getUrl","-----"+file.getPath());
+        Uri fileUri = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+           // fileUri = FileProvider.getUriForFile(context,"com.example.yzh.mylibrary.fileProvider", file);
+            fileUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
+        } else {
+            fileUri = Uri.fromFile(file);
+        }
+        Log.w("getUrl","-----"+fileUri.toString());
+        return fileUri;
     }
 
 }

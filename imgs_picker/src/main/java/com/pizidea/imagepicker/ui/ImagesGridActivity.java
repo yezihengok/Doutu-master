@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
@@ -64,7 +65,15 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
         setContentView(R.layout.activity_images_grid);
         context=this;
         try {
-            mDestinationUri = Util.getUrl(new File(this.getCacheDir(), "cropImage.jpeg"),context);
+           String  jpg = Environment.getExternalStorageDirectory() + "/corp/cropImage.jpeg";
+
+            File file = new File(jpg);
+            // 如果文件夹不存在则创建
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            mDestinationUri = Util.getUrl(file,context);
+          //  mDestinationUri = Util.getUrl(new File(this.getCacheDir(), "cropImage.jpeg"),context);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -237,16 +246,17 @@ public class ImagesGridActivity extends FragmentActivity implements View.OnClick
                 Bitmap bmp = (Bitmap)data.getExtras().get("bitmap");
                 Log.i(TAG,"=====get Bitmap:"+bmp.hashCode());
             }else if(requestCode == AndroidImagePicker.REQ_PREVIEW){
+                Toast.makeText(context,"RESULT_OK",Toast.LENGTH_LONG).show();
                 setResult(RESULT_OK);
                 finish();
 
             }else if(requestCode == UCrop.REQUEST_CROP){  // 裁剪图片结果
                 handleCropResult(data);
-            }else if(requestCode == UCrop.RESULT_ERROR){// 裁剪图片错误
+            }else if(requestCode == UCrop.RESULT_ERROR) {// 裁剪图片错误
                 handleCropError(data);
+            }
         }
 
-        }
 
     }
 

@@ -40,6 +40,7 @@ public class CropActivity extends AppCompatActivity {
         setContentView(R.layout.activity_crop);
 
         initViews();
+        Log.w(TAG,"--onCreate()");
     }
 
     protected void initViews() {
@@ -105,7 +106,7 @@ public class CropActivity extends AppCompatActivity {
     private void setImageData(Intent intent) {
         Uri inputUri = intent.getParcelableExtra(UCrop.EXTRA_INPUT_URI);
         mOutputUri = intent.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
-
+        Log.d(TAG,"mOutputUri:   "+mOutputUri);
         if (inputUri != null && mOutputUri != null) {
             try {
                 mGestureCropImageView.setImageUri(inputUri);
@@ -224,6 +225,7 @@ public class CropActivity extends AppCompatActivity {
     }
 
     private void setResultException(Throwable throwable) {
+        Log.e(TAG,throwable.getMessage());
         setResult(UCrop.RESULT_ERROR, new Intent().putExtra(UCrop.EXTRA_ERROR, throwable));
     }
 }

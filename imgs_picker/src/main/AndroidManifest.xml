@@ -9,7 +9,7 @@
         <!-- 解决 Android N 7.0 上 报错：android.os.FileUriExposedException -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.yzh.mylibrary.fileProvider"
+            android:authorities="${applicationId}.fileprovider"
             android:grantUriPermissions="true"
             android:exported="false">
             <meta-data

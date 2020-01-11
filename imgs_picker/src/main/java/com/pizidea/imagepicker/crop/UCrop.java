@@ -15,6 +15,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 
 import com.example.yzh.mylibrary.BuildConfig;
@@ -135,6 +136,7 @@ public class UCrop {
      * @param activity Activity to receive result
      */
     public void start(@NonNull Activity activity) {
+        Log.d("UCrop","activity:"+activity.getClass().getSimpleName());
         start(activity, REQUEST_CROP);
     }
 
